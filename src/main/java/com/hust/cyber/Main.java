@@ -5,5 +5,6 @@ public class Main {
         // Launch the JavaFX application by calling the launch method
         System.out.println("HELLO");
         LoginForm.launch(LoginForm.class, args);
+
     }
 }
