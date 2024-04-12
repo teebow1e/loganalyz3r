@@ -21,7 +21,7 @@ public class LoginForm extends Application {
 
         // Set the Scene to the Stage and show the Stage
         primaryStage.setScene(scene);
-        primaryStage.setTitle("Login Form");
+        primaryStage.setTitle("Log Analyzer");
         primaryStage.show();
     }
 
