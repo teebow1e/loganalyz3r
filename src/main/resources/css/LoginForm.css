@@ -1,0 +1,23 @@
+.login-label {
+    -fx-font-size: 30px;
+    -fx-text-fill: #000000;
+    -fx-alignment: center;
+}
+
+.Vbox-text {
+    -fx-padding: 0 100px 0 100px;
+}
+
+.text-box {
+    -fx-pref-width: 600px;
+    -fx-background-radius: 40px;
+    -fx-padding: 0 10 5 10;
+    -fx-border-radius: 40px;
+    -fx-padding: 8px 15px;
+    -fx-font-size: 14px;
+}
+
+.vbox-create-acc {
+    -fx-font-size: 15px;
+    -fx-padding: 0 40px 40px 0;
+}
