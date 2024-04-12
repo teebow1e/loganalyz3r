@@ -1,51 +1,30 @@
-// UI.java
 package com.hust.cyber;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import javafx.scene.layout.Priority;
 
 public class LoginForm extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        // Create a button
-        Button btn = new Button();
-        btn.setText("Say 'Hello'");
+        Label label = new Label("Welcome to the Login Form");
 
-        // Add action to the button
-        btn.setOnAction(event -> {
-            // Create a label with greeting message
-            Label label = new Label("Hello!");
+        VBox vbox = new VBox(10);
+        vbox.getChildren().add(label);
+        VBox.setVgrow(vbox, Priority.ALWAYS);
 
-            // Create a VBox to hold the label
-            VBox vbox = new VBox(label);
-            vbox.setSpacing(10);
+        Scene scene = new Scene(vbox, 1200, 800);
 
-            // Create a new Scene with VBox as the root node
-            Scene scene = new Scene(vbox, 200, 100);
-
-            // Create a new Stage for the popup
-            Stage popupStage = new Stage();
-            popupStage.setScene(scene);
-            popupStage.setTitle("Greeting");
-            popupStage.show();
-        });
-
-        // Create a StackPane layout and add the Button to it
-        StackPane root = new StackPane();
-        root.getChildren().add(btn);
-
-        // Create a Scene with the StackPane as the root node
-        Scene scene = new Scene(root, 300, 250);
-
-        // Set the Scene to the Stage and show the Stage
-        primaryStage.setScene(scene);
-        primaryStage.setTitle("Hello World Example");
-        primaryStage.show();
+        primaryStage.setScene(scene); // Set the scene to the stage
+        primaryStage.setTitle("Login Form"); // Set the stage title
+        primaryStage.show(); // Show the stage
     }
+
 }
