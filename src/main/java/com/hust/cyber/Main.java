@@ -2,8 +2,8 @@ package com.hust.cyber;
 
 public class Main {
     public static void main(String[] args) {
-        System.out.println("Hello world!");
-        System.out.println("Hello Cyber!");
-        System.out.println("xin chao");
+        // Launch the JavaFX application by calling the launch method
+        System.out.println("HELLO");
+        LoginForm.launch(LoginForm.class, args);
     }
 }
