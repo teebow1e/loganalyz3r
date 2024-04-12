@@ -17,7 +17,7 @@ public class LoginForm extends Application {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("fxml/LoginForm.fxml")));
 
         // Create a Scene with the loaded root
-        Scene scene = new Scene(root, 300, 200);
+        Scene scene = new Scene(root, 800, 600);
 
         // Set the Scene to the Stage and show the Stage
         primaryStage.setScene(scene);
