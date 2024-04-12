@@ -13,7 +13,8 @@ public class LoginForm extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         // Load the FXML file
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("LoginForm.fxml")));
+        System.out.println("test");
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("fxml/LoginForm.fxml")));
 
         // Create a Scene with the loaded root
         Scene scene = new Scene(root, 300, 200);

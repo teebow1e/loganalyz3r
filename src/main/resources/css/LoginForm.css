@@ -1,0 +1,4 @@
+.login-label {
+    -fx-font-size: 60px;
+    -fx-text-fill: #00FFFF; /* Change the text color */
+}
