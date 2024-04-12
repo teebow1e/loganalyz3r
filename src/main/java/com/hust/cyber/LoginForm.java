@@ -1,30 +1,27 @@
 package com.hust.cyber;
 
 import javafx.application.Application;
-import javafx.event.ActionEvent;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import javafx.scene.layout.Priority;
+
+import java.util.Objects;
 
 public class LoginForm extends Application {
 
     @Override
-    public void start(Stage primaryStage) {
-        Label label = new Label("Welcome to the Login Form");
+    public void start(Stage primaryStage) throws Exception {
+        // Load the FXML file
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("LoginForm.fxml")));
 
-        VBox vbox = new VBox(10);
-        vbox.getChildren().add(label);
-        VBox.setVgrow(vbox, Priority.ALWAYS);
+        // Create a Scene with the loaded root
+        Scene scene = new Scene(root, 300, 200);
 
-        Scene scene = new Scene(vbox, 1200, 800);
-
-        primaryStage.setScene(scene); // Set the scene to the stage
-        primaryStage.setTitle("Login Form"); // Set the stage title
-        primaryStage.show(); // Show the stage
+        // Set the Scene to the Stage and show the Stage
+        primaryStage.setScene(scene);
+        primaryStage.setTitle("Login Form");
+        primaryStage.show();
     }
 
 }
