@@ -1,10 +1,7 @@
 name: SonarQube-test
 
 on:
-  issues:
-    types: [opened, reopened, closed]
-  issue_comment:
-    types: [created, edited, deleted]
+  push:
 
 jobs:
   build:
