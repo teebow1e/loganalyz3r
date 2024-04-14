@@ -1,0 +1,74 @@
+.Vbox-main {
+    -fx-background-image: url("/img/Login-BG.jpg");
+    -fx-background-size: cover;
+    -fx-background-position: center;
+}
+
+.Vbox-content {
+    -fx-min-width: 500px;
+    -fx-min-height: 500px;
+    -fx-max-width: 500px;
+    -fx-max-height: 500px;
+    -fx-border-width: 2px;
+    -fx-border-color: black;
+    -fx-border-radius: 40px;
+    -fx-background-color: white;
+    -fx-background-radius: 40px;
+}
+
+.Vbox-login-label {
+    -fx-padding: 0 0 0 0;
+}
+
+.login-label {
+    -fx-font-size: 30px;
+    -fx-text-fill: #000000;
+    -fx-alignment: center;
+}
+
+.Vbox-text-box {
+    -fx-padding: 0 100px 0 100px;
+}
+
+.text-box {
+    -fx-background-radius: 40px;
+    -fx-padding: 0 10 5 10;
+    -fx-border-radius: 40px;
+    -fx-padding: 8px 15px;
+    -fx-font-size: 14px;
+}
+
+.create-account-label {
+    -fx-text-fill: #387eee;
+}
+
+.create-account-label:hover {
+    -fx-underline: true;
+    -fx-cursor: hand;
+    cursor: pointer;
+}
+
+.clicked {
+    -fx-text-fill: purple;
+}
+
+.Vbox-sign-up-button {
+    -fx-padding: 20px 0 0 0;
+    -fx-pref-width: 400px;
+    -fx-max-width: 400px;
+}
+
+.button-sign-up {
+    -fx-background-color: #059dbc;
+    -fx-cursor: pointer;
+    -fx-pref-width: 200px;
+    -fx-max-width: 200px;
+    -fx-padding: 5px 0 5px 0;
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.button-sign-up:hover {
+    -fx-background-color: #346d77;
+}

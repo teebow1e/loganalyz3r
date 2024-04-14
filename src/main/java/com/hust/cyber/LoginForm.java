@@ -2,7 +2,6 @@ package com.hust.cyber;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -12,15 +11,13 @@ public class LoginForm extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // Load the FXML file
-        System.out.println("test");
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("fxml/LoginForm.fxml")));
+        Scene loginscene = new Scene(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/LoginForm.fxml"))), 1200, 800);
 
-        // Create a Scene with the loaded root
-        Scene scene = new Scene(root, 800, 600);
+        loginscene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/Form.css")).toExternalForm());
 
-        // Set the Scene to the Stage and show the Stage
-        primaryStage.setScene(scene);
+        loginscene.getRoot().setOnMouseClicked(event -> loginscene.getRoot().requestFocus());
+
+        primaryStage.setScene(loginscene);
         primaryStage.setTitle("Log Analyzer");
         primaryStage.show();
     }
