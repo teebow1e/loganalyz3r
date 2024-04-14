@@ -18,4 +18,10 @@ public class LoginFormController {
         SignUpForm signUpForm = new SignUpForm();
         signUpForm.start(stage);
     }
+
+    @FXML
+    private void handleSubmitAccount(MouseEvent event) throws Exception{
+        LoginForm loginForm = new LoginForm();
+        loginForm.start(stage);
+    }
 }

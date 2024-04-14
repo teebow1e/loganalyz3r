@@ -21,6 +21,8 @@ public class SignUpForm {
         primaryStage.setScene(scene);
         primaryStage.show();
 
+        root.setOnMouseClicked(event -> scene.getRoot().requestFocus());
+
         LoginFormController controller = loader.getController();
         controller.init(primaryStage);
     }

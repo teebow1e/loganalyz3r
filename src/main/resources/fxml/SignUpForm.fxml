@@ -16,7 +16,7 @@
         </VBox>
 
         <VBox alignment="CENTER" spacing="10" styleClass="Vbox-sign-up-button">
-            <Button text="Submit" styleClass="button-sign-up"/>
+            <Button text="Submit" styleClass="button-sign-up" onMouseClicked="#handleSubmitAccount"/>
         </VBox>
     </VBox>
 </VBox>

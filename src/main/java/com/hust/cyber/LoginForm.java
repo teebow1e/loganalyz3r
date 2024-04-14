@@ -16,15 +16,15 @@ public class LoginForm extends Application {
         Parent root = loader.load();
 
         Scene scene = new Scene(root, 1200, 800);
-
         scene.getStylesheets().add(getClass().getResource("/css/Form.css").toExternalForm());
 
         primaryStage.setTitle("Login");
         primaryStage.setScene(scene);
         primaryStage.show();
 
+        root.setOnMouseClicked(event -> scene.getRoot().requestFocus());
+
         LoginFormController controller = loader.getController();
         controller.init(primaryStage);
     }
-
 }
