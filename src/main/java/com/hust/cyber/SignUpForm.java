@@ -1,6 +1,7 @@
 package com.hust.cyber;
 
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -9,14 +10,18 @@ import java.util.Objects;
 
 public class SignUpForm {
     public void start(Stage primaryStage) throws IOException {
-        Scene signUpScene = new Scene(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/SignUpForm.fxml"))), 1200, 800);
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SignUpForm.fxml"));
+        Parent root = loader.load();
 
-        signUpScene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/Form.css")).toExternalForm());
+        Scene scene = new Scene(root, 1200, 800);
 
-        signUpScene.getRoot().setOnMouseClicked(event -> signUpScene.getRoot().requestFocus());
+        scene.getStylesheets().add(getClass().getResource("/css/Form.css").toExternalForm());
 
-        primaryStage.setScene(signUpScene);
         primaryStage.setTitle("Sign Up");
+        primaryStage.setScene(scene);
         primaryStage.show();
+
+        LoginFormController controller = loader.getController();
+        controller.init(primaryStage);
     }
 }

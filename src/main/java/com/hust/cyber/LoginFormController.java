@@ -6,14 +6,16 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class LoginFormController {
+    private Stage stage;
+
+    // Method to initialize the stage
+    public void init(Stage stage) {
+        this.stage = stage;
+    }
+
     @FXML
-    private void handleCreateAccount(MouseEvent event) {
-        try {
-            SignUpForm signUpForm = new SignUpForm();
-            Stage stage = new Stage(); // Create a new stage for the sign-up form
-            signUpForm.start(stage); // Open the sign-up form
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+    private void handleCreateAccount(MouseEvent event) throws Exception{
+        SignUpForm signUpForm = new SignUpForm();
+        signUpForm.start(stage);
     }
 }

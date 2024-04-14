@@ -2,24 +2,29 @@ package com.hust.cyber;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.util.Objects;
+import java.io.IOException;
 
 public class LoginForm extends Application {
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        Scene loginscene = new Scene(FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/fxml/LoginForm.fxml"))), 1200, 800);
+    public void start(Stage primaryStage) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/LoginForm.fxml"));
+        Parent root = loader.load();
 
-        loginscene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/Form.css")).toExternalForm());
+        Scene scene = new Scene(root, 1200, 800);
 
-        loginscene.getRoot().setOnMouseClicked(event -> loginscene.getRoot().requestFocus());
+        scene.getStylesheets().add(getClass().getResource("/css/Form.css").toExternalForm());
 
-        primaryStage.setScene(loginscene);
-        primaryStage.setTitle("Log Analyzer");
+        primaryStage.setTitle("Login");
+        primaryStage.setScene(scene);
         primaryStage.show();
+
+        LoginFormController controller = loader.getController();
+        controller.init(primaryStage);
     }
 
 }
