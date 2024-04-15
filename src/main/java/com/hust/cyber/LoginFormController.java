@@ -3,7 +3,7 @@ package com.hust.cyber;
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import java.io.IOException;
+import javafx.scene.control.*;
 
 public class LoginFormController {
     private Stage stage;
@@ -14,14 +14,41 @@ public class LoginFormController {
     }
 
     @FXML
+    private TextField usernameField;
+
+    @FXML
+    private TextField passwordField;
+
+    @FXML
+    private TextField rePasswordField;
+
+    @FXML
     private void handleCreateAccount(MouseEvent event) throws Exception{
         SignUpForm signUpForm = new SignUpForm();
         signUpForm.start(stage);
     }
 
     @FXML
-    private void handleSubmitAccount(MouseEvent event) throws Exception{
+    private void returnToLogin(MouseEvent event) throws Exception{
         LoginForm loginForm = new LoginForm();
         loginForm.start(stage);
+    }
+    @FXML
+    private void handleSignupAccount(MouseEvent event) throws Exception{
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+        String rePassword = rePasswordField.getText();
+
+        System.out.println("Username: " + username);
+        System.out.println("Password: " + password);
+        System.out.println("Re-entered Password: " + rePassword);
+
+        LoginForm loginForm = new LoginForm();
+        loginForm.start(stage);
+    }
+
+    @FXML
+    private void handleLoginAccount(MouseEvent event) throws Exception {
+        System.out.println("CHECK Login account");
     }
 }

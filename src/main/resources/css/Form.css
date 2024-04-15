@@ -1,3 +1,17 @@
+.Vbox-return {
+    -fx-padding: 40px 0 60px 40px; /* top right bottom left */
+}
+
+.return-label {
+    -fx-text-fill: #387eee;
+}
+
+.return-label:hover {
+    -fx-underline: true;
+    -fx-cursor: hand;
+    cursor: pointer;
+}
+
 .Vbox-main {
     -fx-background-image: url("/img/Login-BG.jpg");
     -fx-background-size: cover;
@@ -52,23 +66,17 @@
     -fx-text-fill: purple;
 }
 
-.Vbox-sign-up-button {
-    -fx-padding: 20px 0 0 0;
-    -fx-pref-width: 400px;
-    -fx-max-width: 400px;
-}
-
-.button-sign-up {
+.button {
     -fx-background-color: #059dbc;
     -fx-cursor: pointer;
-    -fx-pref-width: 200px;
-    -fx-max-width: 200px;
+    -fx-pref-width: 400px;
+    -fx-max-width: 400px;
     -fx-padding: 5px 0 5px 0;
     -fx-font-size: 16px;
     -fx-font-weight: bold;
     -fx-text-fill: white;
 }
 
-.button-sign-up:hover {
+.button:hover {
     -fx-background-color: #346d77;
 }

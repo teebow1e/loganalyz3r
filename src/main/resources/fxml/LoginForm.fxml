@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.layout.VBox?>
-<?import javafx.scene.layout.HBox?>
-<?import javafx.scene.control.TextField?>
-
-<!-- Declare stylesheet in tag -->
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
 
 <VBox alignment="CENTER" spacing="10" xmlns="http://javafx.com/javafx/17.0.10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.hust.cyber.LoginFormController" styleClass="Vbox-main">
     <VBox alignment="CENTER" spacing="10" styleClass="Vbox-content">
@@ -14,7 +10,8 @@
 
         <VBox alignment="CENTER" spacing="10" styleClass="Vbox-text-box">
             <TextField promptText="Enter username" styleClass="text-box"/>
-            <TextField promptText="Enter password" styleClass="text-box"/>
+            <PasswordField promptText="Enter password" styleClass="text-box"/>
+            <Button text="Login" styleClass="button" onMouseClicked="#handleLoginAccount"/>
             <Label text="Create Account" styleClass="create-account-label" onMouseClicked="#handleCreateAccount"/>
         </VBox>
     </VBox>
