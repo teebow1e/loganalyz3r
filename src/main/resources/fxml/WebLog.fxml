@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <VBox spacing="10" styleClass="Vbox-sidebar">
+        <Label text="Log Analyzer" styleClass="side-bar-label"/>
+        <Label text="Log Analyzer" styleClass="side-bar-label"/>
+        <Label text="Log Analyzer" styleClass="side-bar-label"/>
+        <Label text="Log Analyzer" styleClass="side-bar-label"/>
+    </VBox>
+
+    <VBox styleClass="Vbox-main" HBox.hgrow="ALWAYS">
+        <Label text="Log Analyzer"/>
+    </VBox>
+</HBox>

@@ -1,0 +1,14 @@
+.Vbox-sidebar {
+    -fx-background-color: #000000;
+    -fx-pref-width: 200px;
+    -fx-alignment: TOP_CENTER;
+}
+
+.Vbox-main {
+    -fx-background-color: #00FF00;
+}
+
+.side-bar-label {
+    -fx-alignment: center;
+    -fx-text-fill: white;
+}

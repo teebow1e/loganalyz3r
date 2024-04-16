@@ -2,7 +2,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="CENTER" spacing="10" xmlns="http://javafx.com/javafx/17.0.10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.hust.cyber.LoginController" styleClass="Vbox-main">
+<VBox alignment="CENTER" spacing="10" xmlns="http://javafx.com/javafx/17.0.10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.hust.cyber.Controller" styleClass="Vbox-main">
     <VBox spacing="10" styleClass="Vbox-content">
         <VBox spacing="10" styleClass="Vbox-return">
             <Label text="Return to Login" styleClass="return-label" onMouseClicked="#returnToLogin"/>
@@ -18,6 +18,5 @@
             <PasswordField fx:id="rePasswordField" promptText="Re-Enter password" styleClass="text-box"/>
             <Button text="Submit" styleClass="button-sign-up" onMouseClicked="#handleSignupAccount"/>
         </VBox>
-
     </VBox>
 </VBox>

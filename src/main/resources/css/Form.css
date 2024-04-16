@@ -23,19 +23,19 @@
     -fx-min-height: 500px;
     -fx-max-width: 500px;
     -fx-max-height: 500px;
-    -fx-border-width: 2px;
-    -fx-border-color: black;
     -fx-border-radius: 40px;
     -fx-background-color: white;
+    -fx-opacity: 0.925;
     -fx-background-radius: 40px;
 }
 
 .Vbox-login-label {
-    -fx-padding: 0 0 0 0;
+
 }
 
 .login-label {
-    -fx-font-size: 30px;
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
     -fx-text-fill: #000000;
     -fx-alignment: center;
 }
@@ -46,9 +46,8 @@
 
 .text-box {
     -fx-background-radius: 40px;
-    -fx-padding: 0 10 5 10;
     -fx-border-radius: 40px;
-    -fx-padding: 8px 15px;
+    -fx-padding: 10px 15px;
     -fx-font-size: 14px;
 }
 
