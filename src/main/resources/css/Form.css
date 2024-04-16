@@ -1,4 +1,4 @@
-.Vbox-return {
+.return-wrapper {
     -fx-padding: 40px 0 60px 40px; /* top right bottom left */
 }
 
@@ -12,13 +12,13 @@
     cursor: pointer;
 }
 
-.Vbox-main {
+.main {
     -fx-background-image: url("/img/Login-BG.jpg");
     -fx-background-size: cover;
     -fx-background-position: center;
 }
 
-.Vbox-content {
+.content-wrapper {
     -fx-min-width: 500px;
     -fx-min-height: 500px;
     -fx-max-width: 500px;
@@ -29,7 +29,7 @@
     -fx-background-radius: 40px;
 }
 
-.Vbox-login-label {
+.login-wrapper {
 
 }
 
@@ -40,7 +40,7 @@
     -fx-alignment: center;
 }
 
-.Vbox-text-box {
+.textbox-wrapper {
     -fx-padding: 0 100px 0 100px;
 }
 

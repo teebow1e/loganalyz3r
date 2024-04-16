@@ -1,14 +1,31 @@
-.Vbox-sidebar {
+.sidebar {
     -fx-background-color: #000000;
     -fx-pref-width: 200px;
+}
+
+.sidebar-content-wrapper {
     -fx-alignment: TOP_CENTER;
+    -fx-padding: 40px 20px 40px 20px; /* top right bottom left */
 }
 
-.Vbox-main {
-    -fx-background-color: #00FF00;
-}
-
-.side-bar-label {
+.sidebar-content-label {
+    -fx-min-width: 150px;
+    -fx-min-height: 40px;
+    -fx-padding: 10px 20px 10px 20px;
     -fx-alignment: center;
     -fx-text-fill: white;
+    -fx-font-size: 20px;
+    -fx-background-radius: 4px;
+}
+
+.sidebar-content-label:hover {
+    -fx-background-color: #939c9d;
+}
+
+.signout-wrapper{
+    -fx-alignment: BOTTOM_CENTER;
+}
+
+.main {
+    -fx-background-color: #00FF00;
 }

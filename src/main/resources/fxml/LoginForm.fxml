@@ -2,13 +2,13 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="CENTER" spacing="10" xmlns="http://javafx.com/javafx/17.0.10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.hust.cyber.Controller" styleClass="Vbox-main">
-    <VBox alignment="CENTER" spacing="10" styleClass="Vbox-content">
-        <VBox alignment="CENTER" spacing="10" styleClass="Vbox-login-label">
-            <Label text="Log Analyzer" styleClass="login-label"/>
+<VBox alignment="CENTER" spacing="10" xmlns="http://javafx.com/javafx/17.0.10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.hust.cyber.Controller" styleClass="main">
+    <VBox alignment="CENTER" spacing="10" styleClass="content-wrapper">
+        <VBox alignment="CENTER" spacing="10" styleClass="login-wrapper">
+            <Label text="Sign In" styleClass="login-label"/>
         </VBox>
 
-        <VBox alignment="CENTER" spacing="10" styleClass="Vbox-text-box">
+        <VBox alignment="CENTER" spacing="10" styleClass="textbox-wrapper">
             <TextField promptText="Enter username" styleClass="text-box"/>
             <PasswordField promptText="Enter password" styleClass="text-box"/>
             <Button text="Login" styleClass="button" onMouseClicked="#handleLoginAccount"/>

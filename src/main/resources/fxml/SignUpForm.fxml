@@ -2,21 +2,22 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="CENTER" spacing="10" xmlns="http://javafx.com/javafx/17.0.10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.hust.cyber.Controller" styleClass="Vbox-main">
-    <VBox spacing="10" styleClass="Vbox-content">
-        <VBox spacing="10" styleClass="Vbox-return">
+<VBox alignment="CENTER" spacing="10" xmlns="http://javafx.com/javafx/17.0.10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.hust.cyber.Controller" styleClass="main">
+    <VBox spacing="10" styleClass="content-wrapper">
+        <VBox spacing="10" styleClass="return-wrapper">
             <Label text="Return to Login" styleClass="return-label" onMouseClicked="#returnToLogin"/>
         </VBox>
 
-        <VBox alignment="CENTER" spacing="10" styleClass="Vbox-login-label">
+        <VBox alignment="CENTER" spacing="10" styleClass="login-wrapper">
             <Label text="Sign Up" styleClass="login-label"/>
         </VBox>
 
-        <VBox alignment="CENTER" spacing="10" styleClass="Vbox-text-box">
+        <VBox alignment="CENTER" spacing="10" styleClass="textbox-wrapper">
             <TextField fx:id="usernameField" promptText="Enter username" styleClass="text-box"/>
             <PasswordField fx:id="passwordField" promptText="Enter password" styleClass="text-box"/>
             <PasswordField fx:id="rePasswordField" promptText="Re-Enter password" styleClass="text-box"/>
             <Button text="Submit" styleClass="button-sign-up" onMouseClicked="#handleSignupAccount"/>
         </VBox>
+
     </VBox>
 </VBox>
