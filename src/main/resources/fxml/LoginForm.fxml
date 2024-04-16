@@ -2,7 +2,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="CENTER" spacing="10" xmlns="http://javafx.com/javafx/17.0.10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.hust.cyber.LoginFormController" styleClass="Vbox-main">
+<VBox alignment="CENTER" spacing="10" xmlns="http://javafx.com/javafx/17.0.10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.hust.cyber.LoginController" styleClass="Vbox-main">
     <VBox alignment="CENTER" spacing="10" styleClass="Vbox-content">
         <VBox alignment="CENTER" spacing="10" styleClass="Vbox-login-label">
             <Label text="Login" styleClass="login-label"/>

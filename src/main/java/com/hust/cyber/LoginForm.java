@@ -24,7 +24,7 @@ public class LoginForm extends Application {
 
         root.setOnMouseClicked(event -> scene.getRoot().requestFocus());
 
-        LoginFormController controller = loader.getController();
+        LoginController controller = loader.getController();
         controller.init(primaryStage);
     }
 }

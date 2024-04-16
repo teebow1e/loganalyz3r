@@ -5,7 +5,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.scene.control.*;
 
-public class LoginFormController {
+public class LoginController {
     private Stage stage;
 
     // Method to initialize the stage

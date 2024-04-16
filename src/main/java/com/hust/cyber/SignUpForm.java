@@ -6,7 +6,6 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Objects;
 
 public class SignUpForm {
     public void start(Stage primaryStage) throws IOException {
@@ -23,7 +22,7 @@ public class SignUpForm {
 
         root.setOnMouseClicked(event -> scene.getRoot().requestFocus());
 
-        LoginFormController controller = loader.getController();
+        LoginController controller = loader.getController();
         controller.init(primaryStage);
     }
 }
