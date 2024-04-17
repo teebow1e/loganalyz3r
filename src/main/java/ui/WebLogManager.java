@@ -1,4 +1,4 @@
-package UI;
+package ui;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -8,23 +8,22 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-public class LoginForm extends Application {
-
+public class WebLogManager extends Application {
     @Override
     public void start(Stage primaryStage) throws IOException {
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/LoginForm.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/WebLog.fxml"));
         Parent root = loader.load();
 
-        Scene scene = new Scene(root, 1000, 600);
-        scene.getStylesheets().add(getClass().getResource("/css/Form.css").toExternalForm());
+        Scene scene = new Scene(root, 1200, 800);
+        scene.getStylesheets().add(getClass().getResource("/css/WebLog.css").toExternalForm());
 
-        primaryStage.setTitle("Login");
+        primaryStage.setTitle("Web Log Analyzer");
         primaryStage.setScene(scene);
         primaryStage.show();
 
         root.setOnMouseClicked(event -> scene.getRoot().requestFocus());
 
-        Controller controller = loader.getController();
-        controller.init(primaryStage);
+//        Controller controller = loader.getController();
+//        controller.init(primaryStage);
     }
 }

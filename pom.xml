@@ -15,7 +15,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
-                    <mainClass>UI.Main</mainClass>
+                    <mainClass>ui.Main</mainClass>
                 </configuration>
             </plugin>
             <plugin>
@@ -23,7 +23,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>UI.Main</mainClass>
+                    <mainClass>ui.Main</mainClass>
                 </configuration>
             </plugin>
         </plugins>
