@@ -1,4 +1,4 @@
-package com.hust.cyber;
+package UI;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

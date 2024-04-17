@@ -1,4 +1,4 @@
-package com.hust.cyber;
+package UI;
 
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
