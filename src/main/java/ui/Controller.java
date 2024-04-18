@@ -27,7 +27,7 @@ public class Controller {
         if (dbFile.exists()) {
             userLists = UserManagement.readUserFile(dbFilePath);
         } else {
-            logger.log(Level.SEVERE, "DB file not exists: " + dbFile.getAbsolutePath());
+            logger.log(Level.SEVERE, "DB file not exists: {0}", dbFile.getAbsolutePath());
         }
         this.stage = stage;
     }

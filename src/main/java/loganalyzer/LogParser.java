@@ -84,7 +84,7 @@ public class LogParser {
         if (parsedLog != null) {
             return (parsedLog.replace("\"", "")).split(" ");
         } else {
-            return null;
+            return new String[0];
         }
     }
 }
