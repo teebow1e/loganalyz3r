@@ -49,6 +49,20 @@ public class Controller {
 
     @FXML
     private void handleLoginAccount(MouseEvent event) throws Exception {
-        System.out.println("CHECK Login account");
+        String username = usernameField.getText();
+        String password = passwordField.getText();
+
+        System.out.println("Username: " + username);
+        System.out.println("Password: " + password);
+
+        WebLogManager webLogManager = new WebLogManager();
+        webLogManager.start(stage);
+    }
+
+    @FXML
+    private void handleLogout(MouseEvent event) throws Exception {
+        LoginForm loginForm = new LoginForm();
+        stage.close();
+        loginForm.start(new Stage());
     }
 }

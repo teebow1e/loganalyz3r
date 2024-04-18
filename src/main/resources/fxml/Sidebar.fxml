@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox styleClass="sidebar" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="ui.SidebarController">
+    <VBox spacing="15" styleClass="sidebar-content-wrapper">
+        <Label text="Dashboard" styleClass="sidebar-content-label">
+            <graphic>
+                <ImageView>
+                    <Image url="@/img/dashboard.png"/>
+                </ImageView>
+            </graphic>
+        </Label>
+
+        <Label text="View Logs" styleClass="sidebar-content-label">
+            <graphic>
+                <ImageView>
+                    <Image url="@/img/log.png"/>
+                </ImageView>
+            </graphic>
+        </Label>
+
+        <Label text="Feed Back" styleClass="sidebar-content-label">
+            <graphic>
+                <ImageView>
+                    <Image url="@/img/feedback.png"/>
+                </ImageView>
+            </graphic>
+        </Label>
+
+        <Label text="Export" styleClass="sidebar-content-label">
+            <graphic>
+                <ImageView>
+                    <Image url="@/img/export.png"/>
+                </ImageView>
+            </graphic>
+        </Label>
+
+        <Label text="Manage logs" styleClass="sidebar-content-label">
+            <graphic>
+                <ImageView>
+                    <Image url="@/img/manage.png"/>
+                </ImageView>
+            </graphic>
+        </Label>
+
+        <Label text="Log out" styleClass="sidebar-content-label" onMouseClicked="#handleLogout">
+            <graphic>
+                <ImageView>
+                    <Image url="@/img/logout.png"/>
+                </ImageView>
+            </graphic>
+        </Label>
+    </VBox>
+</VBox>
