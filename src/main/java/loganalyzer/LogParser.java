@@ -15,6 +15,7 @@ public class LogParser {
     private static final Pattern userAgentPattern = Pattern.compile("\"([^\"]*)\"[^\"]*$");
     private static final Pattern allInOnePattern = Pattern.compile("\"(GET|HEAD|POST|PUT|DELETE|CONNECT|OPTIONS|TRACE|PATCH) \\/[a-zA-Z0-9.\\-_~!$&'()*+,;=:@]+ (HTTP|HTTPS)\\/\\d+(\\.\\d+)*\" \\d{3}(\\.\\d+)? \\d+");
     public static void main(String[] args) {
+        // aio pattern: "(GET|HEAD|POST|PUT|DELETE|CONNECT|OPTIONS|TRACE|PATCH) \/[a-zA-Z0-9.\-_~!$&'()*+,;=:@]+ (HTTP|HTTPS)\/\d+(\.\d+)*" \d{3}(\.\d+)? \d+
         Logger logger = Logger.getLogger(LogParser.class.getName());
         String logFilePath = System.getProperty("user.dir") + "/logs/apache_nginx/access_log_50000.log";
         Path logPath = Paths.get(logFilePath);
@@ -29,16 +30,16 @@ public class LogParser {
                     System.out.println("Timestamp: " + parseTimestamp(workingLine));
                     System.out.println("UserAgent: " + parseUserAgent(workingLine));
                     String[] allInOne = parseAllInOne(workingLine);
-                    if (allInOne != null) {
-                        System.out.println("Method: " + allInOne[0]);
-                        System.out.println("Path: " + allInOne[1]);
-                        System.out.println("Protocol: " + allInOne[2]);
-                        System.out.println("Status Code: " + allInOne[3]);
-                        System.out.println("Content Length: " + allInOne[4]);
-                    }
+
+                    System.out.println("Method: " + allInOne[0]);
+                    System.out.println("Path: " + allInOne[1]);
+                    System.out.println("Protocol: " + allInOne[2]);
+                    System.out.println("Status Code: " + allInOne[3]);
+                    System.out.println("Content Length: " + allInOne[4]);
+
                     System.out.println("------------------------------------------------");
                     lineCount++;
-                    if (lineCount >= 50000) {
+                    if (lineCount >= 1) {
                         break;
                     }
                 }
