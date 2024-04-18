@@ -43,10 +43,10 @@ public class LogParser {
                     }
                 }
             } else {
-                logger.log(Level.SEVERE, "Log file not found at location " + logFilePath);
+                logger.log(Level.SEVERE, "Log file not found at location {0}", logFilePath);
             }
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "Error reading log file: " + e.getMessage());
+            logger.log(Level.SEVERE, "Error reading log file: {0}", e.getMessage());
         }
     }
 
