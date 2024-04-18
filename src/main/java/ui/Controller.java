@@ -19,10 +19,9 @@ public class Controller {
     private Stage stage;
     private List<User> userLists;
     // Not sure if declare logger here is correct
-    private Logger logger;
+    private final Logger logger = Logger.getLogger(Controller.class.getName());
 
     public void init(Stage stage) {
-        Logger logger = new Logger.getLogger(Controller.class.getName());
         String dbFilePath = System.getProperty("user.dir") + "\\credentials\\cred.txt";
         File dbFile = new File(dbFilePath);
         if (dbFile.exists()) {
@@ -44,7 +43,6 @@ public class Controller {
 
     @FXML
     private void onEnter(ActionEvent ae) throws Exception {
-        logger.log(Level.INFO, "Enter key pressed");
         handleLoginAccount(null);
     }
     @FXML
