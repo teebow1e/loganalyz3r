@@ -9,8 +9,8 @@
         </VBox>
 
         <VBox alignment="CENTER" spacing="10" styleClass="textbox-wrapper">
-            <TextField fx:id="usernameField" promptText="Enter username" styleClass="text-box"/>
-            <PasswordField fx:id="passwordField" promptText="Enter password" styleClass="text-box"/>
+            <TextField fx:id="usernameField" promptText="Enter username" styleClass="text-box" onAction="#onEnter"/>
+            <PasswordField fx:id="passwordField" promptText="Enter password" styleClass="text-box" onAction="#onEnter"/>
             <Button text="Login" styleClass="button" onMouseClicked="#handleLoginAccount"/>
             <Label text="Create Account" styleClass="create-account-label" onMouseClicked="#handleCreateAccount"/>
         </VBox>
