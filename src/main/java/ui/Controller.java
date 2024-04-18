@@ -12,19 +12,23 @@ import javax.swing.JOptionPane;
 
 import java.io.File;
 import java.util.List;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class Controller {
     private Stage stage;
-    public List<User> userLists;
+    private List<User> userLists;
+    // Not sure if declare logger here is correct
+    private Logger logger;
 
     public void init(Stage stage) {
+        Logger logger = new Logger.getLogger(Controller.class.getName());
         String dbFilePath = System.getProperty("user.dir") + "\\credentials\\cred.txt";
         File dbFile = new File(dbFilePath);
         if (dbFile.exists()) {
-            System.out.println("exists: " + dbFile.getAbsolutePath());
             userLists = UserManagement.readUserFile(dbFilePath);
         } else {
-            System.out.println("not exists: " + dbFile.getAbsolutePath());
+            logger.log(Level.SEVERE, "DB file not exists: " + dbFile.getAbsolutePath());
         }
         this.stage = stage;
     }
@@ -40,7 +44,7 @@ public class Controller {
 
     @FXML
     private void onEnter(ActionEvent ae) throws Exception {
-        System.out.println("Key Enter clicked");
+        logger.log(Level.INFO, "Enter key pressed");
         handleLoginAccount(null);
     }
     @FXML
@@ -77,11 +81,11 @@ public class Controller {
         System.out.println("Password: " + password);
         boolean authenticated = UserManagement.authenticateUser(userLists, username, password);
         if (authenticated) {
-            System.out.println("Login successful");
+            logger.log(Level.INFO, "Login successful");
             WebLogManager webLogManager = new WebLogManager();
             webLogManager.start(stage);
         } else {
-            System.out.println("Login failed");
+            logger.log(Level.INFO, "Login failed");
             JOptionPane.showMessageDialog(null, "Nhap sai password roi cu!");
         }
     }

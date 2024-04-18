@@ -6,6 +6,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import java.util.regex.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class LogParser {
     private static final Pattern ipAddrPattern = Pattern.compile("(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})");
@@ -13,7 +15,8 @@ public class LogParser {
     private static final Pattern userAgentPattern = Pattern.compile("\"([^\"]*)\"[^\"]*$");
     private static final Pattern allInOnePattern = Pattern.compile("\"(GET|HEAD|POST|PUT|DELETE|CONNECT|OPTIONS|TRACE|PATCH) \\/[a-zA-Z0-9.\\-_~!$&'()*+,;=:@]+ (HTTP|HTTPS)\\/\\d+(\\.\\d+)*\" \\d{3}(\\.\\d+)? \\d+");
     public static void main(String[] args) {
-        String logFilePath = System.getProperty("user.dir") + "/logs/apache_nginx/access_log_10000.log";
+        Logger logger = Logger.getLogger(LogParser.class.getName());
+        String logFilePath = System.getProperty("user.dir") + "/logs/apache_nginx/access_log_50000.log";
         Path logPath = Paths.get(logFilePath);
 
         try {
@@ -35,15 +38,15 @@ public class LogParser {
                     }
                     System.out.println("------------------------------------------------");
                     lineCount++;
-                    if (lineCount >= 10000) {
+                    if (lineCount >= 50000) {
                         break;
                     }
                 }
             } else {
-                System.out.println("Log file does not exist: " + logPath);
+                logger.log(Level.SEVERE, "Log file not found at location " + logFilePath);
             }
         } catch (IOException e) {
-            System.out.println("Error reading log file: " + e.getMessage());
+            logger.log(Level.SEVERE, "Error reading log file: " + e.getMessage());
         }
     }
 
