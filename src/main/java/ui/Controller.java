@@ -59,10 +59,4 @@ public class Controller {
         webLogManager.start(stage);
     }
 
-    @FXML
-    private void handleLogout(MouseEvent event) throws Exception {
-        LoginForm loginForm = new LoginForm();
-        stage.close();
-        loginForm.start(new Stage());
-    }
 }

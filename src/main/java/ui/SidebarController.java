@@ -16,14 +16,9 @@ public class SidebarController {
 
     @FXML
     private void handleLogout(MouseEvent event) throws Exception {
-        // Get the primary stage of the application
         Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
-        // Close the primary stage
-        primaryStage.close();
-
-        // Open the login form in a new stage
         LoginForm loginForm = new LoginForm();
-        loginForm.start(new Stage());
+        loginForm.start(primaryStage);
     }
 }
