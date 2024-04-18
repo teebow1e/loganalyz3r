@@ -1,15 +1,31 @@
 package ui;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.scene.control.*;
+import usermanagement.User;
+import usermanagement.UserManagement;
+
+import javax.swing.JOptionPane;
+
+import java.io.File;
+import java.util.List;
 
 public class Controller {
     private Stage stage;
+    public List<User> userLists;
 
-    // Method to initialize the stage
     public void init(Stage stage) {
+        String dbFilePath = System.getProperty("user.dir") + "\\credentials\\cred.txt";
+        File dbFile = new File(dbFilePath);
+        if (dbFile.exists()) {
+            System.out.println("exists: " + dbFile.getAbsolutePath());
+            userLists = UserManagement.readUserFile(dbFilePath);
+        } else {
+            System.out.println("not exists: " + dbFile.getAbsolutePath());
+        }
         this.stage = stage;
     }
 
@@ -22,6 +38,11 @@ public class Controller {
     @FXML
     private TextField rePasswordField;
 
+    @FXML
+    private void onEnter(ActionEvent ae) throws Exception {
+        System.out.println("Key Enter clicked");
+        handleLoginAccount(null);
+    }
     @FXML
     private void handleCreateAccount(MouseEvent event) throws Exception{
         SignUpForm signUpForm = new SignUpForm();
@@ -54,9 +75,15 @@ public class Controller {
 
         System.out.println("Username: " + username);
         System.out.println("Password: " + password);
-
-        WebLogManager webLogManager = new WebLogManager();
-        webLogManager.start(stage);
+        boolean authenticated = UserManagement.authenticateUser(userLists, username, password);
+        if (authenticated) {
+            System.out.println("Login successful");
+            WebLogManager webLogManager = new WebLogManager();
+            webLogManager.start(stage);
+        } else {
+            System.out.println("Login failed");
+            JOptionPane.showMessageDialog(null, "Nhap sai password roi cu!");
+        }
     }
 
 }

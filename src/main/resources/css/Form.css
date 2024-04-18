@@ -30,11 +30,11 @@
 }
 
 .login-wrapper {
-
+    -fx-padding: 0 0 11px 0;
 }
 
 .login-label {
-    -fx-font-size: 28px;
+    -fx-font-size: 30px;
     -fx-font-weight: bold;
     -fx-text-fill: #000000;
     -fx-alignment: center;
