@@ -1,23 +1,64 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
 
 <HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
-    <VBox spacing="10" styleClass="sidebar">
-        <VBox spacing="10" styleClass="sidebar-content-wrapper">
-            <Label text="Dashboard" styleClass="sidebar-content-label"/>
-            <Label text="View Logs" styleClass="sidebar-content-label"/>
-            <Label text="Feed Back" styleClass="sidebar-content-label"/>
-            <Label text="Export" styleClass="sidebar-content-label"/>
-            <Label text="Manage Logs" styleClass="sidebar-content-label"/>
-        </VBox>
+    <VBox styleClass="sidebar">
+        <VBox spacing="15" styleClass="sidebar-content-wrapper">
+            <Label text="Dashboard" styleClass="sidebar-content-label">
+                <graphic>
+                    <ImageView>
+                        <Image url="@/img/dashboard.png"/>
+                    </ImageView>
+                </graphic>
+            </Label>
 
-        <VBox spacing="10" styleClass="signout-wrapper">
-            <Label text="Sign Out" styleClass="sidebar-content-label"/>
+            <Label text="View Logs" styleClass="sidebar-content-label">
+                <graphic>
+                    <ImageView>
+                        <Image url="@/img/log.png"/>
+                    </ImageView>
+                </graphic>
+            </Label>
+
+            <Label text="Feed Back" styleClass="sidebar-content-label">
+                <graphic>
+                    <ImageView>
+                        <Image url="@/img/feedback.png"/>
+                    </ImageView>
+                </graphic>
+            </Label>
+
+            <Label text="Export" styleClass="sidebar-content-label">
+                <graphic>
+                    <ImageView>
+                        <Image url="@/img/export.png"/>
+                    </ImageView>
+                </graphic>
+            </Label>
+
+            <Label text="Manage logs" styleClass="sidebar-content-label">
+                <graphic>
+                    <ImageView>
+                        <Image url="@/img/manage.png"/>
+                    </ImageView>
+                </graphic>
+            </Label>
+
+            <Label text="Log out" styleClass="sidebar-content-label">
+                <graphic>
+                    <ImageView>
+                        <Image url="@/img/logout.png"/>
+                    </ImageView>
+                </graphic>
+            </Label>
         </VBox>
     </VBox>
 
     <VBox styleClass="main" HBox.hgrow="ALWAYS">
-        <Label text="Log Analyzer"/>
+        <Label text="MAIN CONTENT HERE"/>
     </VBox>
 </HBox>
