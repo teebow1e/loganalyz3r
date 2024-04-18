@@ -1,4 +1,4 @@
-package ui;
+package usermanagement;
 
 public class User {
     private final String username;

@@ -1,11 +1,10 @@
-package ui;
+package usermanagement;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import ui.User;
 
 public class UserManagement {
     public static List<User> readUserFile(String fileName) {

@@ -5,6 +5,9 @@ import javafx.fxml.FXML;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.scene.control.*;
+import usermanagement.User;
+import usermanagement.UserManagement;
+
 import javax.swing.JOptionPane;
 
 import java.io.File;
@@ -15,10 +18,7 @@ public class Controller {
     public List<User> userLists;
 
     public void init(Stage stage) {
-        // moi lan chuyen qua 1 scene no se check lai tu dau
-        // kha ngu nhung ma chua nghi ra solution
-        // chua co authorization
-        String dbFilePath = System.getProperty("user.home") + "\\db.txt";
+        String dbFilePath = System.getProperty("user.dir") + "\\credentials\\cred.txt";
         File dbFile = new File(dbFilePath);
         if (dbFile.exists()) {
             System.out.println("exists: " + dbFile.getAbsolutePath());
