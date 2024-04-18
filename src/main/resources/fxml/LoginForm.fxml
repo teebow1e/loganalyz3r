@@ -2,15 +2,15 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="CENTER" spacing="10" xmlns="http://javafx.com/javafx/17.0.10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.Controller" styleClass="main">
+<VBox alignment="CENTER" spacing="10" xmlns="http://javafx.com/javafx/17.0.10" xmlns:fx="http://javafx.com/fxml" fx:controller="ui.Controller" styleClass="main">
     <VBox alignment="CENTER" spacing="10" styleClass="content-wrapper">
         <VBox alignment="CENTER" spacing="10" styleClass="login-wrapper">
             <Label text="Sign In" styleClass="login-label"/>
         </VBox>
 
         <VBox alignment="CENTER" spacing="10" styleClass="textbox-wrapper">
-            <TextField promptText="Enter username" styleClass="text-box"/>
-            <PasswordField promptText="Enter password" styleClass="text-box"/>
+            <TextField fx:id="usernameField" promptText="Enter username" styleClass="text-box"/>
+            <PasswordField fx:id="passwordField" promptText="Enter password" styleClass="text-box"/>
             <Button text="Login" styleClass="button" onMouseClicked="#handleLoginAccount"/>
             <Label text="Create Account" styleClass="create-account-label" onMouseClicked="#handleCreateAccount"/>
         </VBox>
