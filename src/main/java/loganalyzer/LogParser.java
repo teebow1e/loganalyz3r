@@ -24,7 +24,6 @@ public class LogParser {
         try {
             if (Files.exists(logPath)) {
                 List<String> lines = Files.readAllLines(logPath);
-                int lineCount = 0;
                 for (String workingLine : lines) {
                     System.out.println(workingLine);
                     System.out.println("IP Address: " + parseIpAddress(workingLine));
@@ -39,10 +38,7 @@ public class LogParser {
                         System.out.println("Content Length: " + allInOne[4]);
                     }
                     System.out.println("------------------------------------------------");
-                    lineCount++;
-                    if (lineCount >= 50000) {
-                        break;
-                    }
+
                 }
             } else {
                 logger.log(Level.SEVERE, "Log file not found at location {0}", logFilePath);

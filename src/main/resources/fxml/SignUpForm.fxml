@@ -2,7 +2,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox alignment="CENTER" spacing="10" xmlns="http://javafx.com/javafx/17.0.10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ui.Controller" styleClass="main">
+<VBox alignment="CENTER" spacing="10" xmlns="http://javafx.com/javafx/17.0.10" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controller" styleClass="main">
     <VBox spacing="10" styleClass="content-wrapper">
         <VBox spacing="10" styleClass="return-wrapper">
             <Label text="Return to Login" styleClass="return-label" onMouseClicked="#returnToLogin"/>

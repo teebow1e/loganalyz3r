@@ -5,10 +5,11 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.image.Image?>
 
-<HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="ui.Controller">
+<HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.Controller">
     <fx:include source="Sidebar.fxml"/>
 
     <VBox styleClass="main" HBox.hgrow="ALWAYS">
         <Label text="MAIN CONTENT HERE"/>
+        <fx:include source="PieChart.fxml"/>
     </VBox>
 </HBox>

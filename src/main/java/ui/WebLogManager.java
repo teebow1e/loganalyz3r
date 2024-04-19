@@ -1,16 +1,16 @@
 package ui;
 
+import controller.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
 public class WebLogManager extends Application {
     @Override
-    public void start(Stage primaryStage) throws IOException {
+    public void start(Stage primaryStage) throws Exception {
+        // Load the Dashboard.fxml file
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/Dashboard.fxml"));
         Parent root = loader.load();
 
@@ -23,7 +23,12 @@ public class WebLogManager extends Application {
 
         root.setOnMouseClicked(event -> scene.getRoot().requestFocus());
 
+        // Pass the primary stage to the controller
         Controller controller = loader.getController();
         controller.init(primaryStage);
+    }
+
+    public static void main(String[] args) {
+        launch(args);
     }
 }

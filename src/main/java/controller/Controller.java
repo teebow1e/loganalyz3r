@@ -1,10 +1,18 @@
-package ui;
+package controller;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+
+import javafx.scene.chart.PieChart;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.scene.control.*;
+
+import ui.LoginForm;
+import ui.SignUpForm;
+import ui.WebLogManager;
+
 import usermanagement.User;
 import usermanagement.UserManagement;
 
@@ -21,6 +29,18 @@ public class Controller {
     // Not sure if declare logger here is correct
     private final Logger logger = Logger.getLogger(Controller.class.getName());
 
+    @FXML
+    private TextField usernameField;
+
+    @FXML
+    private TextField passwordField;
+
+    @FXML
+    private TextField rePasswordField;
+
+    @FXML
+    private PieChart pieChart;
+
     public void init(Stage stage) {
         String dbFilePath = System.getProperty("user.dir") + "\\credentials\\cred.txt";
         File dbFile = new File(dbFilePath);
@@ -31,16 +51,6 @@ public class Controller {
         }
         this.stage = stage;
     }
-
-    @FXML
-    private TextField usernameField;
-
-    @FXML
-    private TextField passwordField;
-
-    @FXML
-    private TextField rePasswordField;
-
     @FXML
     private void onEnter(ActionEvent ae) throws Exception {
         handleLoginAccount(null);
