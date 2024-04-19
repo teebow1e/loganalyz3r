@@ -4,16 +4,17 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class LogParser {
-    private static final Pattern ipAddrPattern = Pattern.compile("(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})");
+    private static final Pattern ipAddrPattern = Pattern.compile("((\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})|([0-9a-fA-F]{1,4}(:[0-9a-fA-F]{1,4}){7}))");
     private static final Pattern timestampPattern = Pattern.compile("\\[(\\d{2}/[A-Za-z]{3}/\\d{4}:\\d{2}:\\d{2}:\\d{2} [+\\-]\\d{4})]");
     private static final Pattern userAgentPattern = Pattern.compile("\"([^\"]*)\"[^\"]*$");
-    private static final Pattern allInOnePattern = Pattern.compile("\"(GET|HEAD|POST|PUT|DELETE|CONNECT|OPTIONS|TRACE|PATCH) \\/[a-zA-Z0-9.\\-_~!$&'()*+,;=:@]+ (HTTP|HTTPS)\\/\\d+(\\.\\d+)*\" \\d{3}(\\.\\d+)? \\d+");
+//    private static final Pattern allInOnePattern = Pattern.compile("\"(GET|HEAD|POST|PUT|DELETE|CONNECT|OPTIONS|TRACE|PATCH) \\/[a-zA-Z0-9.\\-_~!$&'()*+,;=:@]+ (HTTP|HTTPS)\\/\\d+(\\.\\d+)*\" \\d{3}(\\.\\d+)? \\d+");
     public static void main(String[] args) {
         // aio pattern: "(GET|HEAD|POST|PUT|DELETE|CONNECT|OPTIONS|TRACE|PATCH) \/[a-zA-Z0-9.\-_~!$&'()*+,;=:@]+ (HTTP|HTTPS)\/\d+(\.\d+)*" \d{3}(\.\d+)? \d+
         Logger logger = Logger.getLogger(LogParser.class.getName());
@@ -30,16 +31,16 @@ public class LogParser {
                     System.out.println("Timestamp: " + parseTimestamp(workingLine));
                     System.out.println("UserAgent: " + parseUserAgent(workingLine));
                     String[] allInOne = parseAllInOne(workingLine);
-
-                    System.out.println("Method: " + allInOne[0]);
-                    System.out.println("Path: " + allInOne[1]);
-                    System.out.println("Protocol: " + allInOne[2]);
-                    System.out.println("Status Code: " + allInOne[3]);
-                    System.out.println("Content Length: " + allInOne[4]);
-
+                    if (allInOne.length >= 5) {
+                        System.out.println("Method: " + allInOne[0]);
+                        System.out.println("Path: " + allInOne[1]);
+                        System.out.println("Protocol: " + allInOne[2]);
+                        System.out.println("Status Code: " + allInOne[3]);
+                        System.out.println("Content Length: " + allInOne[4]);
+                    }
                     System.out.println("------------------------------------------------");
                     lineCount++;
-                    if (lineCount >= 1) {
+                    if (lineCount >= 50000) {
                         break;
                     }
                 }
@@ -61,7 +62,6 @@ public class LogParser {
     }
 
     public static String parseIpAddress(String logLine) {
-        // chua handle truong hop ipv6
         return findFirstMatch(logLine, ipAddrPattern.pattern());
     }
     public static String parseTimestamp(String logLine) {
@@ -81,11 +81,11 @@ public class LogParser {
         }
     }
     public static String[] parseAllInOne(String logLine) {
-        String parsedLog = findFirstMatch(logLine, allInOnePattern.pattern());
-        if (parsedLog != null) {
-            return (parsedLog.replace("\"", "")).split(" ");
-        } else {
-            return new String[0];
+        String[] aioParts = logLine.split(" ");
+        String[] finalAio = Arrays.copyOfRange(aioParts, 5, 10);
+        for (int i = 0; i < finalAio.length; i++) {
+            finalAio[i] = finalAio[i].replace("\"", "");
         }
+        return finalAio;
     }
 }
