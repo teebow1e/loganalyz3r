@@ -1,4 +1,4 @@
-name: SonarQube-test
+name: SonarQube
 
 on:
   push:
@@ -20,8 +20,14 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar-tee
-          restore-keys: ${{ runner.os }}-sonar-tee
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
       - name: Download SonarScanner
         shell: bash
         working-directory: .
