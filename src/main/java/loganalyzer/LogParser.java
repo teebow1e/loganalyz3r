@@ -5,18 +5,19 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import csvgenerator.CsvGenerator;
+
 public class LogParser {
     private static final Pattern ipAddrPattern = Pattern.compile("((\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})|([0-9a-fA-F]{1,4}(:[0-9a-fA-F]{1,4}){7}))");
     private static final Pattern timestampPattern = Pattern.compile("\\[(\\d{2}/[A-Za-z]{3}/\\d{4}:\\d{2}:\\d{2}:\\d{2} [+\\-]\\d{4})]");
     private static final Pattern userAgentPattern = Pattern.compile("\"([^\"]*)\"[^\"]*$");
-//    private static final Pattern allInOnePattern = Pattern.compile("\"(GET|HEAD|POST|PUT|DELETE|CONNECT|OPTIONS|TRACE|PATCH) \\/[a-zA-Z0-9.\\-_~!$&'()*+,;=:@]+ (HTTP|HTTPS)\\/\\d+(\\.\\d+)*\" \\d{3}(\\.\\d+)? \\d+");
     public static void main(String[] args) {
-        // aio pattern: "(GET|HEAD|POST|PUT|DELETE|CONNECT|OPTIONS|TRACE|PATCH) \/[a-zA-Z0-9.\-_~!$&'()*+,;=:@]+ (HTTP|HTTPS)\/\d+(\.\d+)*" \d{3}(\.\d+)? \d+
         Logger logger = Logger.getLogger(LogParser.class.getName());
         String logFilePath = System.getProperty("user.dir") + "/logs/apache_nginx/access_log_50000.log";
         Path logPath = Paths.get(logFilePath);
@@ -24,21 +25,23 @@ public class LogParser {
         try {
             if (Files.exists(logPath)) {
                 List<String> lines = Files.readAllLines(logPath);
+                LinkedList<Log> logList = new LinkedList<>();
                 for (String workingLine : lines) {
-                    System.out.println(workingLine);
-                    System.out.println("IP Address: " + parseIpAddress(workingLine));
-                    System.out.println("Timestamp: " + parseTimestamp(workingLine));
-                    System.out.println("UserAgent: " + parseUserAgent(workingLine));
-                    String[] allInOne = parseAllInOne(workingLine);
-                    if (allInOne.length >= 5) {
-                        System.out.println("Method: " + allInOne[0]);
-                        System.out.println("Path: " + allInOne[1]);
-                        System.out.println("Protocol: " + allInOne[2]);
-                        System.out.println("Status Code: " + allInOne[3]);
-                        System.out.println("Content Length: " + allInOne[4]);
-                    }
-                    System.out.println("------------------------------------------------");
-
+                    logList.add(new Log(
+                            parseIpAddress(workingLine),
+                            parseTimestamp(workingLine),
+                            parseAllInOne(workingLine)[0],
+                            parseAllInOne(workingLine)[2],
+                            parseAllInOne(workingLine)[1],
+                            Integer.parseInt(parseAllInOne(workingLine)[3]),
+                            Integer.parseInt(parseAllInOne(workingLine)[4]),
+                            parseUserAgent(workingLine)
+                    ));
+                }
+                try {
+                    CsvGenerator.generateCSV(logList);
+                } catch (Exception e) {
+                    logger.log(Level.SEVERE, "Error generating CSV: {0}", e.getMessage());
                 }
             } else {
                 logger.log(Level.SEVERE, "Log file not found at location {0}", logFilePath);

@@ -17,5 +17,4 @@ public class PieChartController {
         pieChart.getData().add(new PieChart.Data("Category B", 20));
         pieChart.getData().add(new PieChart.Data("Category C", 50));
     }
-
 }

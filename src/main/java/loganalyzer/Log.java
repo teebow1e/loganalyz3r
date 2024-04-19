@@ -1,5 +1,8 @@
 package loganalyzer;
 
+import com.opencsv.bean.CsvBindByPosition;
+import com.opencsv.bean.CsvBindByName;
+
 public class Log {
     public Log(String ipAddress, String timeStamp, String method, String protocol, String requestPath, int statusCode, int contentLength, String userAgent) {
         this.ipAddress = ipAddress;
@@ -43,13 +46,28 @@ public class Log {
     public String getUserAgent() {
         return userAgent;
     }
-
+    @CsvBindByName(column = "ipAddr", required = true)
+    @CsvBindByPosition(position = 0)
     private final String ipAddress;
+    @CsvBindByName(column = "timestamp", required = true)
+    @CsvBindByPosition(position = 1)
     private final String timeStamp;
+    @CsvBindByName(column = "method", required = true)
+    @CsvBindByPosition(position = 2)
     private final String method;
+    @CsvBindByName(column = "protocol", required = true)
+    @CsvBindByPosition(position = 3)
     private final String protocol;
+    @CsvBindByName(column = "path", required = true)
+    @CsvBindByPosition(position = 4)
     private final String requestPath;
+    @CsvBindByName(column = "statusCode", required = true)
+    @CsvBindByPosition(position = 5)
     private final int statusCode;
+    @CsvBindByName(column = "contentLength", required = true)
+    @CsvBindByPosition(position = 6)
     private final int contentLength;
+    @CsvBindByName(column = "userAgent", required = true)
+    @CsvBindByPosition(position = 7)
     private final String userAgent;
 }
