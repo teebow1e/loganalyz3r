@@ -4,16 +4,21 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class LogParser {
-    private static final Pattern ipAddrPattern = Pattern.compile("(\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})");
+    private static final Pattern ipAddrPattern = Pattern.compile("((\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})|([0-9a-fA-F]{1,4}(:[0-9a-fA-F]{1,4}){7}))");
     private static final Pattern timestampPattern = Pattern.compile("\\[(\\d{2}/[A-Za-z]{3}/\\d{4}:\\d{2}:\\d{2}:\\d{2} [+\\-]\\d{4})]");
     private static final Pattern userAgentPattern = Pattern.compile("\"([^\"]*)\"[^\"]*$");
-    private static final Pattern allInOnePattern = Pattern.compile("\"(GET|HEAD|POST|PUT|DELETE|CONNECT|OPTIONS|TRACE|PATCH) /[a-zA-Z0-9]+ (HTTP|HTTPS)/\\d+(\\.\\d+)*\" \\d{3}(\\.\\d+)? \\d+");
+//    private static final Pattern allInOnePattern = Pattern.compile("\"(GET|HEAD|POST|PUT|DELETE|CONNECT|OPTIONS|TRACE|PATCH) \\/[a-zA-Z0-9.\\-_~!$&'()*+,;=:@]+ (HTTP|HTTPS)\\/\\d+(\\.\\d+)*\" \\d{3}(\\.\\d+)? \\d+");
     public static void main(String[] args) {
-        String logFilePath = System.getProperty("user.dir") + "/logs/apache_nginx/access_log_100.log";
+        // aio pattern: "(GET|HEAD|POST|PUT|DELETE|CONNECT|OPTIONS|TRACE|PATCH) \/[a-zA-Z0-9.\-_~!$&'()*+,;=:@]+ (HTTP|HTTPS)\/\d+(\.\d+)*" \d{3}(\.\d+)? \d+
+        Logger logger = Logger.getLogger(LogParser.class.getName());
+        String logFilePath = System.getProperty("user.dir") + "/logs/apache_nginx/access_log_50000.log";
         Path logPath = Paths.get(logFilePath);
 
         try {
@@ -25,7 +30,7 @@ public class LogParser {
                     System.out.println("Timestamp: " + parseTimestamp(workingLine));
                     System.out.println("UserAgent: " + parseUserAgent(workingLine));
                     String[] allInOne = parseAllInOne(workingLine);
-                    if (allInOne != null) {
+                    if (allInOne.length >= 5) {
                         System.out.println("Method: " + allInOne[0]);
                         System.out.println("Path: " + allInOne[1]);
                         System.out.println("Protocol: " + allInOne[2]);
@@ -36,10 +41,10 @@ public class LogParser {
 
                 }
             } else {
-                System.out.println("Log file does not exist: " + logPath);
+                logger.log(Level.SEVERE, "Log file not found at location {0}", logFilePath);
             }
         } catch (IOException e) {
-            System.out.println("Error reading log file: " + e.getMessage());
+            logger.log(Level.SEVERE, "Error reading log file: {0}", e.getMessage());
         }
     }
 
@@ -53,7 +58,6 @@ public class LogParser {
     }
 
     public static String parseIpAddress(String logLine) {
-        // chua handle truong hop ipv6
         return findFirstMatch(logLine, ipAddrPattern.pattern());
     }
     public static String parseTimestamp(String logLine) {
@@ -73,11 +77,11 @@ public class LogParser {
         }
     }
     public static String[] parseAllInOne(String logLine) {
-        String parsedLog = findFirstMatch(logLine, allInOnePattern.pattern());
-        if (parsedLog != null) {
-            return (parsedLog.replace("\"", "")).split(" ");
-        } else {
-            return null;
+        String[] aioParts = logLine.split(" ");
+        String[] finalAio = Arrays.copyOfRange(aioParts, 5, 10);
+        for (int i = 0; i < finalAio.length; i++) {
+            finalAio[i] = finalAio[i].replace("\"", "");
         }
+        return finalAio;
     }
 }

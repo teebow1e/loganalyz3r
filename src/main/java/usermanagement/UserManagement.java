@@ -5,8 +5,14 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class UserManagement {
+    private static final Logger logger = Logger.getLogger(UserManagement.class.getName());
+    private UserManagement() {
+        throw new IllegalStateException("Utility class");
+    }
     public static List<User> readUserFile(String fileName) {
         List<User> userList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(fileName))) {
@@ -21,7 +27,7 @@ public class UserManagement {
                 }
             }
         } catch (IOException e) {
-            System.out.println("Error reading file: " + e.getMessage());
+            logger.log(Level.SEVERE, "An error occurred while reading the user file", e);
         }
         return userList;
     }

@@ -1,4 +1,4 @@
-name: SonarQube-test
+name: SonarQube
 
 on:
   push:
@@ -20,8 +20,14 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ~/.sonar/cache
-          key: ${{ runner.os }}-sonar-tee
-          restore-keys: ${{ runner.os }}-sonar-tee
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
       - name: Download SonarScanner
         shell: bash
         working-directory: .
@@ -34,7 +40,6 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         shell: bash
         working-directory: .
-        # run: ./sonar-scanner-5.0.1.3006-linux/bin/sonar-scanner -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} -Dsonar.java.binaries=.
         run: |
           mvn clean install
           mvn sonar:sonar -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} -Dsonar.token=${{ secrets.SONAR_TOKEN }}
