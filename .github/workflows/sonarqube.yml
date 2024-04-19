@@ -40,7 +40,6 @@ jobs:
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         shell: bash
         working-directory: .
-        # run: ./sonar-scanner-5.0.1.3006-linux/bin/sonar-scanner -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} -Dsonar.java.binaries=.
         run: |
           mvn clean install
           mvn sonar:sonar -Dsonar.host.url=${{ secrets.SONAR_HOST_URL }} -Dsonar.token=${{ secrets.SONAR_TOKEN }}
