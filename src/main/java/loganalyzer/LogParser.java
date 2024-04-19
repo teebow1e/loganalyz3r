@@ -19,7 +19,6 @@ public class LogParser {
         try {
             if (Files.exists(logPath)) {
                 List<String> lines = Files.readAllLines(logPath);
-                int lineCount = 0;
                 for (String workingLine : lines) {
                     System.out.println(workingLine);
                     System.out.println("IP Address: " + parseIpAddress(workingLine));
@@ -34,10 +33,7 @@ public class LogParser {
                         System.out.println("Content Length: " + allInOne[4]);
                     }
                     System.out.println("------------------------------------------------");
-                    lineCount++;
-                    if (lineCount >= 10) {
-                        break;
-                    }
+
                 }
             } else {
                 System.out.println("Log file does not exist: " + logPath);

@@ -22,8 +22,7 @@
 }
 
 .main {
-    -fx-background-color: #0069fc;
+    -fx-background-color: white;
     -fx-alignment: CENTER;
-    -fx-font-size: 30;
-
+    -fx-font-size: 20;
 }

@@ -4,7 +4,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox styleClass="sidebar" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="ui.SidebarController">
+<VBox styleClass="sidebar" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.SidebarController">
     <VBox spacing="15" styleClass="sidebar-content-wrapper">
         <Label text="Dashboard" styleClass="sidebar-content-label">
             <graphic>
