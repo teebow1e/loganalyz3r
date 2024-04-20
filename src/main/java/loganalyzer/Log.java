@@ -3,6 +3,8 @@ package loganalyzer;
 import com.opencsv.bean.CsvBindByPosition;
 import com.opencsv.bean.CsvBindByName;
 
+// todo: this should be a basic class, then we have nginx_apache log class / modsecurity log class
+// modsecurity has some interesting fields that worth logging
 public class Log {
     public Log(String ipAddress, String timeStamp, String method, String protocol, String requestPath, int statusCode, int contentLength, String userAgent) {
         this.ipAddress = ipAddress;
