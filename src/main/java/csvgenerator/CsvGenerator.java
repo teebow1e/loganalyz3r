@@ -10,6 +10,9 @@ import java.io.*;
 import java.util.List;
 
 public class CsvGenerator {
+    private CsvGenerator() {
+        throw new IllegalStateException("Utility class");
+    }
     public static void generateCSV(List<Log> logList)
             throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
         File file = new File("logs/parsed/log.csv");

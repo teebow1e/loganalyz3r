@@ -77,10 +77,19 @@
             <artifactId>javafx-web</artifactId>
             <version>17.0.10</version>
         </dependency>
+
+        <!-- OpenCSV -->
         <dependency>
             <groupId>com.opencsv</groupId>
             <artifactId>opencsv</artifactId>
             <version>5.9</version>
+        </dependency>
+
+        <!-- Guava - Google Core Libraries for Java -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>33.1.0-jre</version>
         </dependency>
     </dependencies>
 </project>
