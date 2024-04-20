@@ -84,12 +84,6 @@
             <artifactId>opencsv</artifactId>
             <version>5.9</version>
         </dependency>
-
-        <!-- Guava - Google Core Libraries for Java -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>33.1.0-jre</version>
-        </dependency>
+        s
     </dependencies>
 </project>
