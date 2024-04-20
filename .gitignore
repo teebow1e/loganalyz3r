@@ -1,5 +1,6 @@
 .idea/
 target/
+logs/parsed/
 !.mvn/wrapper/maven-wrapper.jar
 !src/main/resources/main/**/target/
 !src/main/resources/test/**/target/
