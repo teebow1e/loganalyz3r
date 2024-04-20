@@ -12,6 +12,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import csvgenerator.CsvGenerator;
+import static utility.Utility.findFirstMatch;
+import static utility.Utility.readFile;
 
 public class LogParser {
     private static final Pattern ipAddrPattern = Pattern.compile("((\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})|([0-9a-fA-F]{1,4}(:[0-9a-fA-F]{1,4}){7}))");
@@ -19,22 +21,12 @@ public class LogParser {
     private static final Pattern userAgentPattern = Pattern.compile("\"([^\"]*)\"[^\"]*$");
     public static void main(String[] args) {
         Logger logger = Logger.getLogger(LogParser.class.getName());
-        String logFilePath = System.getProperty("user.dir") + "/logs/apache_nginx/access_log_50000.log";
+        String logFilePath = System.getProperty("user.dir") + "/logs/apache_nginx/access_log_100.log";
         Path logPath = Paths.get(logFilePath);
+        LinkedList<String> lines = new LinkedList<>();
 
         if (Files.exists(logPath)) {
-            LinkedList<String> lines = new LinkedList<>();
-            try {
-                BufferedReader reader = new BufferedReader(new FileReader(logFilePath));
-                String line = reader.readLine();
-                while (line != null) {
-                    lines.add(line);
-                    line = reader.readLine();
-                }
-                reader.close();
-            } catch (IOException e) {
-                logger.log(Level.SEVERE, "Error reading log file: {0}", e.getMessage());
-            }
+            lines = readFile(logFilePath, logger);
 
             LinkedList<Log> logList = new LinkedList<>();
             for (String workingLine : lines) {
@@ -57,18 +49,7 @@ public class LogParser {
         } else {
             logger.log(Level.SEVERE, "Log file not found at location {0}", logFilePath);
         }
-
-
     }
-
-    public static String findFirstMatch(String line, Pattern pattern) {
-        Matcher matcher = pattern.matcher(line);
-        if (matcher.find()) {
-            return matcher.group();
-        }
-        return null;
-    }
-
     public static String parseIpAddress(String logLine) {
         return findFirstMatch(logLine, ipAddrPattern);
     }
