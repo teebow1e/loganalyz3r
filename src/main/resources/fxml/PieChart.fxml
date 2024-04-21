@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.chart.PieChart?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
 
-<VBox xmlns="http://javafx.com/javafx"
-      xmlns:fx="http://javafx.com/fxml"
-      fx:controller="controller.PieChartController">
-    <PieChart fx:id="pieChart" VBox.vgrow="ALWAYS"/>
+<?import java.net.URL?>
+<VBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.PieChartController">
+    <stylesheets>
+        <URL value="@/css/WebLog.css" />
+    </stylesheets>
+    <PieChart fx:id="pieChart" styleClass="pieChart" VBox.vgrow="ALWAYS"/>
 </VBox>

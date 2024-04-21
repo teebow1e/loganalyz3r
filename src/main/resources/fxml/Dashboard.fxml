@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?import javafx.scene.control.*?>
-<?import javafx.scene.control.Label?>
 <?import javafx.scene.layout.*?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.image.Image?>
 
 <HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.Controller">
     <fx:include source="Sidebar.fxml"/>
 
-    <VBox styleClass="main" HBox.hgrow="ALWAYS">
+    <VBox fx:id="mainVBox" styleClass="main" HBox.hgrow="ALWAYS">
         <Label text="MAIN CONTENT HERE"/>
         <fx:include source="PieChart.fxml"/>
     </VBox>

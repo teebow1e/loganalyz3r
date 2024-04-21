@@ -4,8 +4,12 @@ import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.chart.PieChart;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.control.*;
 
@@ -19,6 +23,7 @@ import usermanagement.UserManagement;
 import javax.swing.JOptionPane;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -26,7 +31,6 @@ import java.util.logging.Level;
 public class Controller {
     private Stage stage;
     private List<User> userLists;
-    // Not sure if declare logger here is correct
     private final Logger logger = Logger.getLogger(Controller.class.getName());
 
     @FXML
@@ -37,9 +41,6 @@ public class Controller {
 
     @FXML
     private TextField rePasswordField;
-
-    @FXML
-    private PieChart pieChart;
 
     public void init(Stage stage) {
         String dbFilePath = System.getProperty("user.dir") + "\\credentials\\cred.txt";
@@ -52,7 +53,7 @@ public class Controller {
         this.stage = stage;
     }
     @FXML
-    private void onEnter(ActionEvent ae) throws Exception {
+    private void onEnter(ActionEvent event) throws Exception {
         handleLoginAccount(null);
     }
     @FXML
@@ -98,4 +99,10 @@ public class Controller {
         }
     }
 
+    public void showPieChart(Parent root) throws IOException {
+        VBox mainVBox = (VBox) root.lookup("#mainVBox");
+        FXMLLoader pieChartLoader = new FXMLLoader(getClass().getResource("/fxml/PieChart.fxml"));
+        Parent pieChartRoot = pieChartLoader.load();
+        mainVBox.getChildren().add(pieChartRoot);
+    }
 }
