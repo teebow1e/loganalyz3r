@@ -99,10 +99,23 @@ public class Controller {
         }
     }
 
-    public void showPieChart(Parent root) throws IOException {
+    public void CreatePieChart(Parent root) throws IOException {
+        PieChart pieChart = new PieChart();
+        pieChart.getData().add(new PieChart.Data("Category A", 40));
+        pieChart.getData().add(new PieChart.Data("Category B", 40));
+        pieChart.getData().add(new PieChart.Data("Category C", 40));
+
+        pieChart.getStyleClass().add("pie-chart");
+
+        System.out.println("PieChart created: " + pieChart);
+
         VBox mainVBox = (VBox) root.lookup("#mainVBox");
-        FXMLLoader pieChartLoader = new FXMLLoader(getClass().getResource("/fxml/PieChart.fxml"));
-        Parent pieChartRoot = pieChartLoader.load();
-        mainVBox.getChildren().add(pieChartRoot);
+        mainVBox.getChildren().add(pieChart);
+
+        // System.out.println("PieChart added to mainVBox children: " + mainVBox.getChildren());
+
+        // Print layout bounds of mainVBox and PieChart for inspection
+        // System.out.println("mainVBox layout bounds: " + mainVBox.getLayoutBounds());
+        // System.out.println("PieChart layout bounds: " + pieChart.getLayoutBounds());
     }
 }

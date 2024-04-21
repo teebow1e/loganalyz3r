@@ -5,8 +5,8 @@
 <HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.Controller">
     <fx:include source="Sidebar.fxml"/>
 
-    <VBox fx:id="mainVBox" styleClass="main" HBox.hgrow="ALWAYS">
+    <VBox styleClass="main" HBox.hgrow="ALWAYS" style="-fx-background-color: lightblue;">
         <Label text="MAIN CONTENT HERE"/>
-        <fx:include source="PieChart.fxml"/>
+        <!-- pie chart here -->
     </VBox>
 </HBox>

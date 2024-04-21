@@ -6,7 +6,7 @@
 
 <VBox styleClass="sidebar" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.SidebarController">
     <VBox spacing="15" styleClass="sidebar-content-wrapper">
-        <Label text="Dashboard" styleClass="sidebar-content-label">
+        <Label text="Dashboard" styleClass="sidebar-content-label" onMouseClicked="#handleDashboard">
             <graphic>
                 <ImageView>
                     <Image url="@/img/dashboard.png"/>
@@ -14,7 +14,7 @@
             </graphic>
         </Label>
 
-        <Label text="View Logs" styleClass="sidebar-content-label">
+        <Label text="View Logs" styleClass="sidebar-content-label" onMouseClicked="#handleViewlog">
             <graphic>
                 <ImageView>
                     <Image url="@/img/log.png"/>
@@ -22,7 +22,7 @@
             </graphic>
         </Label>
 
-        <Label text="Feed Back" styleClass="sidebar-content-label">
+        <Label text="Feed Back" styleClass="sidebar-content-label" onMouseClicked="#handleFeedback">
             <graphic>
                 <ImageView>
                     <Image url="@/img/feedback.png"/>
@@ -30,7 +30,7 @@
             </graphic>
         </Label>
 
-        <Label text="Export" styleClass="sidebar-content-label">
+        <Label text="Export" styleClass="sidebar-content-label" onMouseClicked="#handleExport">
             <graphic>
                 <ImageView>
                     <Image url="@/img/export.png"/>
@@ -38,7 +38,7 @@
             </graphic>
         </Label>
 
-        <Label text="Manage logs" styleClass="sidebar-content-label">
+        <Label text="Manage logs" styleClass="sidebar-content-label" onMouseClicked="#handleManagelog">
             <graphic>
                 <ImageView>
                     <Image url="@/img/manage.png"/>
