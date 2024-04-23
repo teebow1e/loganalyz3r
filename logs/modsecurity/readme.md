@@ -9,6 +9,7 @@
 ## Các thông tin nên lấy ra
 - Timestamp: `[Thu Apr 18 15:49:53.491056 2024]`
 - ipAddr - ip của attacker: `[client 127.0.0.1:40408]`
+- logType - loại log: `\[[^\[\]]*?\]` và lấy entry thứ 2
 - phương thức tấn công: `[file "/usr/share/modsecurity-crs/rules/REQUEST-941-APPLICATION-ATTACK-XSS.conf"] -> REQUEST-941-APPLICATION-ATTACK-XSS`
 - attackMsg: `[msg "XSS Attack Detected via libinjection"]`
 - attackData - payload: `[data "Matched Data: XSS data found within ARGS:username: <script>alert(1);</script>"]`

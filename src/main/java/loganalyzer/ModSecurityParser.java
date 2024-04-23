@@ -19,6 +19,8 @@ public class ModSecurityParser {
     private static final Pattern timeStampPattern = Pattern.compile("\\[(.*?)\\]");
     private static final Pattern ipAddrPattern = Pattern.compile("\\[client .*?\\]");
     private static final Pattern aioPattern = Pattern.compile("\\[[^\\[\\]]*?\\]");
+    private static final Pattern filterFilePattern = Pattern.compile("\\[file \".+\\/(.*?).conf\"\\]");
+    private static final Pattern attackTypePattern = Pattern.compile("[A-Z][^.]+");
     public static void main (String[] args) {
         Logger logger = Logger.getLogger(ModSecurityParser.class.getName());
         String logFilePath = System.getProperty("user.dir") + "/logs/modsecurity/error.log";
@@ -29,7 +31,7 @@ public class ModSecurityParser {
             lines = readFile(logFilePath, logger);
 
             for (String line: lines) {
-                System.out.println(parseLogType(line));
+                System.out.println(parseAttackType(line));
             }
         } else {
             logger.log(Level.SEVERE, "Log file not found at location {0}", logFilePath);
@@ -61,5 +63,14 @@ public class ModSecurityParser {
             }
         }
         return "N/A";
+    }
+
+    private static String parseAttackType(String line) {
+        String matchedFile = findFirstMatch(line, filterFilePattern);
+        if (matchedFile != null) {
+            return findFirstMatch(matchedFile, attackTypePattern);
+        } else {
+            return "N/A";
+        }
     }
 }
