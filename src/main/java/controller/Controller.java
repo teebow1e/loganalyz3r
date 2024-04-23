@@ -113,7 +113,6 @@ public class Controller {
         mainVBox.getChildren().add(pieChart);
 
         // System.out.println("PieChart added to mainVBox children: " + mainVBox.getChildren());
-
         // Print layout bounds of mainVBox and PieChart for inspection
         // System.out.println("mainVBox layout bounds: " + mainVBox.getLayoutBounds());
         // System.out.println("PieChart layout bounds: " + pieChart.getLayoutBounds());

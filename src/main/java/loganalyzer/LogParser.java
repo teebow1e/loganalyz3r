@@ -21,7 +21,8 @@ public class LogParser {
     private static final Pattern userAgentPattern = Pattern.compile("\"([^\"]*)\"[^\"]*$");
     public static void main(String[] args) {
         Logger logger = Logger.getLogger(LogParser.class.getName());
-        String logFilePath = System.getProperty("user.dir") + "/logs/apache_nginx/access_log_100.log";
+        String logFilePath = System.getProperty("user.dir") + "\\logs\\apache_nginx\\access_log_100.log";
+        System.out.println(System.getProperty("user.dir"));
         Path logPath = Paths.get(logFilePath);
         LinkedList<String> lines = new LinkedList<>();
 
