@@ -17,17 +17,17 @@ public class WebLogManager extends Application {
     public void start(Stage primaryStage, int mode) throws Exception {
         FXMLLoader loader = null;
         String fxmlFile = switch (mode) {
-            case 1 -> "/fxml/Dashboard.fxml";
-            case 2 -> "/fxml/Viewlog.fxml";
-            case 3 -> "/fxml/Feedback.fxml";
-            case 4 -> "/fxml/Export.fxml";
-            case 5 -> "/fxml/Managelog.fxml";
+            case 1 -> "/fxml/main/Dashboard.fxml";
+            case 2 -> "/fxml/main/Viewlog.fxml";
+            case 3 -> "/fxml/main/Feedback.fxml";
+            case 4 -> "/fxml/main/Export.fxml";
+            case 5 -> "/fxml/main/Managelog.fxml";
             default -> throw new IllegalArgumentException("Invalid mode specified: " + mode);
         };
 
+        System.out.println("FXML File Path: " + getClass().getResource(fxmlFile));
         loader = new FXMLLoader(getClass().getResource(fxmlFile));
         Parent root = loader.load();
-        // System.out.println(fxmlFile + " loaded successfully: " + root);
 
         Scene scene = new Scene(root, 1000, 600);
         scene.getStylesheets().add(getClass().getResource("/css/WebLog.css").toExternalForm());
