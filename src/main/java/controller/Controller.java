@@ -116,5 +116,6 @@ public class Controller {
         // Print layout bounds of mainVBox and PieChart for inspection
         // System.out.println("mainVBox layout bounds: " + mainVBox.getLayoutBounds());
         // System.out.println("PieChart layout bounds: " + pieChart.getLayoutBounds());
+
     }
 }
