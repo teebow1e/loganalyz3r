@@ -16,6 +16,7 @@ public class WebLogManager extends Application {
     }
 
     public void start(Stage primaryStage, int mode) throws Exception {
+        primaryStage.setResizable(false);
         FXMLLoader loader = null;
         String fxmlFile = switch (mode) {
             case 1 -> "/fxml/main/Dashboard.fxml";
@@ -30,14 +31,14 @@ public class WebLogManager extends Application {
         loader = new FXMLLoader(getClass().getResource(fxmlFile));
         Parent root = loader.load();
 
-        Scene scene = new Scene(root, 1000, 600);
+        Scene scene = new Scene(root, 1200, 800);
         scene.getStylesheets().add(getClass().getResource("/css/WebLog.css").toExternalForm());
 
         primaryStage.setTitle("Web Log Analyzer");
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        root.setOnMouseClicked(event -> scene.getRoot().requestFocus());
+        // root.setOnMouseClicked(event -> scene.getRoot().requestFocus());
 
         Controller controller = loader.getController();
         controller.init(primaryStage);

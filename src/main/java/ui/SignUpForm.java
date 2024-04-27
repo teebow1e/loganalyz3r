@@ -13,7 +13,7 @@ public class SignUpForm {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SignUpForm.fxml"));
         Parent root = loader.load();
 
-        Scene scene = new Scene(root, 1000, 600);
+        Scene scene = new Scene(root, 1200, 800);
 
         scene.getStylesheets().add(getClass().getResource("/css/Form.css").toExternalForm());
 
