@@ -7,6 +7,6 @@
 
     <VBox fx:id="mainVBox" styleClass="main" HBox.hgrow="ALWAYS">
         <Label text="MAIN CONTENT HERE"/>
-        <!-- pie chart here -->
+
     </VBox>
 </HBox>

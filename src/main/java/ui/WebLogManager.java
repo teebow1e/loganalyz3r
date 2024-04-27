@@ -1,11 +1,12 @@
 package ui;
 
 import controller.*;
+import dataanalyzer.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.VBox;
+import javafx.scene.chart.PieChart;
 import javafx.stage.Stage;
 
 public class WebLogManager extends Application {
@@ -25,7 +26,7 @@ public class WebLogManager extends Application {
             default -> throw new IllegalArgumentException("Invalid mode specified: " + mode);
         };
 
-        System.out.println("FXML File Path: " + getClass().getResource(fxmlFile));
+        // System.out.println("FXML File Path: " + getClass().getResource(fxmlFile));
         loader = new FXMLLoader(getClass().getResource(fxmlFile));
         Parent root = loader.load();
 
@@ -42,7 +43,10 @@ public class WebLogManager extends Application {
         controller.init(primaryStage);
 
         if (mode == 1) {
-            controller.CreatePieChart(root);
+            PieChartVisualizer.CreatePieChart(root);
+        }
+        else if (mode == 2) {
+            TableVisualizer.CreateTable(root);
         }
     }
 

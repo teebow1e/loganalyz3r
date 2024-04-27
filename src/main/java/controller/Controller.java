@@ -1,15 +1,9 @@
 package controller;
 
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.chart.PieChart;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.control.*;
 
@@ -23,7 +17,6 @@ import usermanagement.UserManagement;
 import javax.swing.JOptionPane;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -99,18 +92,4 @@ public class Controller {
         }
     }
 
-    public void CreatePieChart(Parent root) throws IOException {
-        PieChart pieChart = new PieChart();
-        pieChart.getData().add(new PieChart.Data("Category A", 40));
-        pieChart.getData().add(new PieChart.Data("Category B", 40));
-        pieChart.getData().add(new PieChart.Data("Category C", 40));
-
-        pieChart.getStyleClass().add("pie-chart");
-
-        System.out.println("PieChart created: " + pieChart);
-
-        VBox mainVBox = (VBox) root.lookup("#mainVBox");
-        mainVBox.getChildren().add(pieChart);
-
-    }
 }
