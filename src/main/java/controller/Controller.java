@@ -1,15 +1,9 @@
 package controller;
 
-import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.chart.PieChart;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.control.*;
 
@@ -23,7 +17,6 @@ import usermanagement.UserManagement;
 import javax.swing.JOptionPane;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.List;
 import java.util.logging.Logger;
 import java.util.logging.Level;
@@ -97,25 +90,5 @@ public class Controller {
             logger.log(Level.INFO, "Login failed");
             JOptionPane.showMessageDialog(null, "Nhap sai password roi cu!");
         }
-    }
-
-    public void CreatePieChart(Parent root) throws IOException {
-        PieChart pieChart = new PieChart();
-        pieChart.getData().add(new PieChart.Data("Category A", 40));
-        pieChart.getData().add(new PieChart.Data("Category B", 40));
-        pieChart.getData().add(new PieChart.Data("Category C", 40));
-
-        pieChart.getStyleClass().add("pie-chart");
-
-        System.out.println("PieChart created: " + pieChart);
-
-        VBox mainVBox = (VBox) root.lookup("#mainVBox");
-        mainVBox.getChildren().add(pieChart);
-
-        // System.out.println("PieChart added to mainVBox children: " + mainVBox.getChildren());
-        // Print layout bounds of mainVBox and PieChart for inspection
-        // System.out.println("mainVBox layout bounds: " + mainVBox.getLayoutBounds());
-        // System.out.println("PieChart layout bounds: " + pieChart.getLayoutBounds());
-
     }
 }

@@ -5,8 +5,25 @@
 <HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.Controller">
     <fx:include source="Sidebar.fxml"/>
 
-    <VBox styleClass="main" HBox.hgrow="ALWAYS" style="-fx-background-color: lightyellow;">
-        <Label text="MAIN CONTENT HERE"/>
-        <!-- pie chart here -->
+    <!-- Wrap the VBox inside a ScrollPane -->
+    <VBox fx:id="mainVBox" styleClass="main" HBox.hgrow="ALWAYS">
+        <Label styleClass="title-label" text="LOGS"/>
+        <HBox styleClass="filter-box">
+            <Label text="Some"/>
+            <Label text="Random"/>
+            <Label text="Filter"/>
+            <Label text="Attributes"/>
+        </HBox>
+
+        <!-- Add a ScrollPane for the TableView -->
+        <ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+                    prefHeight="600.0" prefWidth="1000.0">
+            <content>
+                <TableView fx:id="LogTable" prefHeight="600.0" prefWidth="1000.0">
+
+                </TableView>
+            </content>
+        </ScrollPane>
     </VBox>
 </HBox>
+

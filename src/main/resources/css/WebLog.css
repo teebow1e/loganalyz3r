@@ -30,5 +30,12 @@
     -fx-background-color: white;
     -fx-font-size: 16;
     -fx-border-color: black;
-    -fx-border-width: 2px;
+    -fx-border-width: 1px;
+}
+
+.title-label {
+    -fx-alignment: TOP_CENTER;
+    -fx-padding: 20px 0 0 0;
+    -fx-font-size: 24;
+    -fx-font-weight: bold;
 }

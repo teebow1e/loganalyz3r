@@ -1,0 +1,32 @@
+.column-1 {
+    -fx-pref-width: 300px;
+}
+
+.column-2 {
+    -fx-pref-width: 150px;
+}
+
+.column-3 {
+    -fx-pref-width: 50px;
+}
+
+.column-4 {
+    -fx-pref-width: 100px;
+}
+
+.column-5 {
+    -fx-pref-width: 100px;
+}
+
+.column-6 {
+    -fx-pref-width: 100px;
+}
+
+.column-7 {
+    -fx-pref-width: 100px;
+}
+
+.column-8 {
+    -fx-pref-width: 300px;
+}
+
