@@ -7,13 +7,6 @@
 
     <VBox fx:id="mainVBox" styleClass="main" HBox.hgrow="ALWAYS">
         <Label styleClass="title-label" text="LOGS"/>
-        <HBox styleClass="filter-box">
-            <Label text="Some"/>
-            <Label text="Random"/>
-            <Label text="Filter"/>
-            <Label text="Attributes"/>
-        </HBox>
-
         <TableView fx:id="Table" prefHeight="600.0" prefWidth="1000.0">
 
         </TableView>

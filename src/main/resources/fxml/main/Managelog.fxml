@@ -5,8 +5,17 @@
 <HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.Controller">
     <fx:include source="Sidebar.fxml"/>
 
-    <VBox styleClass="main" HBox.hgrow="ALWAYS" style="-fx-background-color: lightpink;">
-        <Label text="MAIN CONTENT HERE"/>
-        <!-- pie chart here -->
+    <VBox fx:id="mainVBox" styleClass="main" HBox.hgrow="ALWAYS">
+        <Label styleClass="title-label" text="LOGS"/>
+        <HBox styleClass="filter-box">
+            <TextField fx:id="filterTextField" promptText="Enter filter text"/>
+            <Button text="Button 1" fx:id="button1"/>
+            <Button text="Button 2" fx:id="button2"/>
+            <Button text="Button 3" fx:id="button3"/>
+            <Button text="Button 4" fx:id="button4"/>
+        </HBox>
+        <TableView fx:id="Table" prefHeight="600.0" prefWidth="1000.0">
+
+        </TableView>
     </VBox>
 </HBox>
