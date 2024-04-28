@@ -15,15 +15,19 @@
             <Label text="Attributes"/>
         </HBox>
 
-        <!-- Add a ScrollPane for the TableView -->
-        <ScrollPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-                    prefHeight="600.0" prefWidth="1000.0">
-            <content>
-                <TableView fx:id="LogTable" prefHeight="600.0" prefWidth="1000.0">
-
-                </TableView>
-            </content>
-        </ScrollPane>
+        <TableView fx:id="Table" prefHeight="600.0" prefWidth="1000.0">
+            <!-- Define your columns here -->
+            <columns>
+                <TableColumn text="1" fx:id="col1" styleClass="log-table-column-1" resizable="false"/>
+                <TableColumn text="2" fx:id="col2" styleClass="log-table-column-2" resizable="false"/>
+                <TableColumn text="3" fx:id="col3" styleClass="log-table-column-3" resizable="false"/>
+                <TableColumn text="4" fx:id="col4" styleClass="log-table-column-4" resizable="false"/>
+                <TableColumn text="5" fx:id="col5" styleClass="log-table-column-5" resizable="false"/>
+                <TableColumn text="6" fx:id="col6" styleClass="log-table-column-6" resizable="false"/>
+                <TableColumn text="7" fx:id="col7" styleClass="log-table-column-7" resizable="false"/>
+                <TableColumn text="8" fx:id="col8" styleClass="log-table-column-8" resizable="false"/>
+                <TableColumn text="9" fx:id="col9" styleClass="log-table-column-9" resizable="false"/>
+            </columns>
+        </TableView>
     </VBox>
 </HBox>
-

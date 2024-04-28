@@ -47,7 +47,8 @@ public class WebLogManager extends Application {
             PieChartVisualizer.CreatePieChart(root);
         }
         else if (mode == 2) {
-            TableVisualizer.CreateTable(root);
+            TableVisualizer.CreateLogTable(root);
+            scene.getStylesheets().add(getClass().getResource("/css/Table.css").toExternalForm());
         }
     }
 
