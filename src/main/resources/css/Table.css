@@ -33,9 +33,9 @@
 }
 .log-table-column-8 {
     -fx-alignment: CENTER;
-    -fx-pref-width: 350px;
+    -fx-pref-width: 300px;
 }
 .log-table-column-9 {
     -fx-alignment: CENTER;
-    -fx-pref-width: 50px;
+    -fx-pref-width: 100px;
 }
