@@ -34,7 +34,7 @@ public class LogParser {
                 logList.add(new Log(
                         parseIpAddress(workingLine),
                         parseTimestamp(workingLine),
-                        parseAllInOne(workingLine)[5],
+                        parseAllInOne(workingLine)[5].replace("\"", ""),
                         parseAllInOne(workingLine)[7].replace("\"", ""),
                         parseAllInOne(workingLine)[6].replace("\"", ""),
                         Integer.parseInt(parseAllInOne(workingLine)[8]),

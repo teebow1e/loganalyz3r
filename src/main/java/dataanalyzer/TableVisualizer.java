@@ -16,7 +16,7 @@ import static csvgenerator.CSVReader.read;
 
 public class TableVisualizer {
     public static void ShowLogTable(Parent root) throws IOException {
-        List<String> data = read("logs/parsed/log_test.csv");
+        List<String> data = read("logs/parsed/log.csv");
         VBox mainVBox = (VBox) root.lookup("#mainVBox");
 
         TableView<String[]> tableView = (TableView<String[]>) mainVBox.lookup("#Table");
