@@ -1,7 +1,7 @@
 name: SonarQube
 
 on:
-  push:
+  issue_comment:
 
 jobs:
   build:
