@@ -1,0 +1,46 @@
+name: LogAnalyz3r Bug Report
+description: A bug that causes LogAnalyz3r to misbehave
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report!
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: Bug Description
+      description: Tell us what issues you ran into
+      placeholder: Include information about what you tried, what you expected to happen, and what actually happened. The more details, the better!
+    validations:
+      required: true
+  - type: input
+    id: java-version
+    attributes:
+      label: Java Version
+      description: Include the output of `java -version`
+    validations:
+      required: true
+  - type: input
+    id: os-info
+    attributes:
+      label: System Architecture/Version
+      description: You can check the system info and provide information here
+    validations:
+      required: true
+  - type: textarea
+    id: log
+    attributes:
+      label: Logs
+      description: We prefer you to provide related error logs here
+      placeholder: Make sure to double check any personal information.
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to reproduce
+      description: How to reproduce it? It's important for us to find the bug
+      value: |
+        1. 
+        2. 
+        3. 
+        ...

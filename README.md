@@ -12,19 +12,70 @@
 </div>
 
 ## LogAnalyz3r
-This is LogAnalyz3r, a powerful Java application designed to streamline the analysis and visualization of logs from various sources including Kernel Firewall, Webserver Access Log, and WAF. With LogAnalyz3r, gain deep insights into your network traffic, web server activity, and security events with ease.
+This is LogAnalyz3r, a powerful Java application designed to streamline the analysis and visualization of logs from various sources including Kernel Firewall, Webserver Access Log, and WAF. With LogAnalyz3r, gain deep insights into your network traffic, web server activity, and security events with ease. 
+
+This application was developed as part of the course Project 1 by [SoICT@HUST](https://soict.hust.edu.vn/). It is designed using principles of Java Object-Oriented Programming (OOP) and secure coding practices to enhance both functionality and security for the end-user.
 
 ## Features
-- Multi-source log ingestion: Import logs from iptables, Apache, Nginx, and ModSecurity effortlessly.
+- Multi-source log ingestion: Import logs from iptables, Apache/NGINX, and ModSecurity effortlessly.
 - Intuitive visualization: Generate interactive charts, graphs, and tables to visualize log data for easy interpretation.
 - Advanced filtering: Filter and search through logs based on specific criteria to pinpoint relevant information quickly.
-- Customizable dashboards: Tailor dashboards to suit your needs, allowing you to focus on the metrics that matter most to you.
+
+## Code Structure
+```
+├── src
+│   └── main
+│       ├── java
+│       │   ├── controller
+│       │   │   ├── Controller.java
+│       │   │   ├── SidebarController.java
+│       │   │   └── TableCheckBox.java
+│       │   ├── csvgenerator
+│       │   │   ├── CSVReader.java
+│       │   │   ├── CsvGenerator.java
+│       │   │   └── CustomColumnPositionStrategy.java
+│       │   ├── dataanalyzer
+│       │   │   ├── PieChartVisualizer.java
+│       │   │   └── TableVisualizer.java
+│       │   ├── loganalyzer
+│       │   │   ├── Log.java
+│       │   │   ├── LogParser.java
+│       │   │   ├── ModSecurity.java
+│       │   │   └── ModSecurityParser.java
+│       │   ├── ui
+│       │   │   ├── LoginForm.java
+│       │   │   ├── Main.java
+│       │   │   ├── SignUpForm.java
+│       │   │   └── WebLogManager.java
+│       │   ├── usermanagement
+│       │   │   ├── User.java
+│       │   │   └── UserManagement.java
+│       │   └── utility
+│       │       └── Utility.java
+│       └── resources
+│           ├── css
+│           │   ├── Form.css
+│           │   ├── Table.css
+│           │   └── WebLog.css
+│           ├── fxml
+│           │   ├── LoginForm.fxml
+│           │   ├── PieChart.fxml
+│           │   ├── SignUpForm.fxml
+│           │   └── main
+│           │       ├── Dashboard.fxml
+│           │       ├── Export.fxml
+│           │       ├── Feedback.fxml
+│           │       ├── Managelog.fxml
+│           │       ├── Sidebar.fxml
+│           │       └── Viewlog.fxml
+│           └── img
+```
 
 ## License
 Distributed under the MIT License. See `LICENSE` for more information.
 
 ## Contact
 This project is maintained by 2 moderators:
-- TrungTQT - [@teebow1e](https://github.com/teebow1e/) - contact@trungtqt.com
-- QuanPH - [@FieryPhoenix](https://www.facebook.com/quan.phamhong.98871) - hongquan090804@gmail.com
+- TrungTQT - [@teebow1e](https://github.com/teebow1e/) - trung.tqt225558@sis.hust.edu.vn/contact@trungtqt.com
+- QuanPH - [@FieryPhoenix](https://www.facebook.com/quan.phamhong.98871) - quan.ph225551@sis.hust.edu.vn/hongquan090804@gmail.com
 
