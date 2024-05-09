@@ -1,4 +1,6 @@
 .idea/
+!/**/.gitkeep
+credentials/cred.txt
 target/
 logs/parsed/
 !.mvn/wrapper/maven-wrapper.jar
