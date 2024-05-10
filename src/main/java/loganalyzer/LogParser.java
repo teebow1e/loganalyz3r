@@ -1,11 +1,7 @@
 package loganalyzer;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.*;
+import java.nio.file.*;
 import java.util.LinkedList;
 import java.util.regex.*;
 import java.util.logging.Level;
@@ -19,38 +15,6 @@ public class LogParser {
     private static final Pattern ipAddrPattern = Pattern.compile("((\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})|([0-9a-fA-F]{1,4}(:[0-9a-fA-F]{1,4}){7}))");
     private static final Pattern timestampPattern = Pattern.compile("\\[(\\d{2}/[A-Za-z]{3}/\\d{4}:\\d{2}:\\d{2}:\\d{2} [+\\-]\\d{4})]");
     private static final Pattern userAgentPattern = Pattern.compile("\"([^\"]*)\"[^\"]*$");
-    public static void main(String[] args) {
-        Logger logger = Logger.getLogger(LogParser.class.getName());
-        String logFilePath = System.getProperty("user.dir") + "\\logs\\apache_nginx\\access_log_100.log";
-        System.out.println(System.getProperty("user.dir"));
-        Path logPath = Paths.get(logFilePath);
-        LinkedList<String> lines = new LinkedList<>();
-
-        if (Files.exists(logPath)) {
-            lines = readFile(logFilePath, logger);
-
-            LinkedList<Log> logList = new LinkedList<>();
-            for (String workingLine : lines) {
-                logList.add(new Log(
-                        parseIpAddress(workingLine),
-                        parseTimestamp(workingLine),
-                        parseAllInOne(workingLine)[5].replace("\"", ""),
-                        parseAllInOne(workingLine)[7].replace("\"", ""),
-                        parseAllInOne(workingLine)[6].replace("\"", ""),
-                        Integer.parseInt(parseAllInOne(workingLine)[8]),
-                        Integer.parseInt(parseAllInOne(workingLine)[9]),
-                        parseUserAgent(workingLine)
-                ));
-            }
-            try {
-                CsvGenerator.generateCSV(logList);
-            } catch (Exception e) {
-                logger.log(Level.SEVERE, "Error generating CSV: {0}", e.getMessage());
-            }
-        } else {
-            logger.log(Level.SEVERE, "Log file not found at location {0}", logFilePath);
-        }
-    }
     public static String parseIpAddress(String logLine) {
         return findFirstMatch(logLine, ipAddrPattern);
     }
@@ -72,5 +36,76 @@ public class LogParser {
     }
     public static String[] parseAllInOne(String logLine) {
         return logLine.split(" ");
+    }
+
+    public static void main(String[] args) {
+        Logger logger = Logger.getLogger(LogParser.class.getName());
+        String logFilePath = System.getProperty("user.dir") + "\\logs\\apache_nginx\\access_log_0.log";
+        Path logPath = Paths.get(logFilePath);
+        Path logDirectory = logPath.getParent(); // Get the parent directory of the log file
+        LinkedList<String> lines = new LinkedList<>();
+
+        if (Files.exists(logPath)) {
+            lines = readFile(logFilePath, logger);
+
+            WatchService watchService = null;
+            try {
+                watchService = FileSystems.getDefault().newWatchService();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            try {
+                logDirectory.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            while (true) {
+                WatchKey key;
+                try {
+                    key = watchService.take();
+                } catch (InterruptedException ex) {
+                    return;
+                }
+
+                for (WatchEvent<?> event : key.pollEvents()) {
+                    WatchEvent.Kind<?> kind = event.kind();
+                    if (kind == StandardWatchEventKinds.OVERFLOW) {
+                        continue;
+                    }
+
+                    WatchEvent<Path> ev = (WatchEvent<Path>) event;
+                    Path filename = ev.context();
+                    if (filename.toString().equals(logPath.getFileName().toString())) {
+                        // Log file has been modified, read and update CSV
+                        lines = readFile(logFilePath, logger);
+                        LinkedList<Log> logList = new LinkedList<>();
+                        for (String workingLine : lines) {
+                            logList.add(new Log(
+                                    parseIpAddress(workingLine),
+                                    parseTimestamp(workingLine),
+                                    parseAllInOne(workingLine)[5].replace("\"", ""),
+                                    parseAllInOne(workingLine)[7].replace("\"", ""),
+                                    parseAllInOne(workingLine)[6].replace("\"", ""),
+                                    Integer.parseInt(parseAllInOne(workingLine)[8]),
+                                    Integer.parseInt(parseAllInOne(workingLine)[9]),
+                                    parseUserAgent(workingLine)
+                            ));
+                        }
+                        try {
+                            CsvGenerator.generateCSV(logList);
+                        } catch (Exception e) {
+                            logger.log(Level.SEVERE, "Error generating CSV: {0}", e.getMessage());
+                        }
+                    }
+                }
+                boolean valid = key.reset();
+                if (!valid) {
+                    break;
+                }
+            }
+        } else {
+            logger.log(Level.SEVERE, "Log file not found at location {0}", logFilePath);
+        }
     }
 }

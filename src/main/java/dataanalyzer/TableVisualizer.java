@@ -43,7 +43,7 @@ public class TableVisualizer {
         tableView.setEditable(true); // Make the table editable
     }
     public static void ManageLogTable(Parent root) throws IOException {
-        List<String> data = read("logs/parsed/log_test.csv");
+        List<String> data = read("logs/parsed/log.csv");
         VBox mainVBox = (VBox) root.lookup("#mainVBox");
 
         TableView<String[]> tableView = (TableView<String[]>) mainVBox.lookup("#Table");

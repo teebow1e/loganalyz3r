@@ -70,8 +70,7 @@ public class Controller {
         System.out.println("Password: " + password);
         System.out.println("Re-entered Password: " + rePassword);
 
-        LoginForm loginForm = new LoginForm();
-        loginForm.start(stage);
+        returnToLogin(event);
     }
 
     @FXML
