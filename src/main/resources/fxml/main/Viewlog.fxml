@@ -6,7 +6,7 @@
     <fx:include source="Sidebar.fxml"/>
 
     <VBox fx:id="mainVBox" styleClass="main" HBox.hgrow="ALWAYS">
-        <Label styleClass="title-label" text="LOGS"/>
+        <Label styleClass="title-label" text="LOGS" alignment="CENTER"/>
         <TableView fx:id="Table" prefHeight="600.0" prefWidth="1000.0">
 
         </TableView>

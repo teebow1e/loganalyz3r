@@ -38,7 +38,7 @@ public class LogParser {
         return logLine.split(" ");
     }
 
-    public static void main(String[] args) {
+    public static void parseAndGenerateCSV() {
         Logger logger = Logger.getLogger(LogParser.class.getName());
         String logFilePath = System.getProperty("user.dir") + "\\logs\\apache_nginx\\access_log_0.log";
         Path logPath = Paths.get(logFilePath);
@@ -107,5 +107,9 @@ public class LogParser {
         } else {
             logger.log(Level.SEVERE, "Log file not found at location {0}", logFilePath);
         }
+    }
+
+    public static void main(String[] args) {
+        parseAndGenerateCSV();
     }
 }
