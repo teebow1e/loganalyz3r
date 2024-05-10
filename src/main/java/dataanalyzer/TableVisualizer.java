@@ -20,7 +20,7 @@ import static csvgenerator.CSVReader.read;
 
 public class TableVisualizer {
 
-    public static void LogTable(TableView<String[]> tableView) throws IOException {
+    public static void LogTable(TableView<String[]> tableView, String columnStyle) throws IOException {
         List<String> data = read("logs/parsed/log.csv");
         // Clear existing table content
         tableView.getItems().clear();
@@ -32,7 +32,7 @@ public class TableVisualizer {
             TableColumn<String[], String> column = new TableColumn<>(headers[i]);
             column.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue()[columnIndex]));
             column.setResizable(false);
-            column.getStyleClass().add("log-table-column-" + (i + 1));
+            column.getStyleClass().add(columnStyle + (i + 1));
             tableView.getColumns().add(column);
         }
 
@@ -49,6 +49,8 @@ public class TableVisualizer {
     public static void ShowLogTable(Parent root) throws IOException {
         VBox mainVBox = (VBox) root.lookup("#mainVBox");
         TableView<String[]> tableView = (TableView<String[]>) mainVBox.lookup("#Table");
+        LogTable(tableView, "access-log-table-column-");
+
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -61,7 +63,7 @@ public class TableVisualizer {
     public static void ManageLogTable(Parent root) throws IOException {
         VBox mainVBox = (VBox) root.lookup("#mainVBox");
         TableView<String[]> tableView = (TableView<String[]>) mainVBox.lookup("#Table");
-        LogTable(tableView);
+        LogTable(tableView, "manage-access-log-table-column-");
 
         // Add a checkbox column
         TableColumn<String[], Boolean> checkboxColumn = new TableColumn<>("Checkbox");
@@ -75,15 +77,16 @@ public class TableVisualizer {
             return selectedProperty;
         });
         checkboxColumn.setCellFactory(CheckBoxTableCell.forTableColumn(checkboxColumn));
-        checkboxColumn.getStyleClass().add("log-table-column-" + 9);
-        checkboxColumn.setEditable(true); // Make the checkbox column editable
+        checkboxColumn.getStyleClass().add("manage-access-log-table-column-" + 9);
+        checkboxColumn.setEditable(true); // Make the checkbox column editable\
+        checkboxColumn.setResizable(false);
         tableView.getColumns().add(checkboxColumn);
     }
 
     private static void updateTableView(TableView<String[]> tableView) {
         Platform.runLater(() -> {
             try {
-                LogTable(tableView);
+                LogTable(tableView, "access-log-table-column-");
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

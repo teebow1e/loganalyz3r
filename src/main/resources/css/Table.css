@@ -2,40 +2,75 @@
     -fx-background-color: #f4f4f4;
 }
 
-.log-table-column-1 {
+.access-log-table-column-1 {
     -fx-alignment: CENTER;
     -fx-pref-width: 100px;
 }
 
-.log-table-column-2 {
+.access-log-table-column-2 {
     -fx-alignment: CENTER;
     -fx-pref-width: 150px;
 }
-.log-table-column-3 {
+.access-log-table-column-3 {
     -fx-alignment: CENTER;
     -fx-pref-width: 50px;
 }
-.log-table-column-4 {
+.access-log-table-column-4 {
     -fx-alignment: CENTER;
     -fx-pref-width: 50px;
 }
-.log-table-column-5 {
+.access-log-table-column-5 {
     -fx-alignment: CENTER;
     -fx-pref-width: 100px;
 }
-.log-table-column-6 {
+.access-log-table-column-6 {
     -fx-alignment: CENTER;
     -fx-pref-width: 50px;
 }
-.log-table-column-7 {
+.access-log-table-column-7 {
     -fx-alignment: CENTER;
     -fx-pref-width: 100px;
 }
-.log-table-column-8 {
+.access-log-table-column-8 {
+    -fx-alignment: CENTER;
+    -fx-pref-width: 400px;
+}
+
+.manage-access-log-table-column-1 {
+    -fx-alignment: CENTER;
+    -fx-pref-width: 100px;
+}
+
+.manage-access-log-table-column-2 {
+    -fx-alignment: CENTER;
+    -fx-pref-width: 150px;
+}
+.manage-access-log-table-column-3 {
+    -fx-alignment: CENTER;
+    -fx-pref-width: 50px;
+}
+.manage-access-log-table-column-4 {
+    -fx-alignment: CENTER;
+    -fx-pref-width: 50px;
+}
+.manage-access-log-table-column-5 {
+    -fx-alignment: CENTER;
+    -fx-pref-width: 100px;
+}
+.manage-access-log-table-column-6 {
+    -fx-alignment: CENTER;
+    -fx-pref-width: 50px;
+}
+.manage-access-log-table-column-7 {
+    -fx-alignment: CENTER;
+    -fx-pref-width: 100px;
+}
+.manage-access-log-table-column-8 {
     -fx-alignment: CENTER;
     -fx-pref-width: 300px;
 }
-.log-table-column-9 {
+.manage-access-log-table-column-9 {
     -fx-alignment: CENTER;
     -fx-pref-width: 100px;
 }
+
