@@ -36,6 +36,22 @@
     -fx-pref-width: 400px;
 }
 
+.access-log-table-column-1,
+.access-log-table-column-2,
+.access-log-table-column-3,
+.access-log-table-column-4,
+.access-log-table-column-5,
+.access-log-table-column-6,
+.access-log-table-column-7,
+.access-log-table-column-8 {
+    -fx-alignment: CENTER;
+    -fx-font-size: 14px;
+    -fx-text-fill: #333;
+    -fx-padding: 5px;
+    -fx-border-color: #ccc;
+    -fx-border-width: 0.5px;
+}
+
 .manage-access-log-table-column-1 {
     -fx-alignment: CENTER;
     -fx-pref-width: 100px;
@@ -74,3 +90,19 @@
     -fx-pref-width: 100px;
 }
 
+.manage-access-log-table-column-1,
+.manage-access-log-table-column-2,
+.manage-access-log-table-column-3,
+.manage-access-log-table-column-4,
+.manage-access-log-table-column-5,
+.manage-access-log-table-column-6,
+.manage-access-log-table-column-7,
+.manage-access-log-table-column-8,
+.manage-access-log-table-column-9{
+    -fx-alignment: CENTER;
+    -fx-font-size: 14px;
+    -fx-text-fill: #333;
+    -fx-padding: 5px;
+    -fx-border-color: #ccc;
+    -fx-border-width: 0.5px;
+}

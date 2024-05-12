@@ -6,11 +6,14 @@ import javafx.beans.property.BooleanProperty;
 import javafx.collections.*;
 
 import javafx.scene.Parent;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 
 import javafx.concurrent.Task;
+import javafx.stage.Stage;
 import loganalyzer.LogParser;
 
 import java.io.IOException;
@@ -43,7 +46,19 @@ public class TableVisualizer {
         }
 
         tableView.setItems(rows);
-        tableView.setEditable(true); // Make the table editable
+        tableView.setEditable(true);
+
+        tableView.setRowFactory(tv -> {
+            TableRow<String[]> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
+                    String[] rowData = row.getItem();
+
+                    System.out.println("Double clicked row: " + Arrays.toString(rowData));
+                }
+            });
+            return row;
+        });
     }
 
     public static void ShowLogTable(Parent root) throws IOException {
@@ -57,7 +72,12 @@ public class TableVisualizer {
             public void run() {
                 updateTableView(tableView);
             }
-        }, 0, 5000); // Update every 5 seconds (adjust as needed)
+        }, 0, 10000); // Update every 10 seconds
+
+        Stage stage = (Stage) root.getScene().getWindow();
+        stage.setOnCloseRequest(event -> { // Stop Timer when exit
+            timer.cancel();
+        });
     }
 
     public static void ManageLogTable(Parent root) throws IOException {
@@ -92,5 +112,6 @@ public class TableVisualizer {
             }
         });
     }
+
 }
 
