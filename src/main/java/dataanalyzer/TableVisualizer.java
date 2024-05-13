@@ -13,6 +13,7 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 
 import javafx.concurrent.Task;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import loganalyzer.LogParser;
 
@@ -54,6 +55,7 @@ public class TableVisualizer {
             row.setOnMouseClicked(event -> {
                 if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
                     String[] rowData = row.getItem();
+                    showRowContent(rowData);
 
                     System.out.println("Double clicked row: " + Arrays.toString(rowData));
                 }
@@ -71,7 +73,6 @@ public class TableVisualizer {
             @Override
             public void run() {
                 updateTableView(tableView);
-                System.out.println(timer);
             }
         }, 0, 10000); // Update every 10 seconds
 
@@ -102,6 +103,11 @@ public class TableVisualizer {
         checkboxColumn.setEditable(true); // Make the checkbox column editable\
         checkboxColumn.setResizable(false);
         tableView.getColumns().add(checkboxColumn);
+
+        Stage stage = (Stage) root.getScene().getWindow();
+        stage.setOnCloseRequest(event -> {
+            timer.cancel();
+        });
     }
 
     private static void updateTableView(TableView<String[]> tableView) {
@@ -112,6 +118,25 @@ public class TableVisualizer {
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    private static void showRowContent(String[] rowData) {
+        // Create a VBox to hold the content
+        VBox contentBox = new VBox();
+        contentBox.setSpacing(5);
+
+        // Iterate through the rowData and create Text nodes for each element
+        for (String rowdata : rowData) {
+            Text text = new Text(rowdata);
+            contentBox.getChildren().add(text);
+        }
+
+        // Create a dialog to display the content
+        Dialog<Void> dialog = new Dialog<>();
+        dialog.getDialogPane().setContent(contentBox);
+        dialog.setTitle("Row Details");
+        dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+        dialog.showAndWait();
     }
 
 }
