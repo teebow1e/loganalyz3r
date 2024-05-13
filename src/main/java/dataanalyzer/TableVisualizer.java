@@ -22,6 +22,7 @@ import java.util.*;
 import static csvgenerator.CSVReader.read;
 
 public class TableVisualizer {
+    private static Timer timer = new Timer();
 
     public static void LogTable(TableView<String[]> tableView, String columnStyle) throws IOException {
         List<String> data = read("logs/parsed/log.csv");
@@ -66,16 +67,16 @@ public class TableVisualizer {
         TableView<String[]> tableView = (TableView<String[]>) mainVBox.lookup("#Table");
         LogTable(tableView, "access-log-table-column-");
 
-        Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 updateTableView(tableView);
+                System.out.println(timer);
             }
         }, 0, 10000); // Update every 10 seconds
 
         Stage stage = (Stage) root.getScene().getWindow();
-        stage.setOnCloseRequest(event -> { // Stop Timer when exit
+        stage.setOnCloseRequest(event -> {
             timer.cancel();
         });
     }
