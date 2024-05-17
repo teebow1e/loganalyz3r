@@ -15,7 +15,7 @@ public class CsvGenerator {
     }
     public static void generateCSV(List<Log> logList)
             throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
-        File file = new File("logs/parsed/log.csv");
+        File file = new File("logs/parsed/log_new.csv");
         try (FileWriter writer = new FileWriter(file)){
             var mappingStrategy = new CustomColumnPositionStrategy<Log>();
             mappingStrategy.setType(Log.class);

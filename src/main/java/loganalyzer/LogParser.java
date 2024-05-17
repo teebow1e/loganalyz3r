@@ -2,6 +2,7 @@ package loganalyzer;
 
 import java.io.*;
 import java.nio.file.*;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.regex.*;
 import java.util.logging.Level;
@@ -46,9 +47,11 @@ public class LogParser {
         LinkedList<String> lines = new LinkedList<>();
 
         if (Files.exists(logPath)) {
+            System.out.println("log path exists");
             lines = readFile(logFilePath, logger);
 
             WatchService watchService = null;
+            System.out.println("watching now");
             try {
                 watchService = FileSystems.getDefault().newWatchService();
             } catch (IOException e) {
@@ -61,6 +64,7 @@ public class LogParser {
             }
 
             while (true) {
+                System.out.println("here");
                 WatchKey key;
                 try {
                     key = watchService.take();
@@ -93,7 +97,9 @@ public class LogParser {
                             ));
                         }
                         try {
+                            System.out.println("generating csv now..");
                             CsvGenerator.generateCSV(logList);
+                            System.out.println("done generate");
                         } catch (Exception e) {
                             logger.log(Level.SEVERE, "Error generating CSV: {0}", e.getMessage());
                         }
