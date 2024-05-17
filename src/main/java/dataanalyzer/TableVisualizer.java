@@ -3,22 +3,21 @@ package dataanalyzer;
 import controller.TableCheckBox;
 import javafx.application.Platform;
 import javafx.beans.property.BooleanProperty;
-import javafx.collections.*;
-
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
-
-import javafx.concurrent.Task;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import loganalyzer.LogParser;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import static csvgenerator.CSVReader.read;
 
@@ -36,7 +35,7 @@ public class TableVisualizer {
             final int columnIndex = i;
             TableColumn<String[], String> column = new TableColumn<>(headers[i]);
             column.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue()[columnIndex]));
-            column.setResizable(false);
+            column.setResizable(true); // Ensure the column can resize
             column.getStyleClass().add(columnStyle + (i + 1));
             tableView.getColumns().add(column);
         }
@@ -56,12 +55,14 @@ public class TableVisualizer {
                 if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
                     String[] rowData = row.getItem();
                     showRowContent(rowData);
-
                     System.out.println("Double clicked row: " + Arrays.toString(rowData));
                 }
             });
             return row;
         });
+
+        // Set column resize policy to ensure all columns cover the full width of the table
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
     public static void ShowLogTable(Parent root) throws IOException {
@@ -100,9 +101,12 @@ public class TableVisualizer {
         });
         checkboxColumn.setCellFactory(CheckBoxTableCell.forTableColumn(checkboxColumn));
         checkboxColumn.getStyleClass().add("manage-access-log-table-column-" + 9);
-        checkboxColumn.setEditable(true); // Make the checkbox column editable\
-        checkboxColumn.setResizable(false);
+        checkboxColumn.setEditable(true); // Make the checkbox column editable
+        checkboxColumn.setResizable(true);
         tableView.getColumns().add(checkboxColumn);
+
+        // Set column resize policy to ensure all columns cover the full width of the table
+        tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
         Stage stage = (Stage) root.getScene().getWindow();
         stage.setOnCloseRequest(event -> {
@@ -138,6 +142,4 @@ public class TableVisualizer {
         dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
         dialog.showAndWait();
     }
-
 }
-

@@ -15,7 +15,9 @@
             <Button text="Button 4" fx:id="button4"/>
         </HBox>
         <TableView fx:id="Table" prefHeight="600.0" prefWidth="1000.0">
-
+            <columnResizePolicy>
+                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+            </columnResizePolicy>
         </TableView>
     </VBox>
 </HBox>
