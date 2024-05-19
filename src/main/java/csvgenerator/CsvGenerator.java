@@ -4,7 +4,7 @@ import com.opencsv.CSVWriter;
 import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import com.opencsv.exceptions.CsvDataTypeMismatchException;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
-import loganalyzer.Log;
+import loganalyzer.Apache;
 import loganalyzer.ModSecurity;
 
 import java.io.*;
@@ -14,14 +14,14 @@ public class CsvGenerator {
     private CsvGenerator() {
         throw new IllegalStateException("Utility class");
     }
-    public static void generateCSVNormalLog(List<Log> logList)
+    public static void generateCSVNormalLog(List<Apache> logList)
             throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
         File file = new File("logs/parsed/log_new.csv");
         try (FileWriter writer = new FileWriter(file)){
-            var mappingStrategy = new CustomColumnPositionStrategy<Log>();
-            mappingStrategy.setType(Log.class);
+            var mappingStrategy = new CustomColumnPositionStrategy<Apache>();
+            mappingStrategy.setType(Apache.class);
 
-            var builder = new StatefulBeanToCsvBuilder<Log>(writer)
+            var builder = new StatefulBeanToCsvBuilder<Apache>(writer)
                     .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
                     .withMappingStrategy(mappingStrategy)
                     .build();

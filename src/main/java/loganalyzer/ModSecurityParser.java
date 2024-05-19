@@ -32,11 +32,6 @@ public class ModSecurityParser {
                 String line;
                 while ((line = reader.readLine()) != null) {
                     JsonNode jsonNode = objectMapper.readTree(line);
-                    String timestamp = jsonNode.path("transaction").path("time").asText();
-                    String transactionId = jsonNode.path("transaction").path("transaction_id").asText();
-                    String remoteAddress = jsonNode.path("transaction").path("remote_address").asText();
-                    String remotePort = String.valueOf(jsonNode.path("transaction").path("remote_port").asInt());
-                    String requestLine = jsonNode.path("request").path("request_line").asText();
                     String auditData = jsonNode.path("audit_data").path("messages").get(0).asText();
                     JsonNode versionSection = jsonNode.path("audit_data").path("producer");
                     String potentialVersion;
@@ -45,22 +40,18 @@ public class ModSecurityParser {
                     } else {
                         potentialVersion = parseVersion(versionSection.get(0).asText());
                     }
-                    String attackType = parseAttackType(auditData);
-                    String attackMsg = parseAttackMsg(auditData);
-                    String attackData = parseAttackData(auditData);
-                    String severity = parseSeverity(auditData);
 
                     logList.add(new ModSecurity(
-                        potentialVersion,
-                        timestamp,
-                        transactionId,
-                        remoteAddress,
-                        remotePort,
-                        requestLine,
-                        attackType,
-                        attackMsg,
-                        attackData,
-                        severity
+                            potentialVersion,
+                            jsonNode.path("transaction").path("time").asText(),
+                            jsonNode.path("transaction").path("transaction_id").asText(),
+                            jsonNode.path("transaction").path("remote_address").asText(),
+                            String.valueOf(jsonNode.path("transaction").path("remote_port").asInt()),
+                            jsonNode.path("request").path("request_line").asText(),
+                            parseAttackType(auditData),
+                            parseAttackMsg(auditData),
+                            parseAttackData(auditData),
+                            parseSeverity(auditData)
                     ));
                 }
             } catch (IOException e) {
@@ -138,7 +129,6 @@ public class ModSecurityParser {
     }
 }
 
-// todo: hoàn thành parser cho modsec + gen log modsec để test
 // todo: suy nghĩ về phương pháp đọc file để gen + benchmark
 // todo: suy nghĩ về cách detect file đã dc thêm data/xóa data đi
 // todo: bảng không cần phải đọc từ csv mà đọc từ đối tượng Log
