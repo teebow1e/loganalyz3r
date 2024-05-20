@@ -40,74 +40,32 @@ public class ApacheParser {
 
     public static void parseAndGenerateCSV() {
         Logger logger = Logger.getLogger(ApacheParser.class.getName());
-        String logFilePath = System.getProperty("user.dir") + "\\logs\\apache_nginx\\access_log_0.log";
+        String logFilePath = System.getProperty("user.dir") + "\\logs\\apache_nginx\\access_log_1000.log";
         Path logPath = Paths.get(logFilePath);
-        Path logDirectory = logPath.getParent(); // Get the parent directory of the log file
         LinkedList<String> lines = new LinkedList<>();
 
         if (Files.exists(logPath)) {
             System.out.println("log path exists");
             lines = readFile(logFilePath, logger);
-
-            WatchService watchService = null;
-            System.out.println("watching now");
-            try {
-                watchService = FileSystems.getDefault().newWatchService();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
+            LinkedList<Apache> logList = new LinkedList<>();
+            for (String workingLine : lines) {
+                logList.add(new Apache(
+                        parseIpAddress(workingLine),
+                        parseTimestamp(workingLine),
+                        parseAllInOne(workingLine)[5].replace("\"", ""),
+                        parseAllInOne(workingLine)[7].replace("\"", ""),
+                        parseAllInOne(workingLine)[6].replace("\"", ""),
+                        Integer.parseInt(parseAllInOne(workingLine)[8]),
+                        Integer.parseInt(parseAllInOne(workingLine)[9]),
+                        parseUserAgent(workingLine)
+                ));
             }
             try {
-                logDirectory.register(watchService, StandardWatchEventKinds.ENTRY_MODIFY);
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-
-            while (true) {
-                System.out.println("here");
-                WatchKey key;
-                try {
-                    key = watchService.take();
-                } catch (InterruptedException ex) {
-                    return;
-                }
-
-                for (WatchEvent<?> event : key.pollEvents()) {
-                    WatchEvent.Kind<?> kind = event.kind();
-                    if (kind == StandardWatchEventKinds.OVERFLOW) {
-                        continue;
-                    }
-
-                    WatchEvent<Path> ev = (WatchEvent<Path>) event;
-                    Path filename = ev.context();
-                    if (filename.toString().equals(logPath.getFileName().toString())) {
-                        // Log file has been modified, read and update CSV
-                        lines = readFile(logFilePath, logger);
-                        LinkedList<Apache> logList = new LinkedList<>();
-                        for (String workingLine : lines) {
-                            logList.add(new Apache(
-                                    parseIpAddress(workingLine),
-                                    parseTimestamp(workingLine),
-                                    parseAllInOne(workingLine)[5].replace("\"", ""),
-                                    parseAllInOne(workingLine)[7].replace("\"", ""),
-                                    parseAllInOne(workingLine)[6].replace("\"", ""),
-                                    Integer.parseInt(parseAllInOne(workingLine)[8]),
-                                    Integer.parseInt(parseAllInOne(workingLine)[9]),
-                                    parseUserAgent(workingLine)
-                            ));
-                        }
-                        try {
-                            System.out.println("generating csv now..");
-                            CsvGenerator.generateCSVNormalLog(logList);
-                            System.out.println("done generate");
-                        } catch (Exception e) {
-                            logger.log(Level.SEVERE, "Error generating CSV: {0}", e.getMessage());
-                        }
-                    }
-                }
-                boolean valid = key.reset();
-                if (!valid) {
-                    break;
-                }
+                System.out.println("generating csv now..");
+                CsvGenerator.generateCSVNormalLog(logList);
+                System.out.println("done generate");
+            } catch (Exception e) {
+                logger.log(Level.SEVERE, "Error generating CSV: {0}", e.getMessage());
             }
         } else {
             logger.log(Level.SEVERE, "Log file not found at location {0}", logFilePath);

@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,6 +34,8 @@ public class ModSecurityParser {
                 while ((line = reader.readLine()) != null) {
                     JsonNode jsonNode = objectMapper.readTree(line);
                     String auditData = jsonNode.path("audit_data").path("messages").get(0).asText();
+                    String requestLine = jsonNode.path("request").path("request_line").asText();
+                    String[] requestParts = requestLine.split(" ");
                     JsonNode versionSection = jsonNode.path("audit_data").path("producer");
                     String potentialVersion;
                     if (versionSection.isMissingNode() || versionSection.isNull()) {
@@ -46,8 +49,11 @@ public class ModSecurityParser {
                             jsonNode.path("transaction").path("time").asText(),
                             jsonNode.path("transaction").path("transaction_id").asText(),
                             jsonNode.path("transaction").path("remote_address").asText(),
-                            String.valueOf(jsonNode.path("transaction").path("remote_port").asInt()),
-                            jsonNode.path("request").path("request_line").asText(),
+                            requestParts[1],
+                            requestParts[0],
+                            requestParts[2],
+                            jsonNode.path("response").path("status").asInt(),
+                            jsonNode.path("request").path("headers").path("User-Agent").asText(),
                             parseAttackType(auditData),
                             parseAttackMsg(auditData),
                             parseAttackData(auditData),

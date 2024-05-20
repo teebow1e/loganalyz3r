@@ -2,6 +2,7 @@ package csvgenerator;
 
 import com.opencsv.bean.ColumnPositionMappingStrategy;
 import com.opencsv.exceptions.CsvRequiredFieldEmptyException;
+import java.util.Arrays;
 
 public class CustomColumnPositionStrategy<T> extends ColumnPositionMappingStrategy<T> {
     @Override

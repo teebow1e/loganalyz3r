@@ -14,10 +14,7 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
+import java.util.*;
 
 import static csvgenerator.CSVReader.read;
 
@@ -25,25 +22,37 @@ public class TableVisualizer {
     private static Timer timer = new Timer();
 
     public static void LogTable(TableView<String[]> tableView, String columnStyle) throws IOException {
-        List<String> data = read("logs/parsed/log.csv");
+        List<String> data = read("logs/parsed/modsecurity.csv");
         // Clear existing table content
         tableView.getItems().clear();
         tableView.getColumns().clear();
 
         String[] headers = data.get(0).split(",");
+        List<Integer> nonEmptyColumnIndices = new ArrayList<>();
         for (int i = 0; i < headers.length; i++) {
-            final int columnIndex = i;
-            TableColumn<String[], String> column = new TableColumn<>(headers[i]);
-            column.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue()[columnIndex]));
-            column.setResizable(true); // Ensure the column can resize
-            column.getStyleClass().add(columnStyle + (i + 1));
-            tableView.getColumns().add(column);
+            if (!headers[i].trim().isEmpty()) {
+                nonEmptyColumnIndices.add(i);
+            }
+        }
+
+        for (int i = 0; i < (nonEmptyColumnIndices.size()); i++) {
+            if (!headers[i].trim().isEmpty()) {
+                final int columnIndex = i;
+                TableColumn<String[], String> column = new TableColumn<>(headers[i]);
+                column.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue()[columnIndex]));
+                column.setResizable(true);
+                column.getStyleClass().add(columnStyle + (nonEmptyColumnIndices.indexOf(i) + 1));
+                tableView.getColumns().add(column);
+            }
         }
 
         ObservableList<String[]> rows = FXCollections.observableArrayList();
         for (int i = 1; i < data.size(); i++) {
             String[] rowData = data.get(i).split(",");
-            rows.add(rowData);
+            String[] filteredRowData = Arrays.stream(rowData)
+                    .filter(s -> !s.trim().isEmpty())
+                    .toArray(String[]::new);
+            rows.add(filteredRowData);
         }
 
         tableView.setItems(rows);
@@ -54,7 +63,7 @@ public class TableVisualizer {
             row.setOnMouseClicked(event -> {
                 if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
                     String[] rowData = row.getItem();
-                    showRowContent(rowData);
+                    showRowContent(headers, rowData);
                     System.out.println("Double clicked row: " + Arrays.toString(rowData));
                 }
             });
@@ -124,14 +133,23 @@ public class TableVisualizer {
         });
     }
 
-    private static void showRowContent(String[] rowData) {
+    private static void showRowContent(String[] headers, String[] rowData) {
         // Create a VBox to hold the content
         VBox contentBox = new VBox();
         contentBox.setSpacing(5);
 
+        // Create a map to store headerName: rowData pairs
+        Map<String, String> headerDataMap = new LinkedHashMap<>();
+        // Iterate through the headers and rowData and add non-empty headers and their data to the map
+        for (int i = 0; i < headers.length; i++) {
+            if (!headers[i].trim().isEmpty()) {
+                headerDataMap.put(headers[i], rowData[i]);
+            }
+        }
+
         // Iterate through the rowData and create Text nodes for each element
-        for (String rowdata : rowData) {
-            Text text = new Text(rowdata);
+        for (Map.Entry<String, String> entry : headerDataMap.entrySet()) {
+            Text text = new Text(entry.getKey() + ": " + entry.getValue());
             contentBox.getChildren().add(text);
         }
 
