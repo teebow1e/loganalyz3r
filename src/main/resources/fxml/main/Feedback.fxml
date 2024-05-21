@@ -5,8 +5,20 @@
 <HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.Controller">
     <fx:include source="Sidebar.fxml"/>
 
-    <VBox styleClass="main" HBox.hgrow="ALWAYS" style="-fx-background-color: lightblue;">
-        <Label text="MAIN CONTENT HERE"/>
-        <!-- pie chart here -->
-    </VBox>
+    <StackPane HBox.hgrow="ALWAYS" alignment="CENTER">
+        <VBox spacing="10" alignment="CENTER" stylesheets="@Feedback.css">
+            <Label text="Feedback Form" styleClass="title-label"/>
+
+            <Label text="Name:"/>
+            <TextField fx:id="nameField" promptText="Enter your name" styleClass="text-field" maxWidth="500"/>
+
+            <Label text="Email:"/>
+            <TextField fx:id="emailField" promptText="Enter your email" styleClass="text-field" maxWidth="500"/>
+
+            <Label text="Feedback:"/>
+            <TextArea fx:id="feedbackArea" promptText="Enter your feedback" prefRowCount="6" styleClass="text-area" maxWidth="500"/>
+
+            <Button text="Submit" styleClass="button"/>
+        </VBox>
+    </StackPane>
 </HBox>

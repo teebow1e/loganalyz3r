@@ -22,7 +22,7 @@
             </graphic>
         </Label>
 
-        <Label text="Feed Back" styleClass="sidebar-content-label" onMouseClicked="#handleFeedback">
+        <Label text="Feedback" styleClass="sidebar-content-label" onMouseClicked="#handleFeedback">
             <graphic>
                 <ImageView>
                     <Image url="@/img/feedback.png"/>
