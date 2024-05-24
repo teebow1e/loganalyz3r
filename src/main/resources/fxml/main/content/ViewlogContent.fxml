@@ -6,7 +6,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox fx:id="mainVBox" styleClass="main" HBox.hgrow="ALWAYS" xmlns:fx="http://javafx.com/fxml">
+<VBox fx:id="mainVBox" styleClass="main" HBox.hgrow="ALWAYS" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.ViewLogController">
     <Label styleClass="title-label" text="LOGS" alignment="CENTER"/>
     <TableView fx:id="Table" prefHeight="600.0" prefWidth="1000.0">
         <columnResizePolicy>

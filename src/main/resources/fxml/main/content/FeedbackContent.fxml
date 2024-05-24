@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 
 <StackPane HBox.hgrow="ALWAYS" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.FeedbackController">
-    <VBox spacing="10" alignment="CENTER" stylesheets="@Feedback.css">
+    <VBox spacing="10" alignment="CENTER" stylesheets="@../../../css/Feedback.css">
         <Label text="Feedback Form" styleClass="title-label"/>
 
         <Label text="Name:"/>

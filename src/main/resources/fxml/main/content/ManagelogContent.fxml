@@ -2,7 +2,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox fx:id="mainVBox" styleClass="main" HBox.hgrow="ALWAYS" xmlns:fx="http://javafx.com/fxml">
+<VBox fx:id="mainVBox" styleClass="main" HBox.hgrow="ALWAYS" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.ManageLogController">
     <Label styleClass="title-label" text="LOGS"/>
     <HBox styleClass="filter-box">
         <TextField fx:id="filterTextField" promptText="Enter filter text"/>
