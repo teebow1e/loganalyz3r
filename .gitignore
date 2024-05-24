@@ -2,6 +2,7 @@
 !/**/.gitkeep
 credentials/cred.txt
 access_log_0.log
+logs/apache_nginx/access_log_2gb.log
 target/
 logs/parsed/
 !.mvn/wrapper/maven-wrapper.jar
