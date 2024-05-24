@@ -43,7 +43,6 @@ public class WebLogManager extends Application {
 
         Controller controller = loader.getController();
         controller.init(primaryStage);
-
     }
 
     public static void main(String[] args) {
