@@ -22,7 +22,7 @@ public class TableVisualizer {
     private static Timer timer = new Timer();
 
     public static void LogTable(TableView<String[]> tableView, String columnStyle) throws IOException {
-        List<String> data = read("logs/parsed/modsecurity.csv");
+        List<String> data = read("logs/parsed/log.csv");
         // Clear existing table content
         tableView.getItems().clear();
         tableView.getColumns().clear();

@@ -5,5 +5,5 @@
 <HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.Controller">
     <fx:include source="Sidebar.fxml"/>
 
-    <fx:include source="Feedback2.fxml"/>
+    <fx:include source="content/FeedbackContent.fxml"/>
 </HBox>

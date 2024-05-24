@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox fx:id="mainVBox" styleClass="main" HBox.hgrow="ALWAYS" xmlns:fx="http://javafx.com/fxml">
+    <Label styleClass="title-label" text="LOGS"/>
+    <HBox styleClass="filter-box">
+        <TextField fx:id="filterTextField" promptText="Enter filter text"/>
+        <Button text="Button 1" fx:id="button1"/>
+        <Button text="Button 2" fx:id="button2"/>
+        <Button text="Button 3" fx:id="button3"/>
+        <Button text="Button 4" fx:id="button4"/>
+    </HBox>
+    <TableView fx:id="Table" prefHeight="600.0" prefWidth="1000.0">
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+        </columnResizePolicy>
+    </TableView>
+</VBox>

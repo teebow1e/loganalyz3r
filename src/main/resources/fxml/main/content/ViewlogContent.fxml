@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox fx:id="mainVBox" styleClass="main" HBox.hgrow="ALWAYS" xmlns:fx="http://javafx.com/fxml">
+    <Label styleClass="title-label" text="LOGS" alignment="CENTER"/>
+    <TableView fx:id="Table" prefHeight="600.0" prefWidth="1000.0">
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+        </columnResizePolicy>
+    </TableView>
+</VBox>
