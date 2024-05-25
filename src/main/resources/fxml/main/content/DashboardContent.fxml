@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ScrollPane?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-
-<VBox fx:id="mainVBox" styleClass="main" HBox.hgrow="ALWAYS" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.DashboardController">
-
+<VBox fx:id="mainVBox" styleClass="main" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.DashboardController" stylesheets="@../../../css/Graph.css">
+    <ComboBox fx:id="timeIntervalComboBox" />
+    <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="AS_NEEDED" vbarPolicy="NEVER">
+        <BarChart fx:id="logBarChart" prefWidth="2000.0" barGap="5.0" categoryGap="20.0">
+            <xAxis>
+                <CategoryAxis />
+            </xAxis>
+            <yAxis>
+                <NumberAxis />
+            </yAxis>
+        </BarChart>
+    </ScrollPane>
 </VBox>
