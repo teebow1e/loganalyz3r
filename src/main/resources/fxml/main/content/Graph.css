@@ -1,0 +1,9 @@
+.chart-bar.series0 .bar { -fx-bar-fill: derive(-fx-chart-bar-color,20%); }
+.chart-bar.series1 .bar { -fx-bar-fill: derive(-fx-chart-bar-color,30%); }
+.chart-bar.series2 .bar { -fx-bar-fill: derive(-fx-chart-bar-color,40%); }
+.chart-bar.series3 .bar { -fx-bar-fill: derive(-fx-chart-bar-color,50%); }
+.chart-bar.series4 .bar { -fx-bar-fill: derive(-fx-chart-bar-color,60%); }
+.chart-bar.series5 .bar { -fx-bar-fill: derive(-fx-chart-bar-color,70%); }
+.chart-bar.series6 .bar { -fx-bar-fill: derive(-fx-chart-bar-color,80%); }
+.chart-bar.series7 .bar { -fx-bar-fill: derive(-fx-chart-bar-color,90%); }
+.chart-bar.series8 .bar { -fx-bar-fill: derive(-fx-chart-bar-color,100%); }

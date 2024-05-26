@@ -2,15 +2,13 @@ package controller;
 
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
-import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
-import javafx.scene.control.ScrollPane;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
-import javafx.scene.control.Tooltip;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -28,14 +26,33 @@ public class DashboardController {
     @FXML
     private ComboBox<String> timeIntervalComboBox;
 
+    @FXML
+    private TableView<RankingEntry> statusCodeRankingTable;
+
+    @FXML
+    private TableColumn<RankingEntry, String> statusCodeColumn;
+
+    @FXML
+    private TableColumn<RankingEntry, Integer> statusCodeCountColumn;
+
+    @FXML
+    private TableView<RankingEntry> timestampRankingTable;
+
+    @FXML
+    private TableColumn<RankingEntry, String> timestampColumn;
+
+    @FXML
+    private TableColumn<RankingEntry, Integer> timestampCountColumn;
+
     private List<LogEntry> logEntries;
     private static final int MAX_DISPLAYED_TIMESTAMPS = 7;
 
     @FXML
     private void initialize() {
         try {
-            logEntries = parseLogFile("logs/apache_nginx/access_log_10000.log");
+            logEntries = parseLogFile("logs/apache_nginx/access_log_50000.log");
             setupComboBox();
+            setupTableViews();
             displayLogsByInterval("15 Minutes");
         } catch (Exception e) {
             e.printStackTrace();
@@ -52,6 +69,14 @@ public class DashboardController {
             }
         });
         timeIntervalComboBox.getSelectionModel().selectFirst();
+    }
+
+    private void setupTableViews() {
+        statusCodeColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        statusCodeCountColumn.setCellValueFactory(new PropertyValueFactory<>("count"));
+
+        timestampColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        timestampCountColumn.setCellValueFactory(new PropertyValueFactory<>("count"));
     }
 
     private List<LogEntry> parseLogFile(String filePath) throws Exception {
@@ -117,6 +142,10 @@ public class DashboardController {
         seriesList.add(series500);
 
         logBarChart.getData().addAll(seriesList);
+
+        // Update rankings
+        updateStatusCodeRanking(groupedLogs);
+        updateTimestampRanking(groupedLogs);
     }
 
     private Map<String, Map<String, Integer>> groupLogsByInterval(String interval) {
@@ -203,6 +232,64 @@ public class DashboardController {
         }
     }
 
+    private void updateStatusCodeRanking(Map<String, Map<String, Integer>> groupedLogs) {
+        Map<String, Integer> statusCodeCounts = new HashMap<>();
+
+        // Iterate over the grouped logs for the selected time interval
+        for (Map<String, Integer> statusCounts : groupedLogs.values()) {
+            for (Map.Entry<String, Integer> entry : statusCounts.entrySet()) {
+                statusCodeCounts.merge(entry.getKey(), entry.getValue(), Integer::sum);
+            }
+        }
+
+        // Clear previous data in the table
+        statusCodeRankingTable.getItems().clear();
+
+        // Sort the status codes based on their counts
+        List<Map.Entry<String, Integer>> sortedStatusCodes = new ArrayList<>(statusCodeCounts.entrySet());
+        sortedStatusCodes.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
+
+        // Add the sorted status codes to the table
+        for (int i = 0; i < sortedStatusCodes.size(); i++) {
+            Map.Entry<String, Integer> entry = sortedStatusCodes.get(i);
+            statusCodeRankingTable.getItems().add(new RankingEntry(entry.getKey(), entry.getValue()));
+        }
+    }
+
+    private void updateTimestampRanking(Map<String, Map<String, Integer>> groupedLogs) {
+        List<Map.Entry<String, Map<String, Integer>>> sortedTimestamps = new ArrayList<>(groupedLogs.entrySet());
+        sortedTimestamps.sort((e1, e2) -> {
+            int sum1 = e1.getValue().values().stream().mapToInt(Integer::intValue).sum();
+            int sum2 = e2.getValue().values().stream().mapToInt(Integer::intValue).sum();
+            return Integer.compare(sum2, sum1);
+        });
+
+        timestampRankingTable.getItems().clear();
+        for (int i = 0; i < 5; i++) {
+            Map.Entry<String, Map<String, Integer>> entry = sortedTimestamps.get(i);
+            int sum = entry.getValue().values().stream().mapToInt(Integer::intValue).sum();
+            timestampRankingTable.getItems().add(new RankingEntry(entry.getKey(), sum));
+        }
+    }
+
+    public static class RankingEntry {
+        private final String name;
+        private final int count;
+
+        public RankingEntry(String name, int count) {
+            this.name = name;
+            this.count = count;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getCount() {
+            return count;
+        }
+    }
+
     private static class LogEntry {
         Date date;
         int statusCode;
@@ -212,4 +299,5 @@ public class DashboardController {
             this.statusCode = statusCode;
         }
     }
+
 }

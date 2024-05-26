@@ -5,18 +5,47 @@
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
+<?import javafx.scene.control.Button?>
 
-<VBox fx:id="mainVBox" styleClass="main" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.DashboardController" stylesheets="@../../../css/Graph.css">
-    <ComboBox fx:id="timeIntervalComboBox" />
-    <ScrollPane fitToWidth="true" fitToHeight="true" hbarPolicy="AS_NEEDED" vbarPolicy="NEVER">
-        <BarChart fx:id="logBarChart" prefWidth="2000.0" barGap="5.0" categoryGap="20.0">
-            <xAxis>
-                <CategoryAxis />
-            </xAxis>
-            <yAxis>
-                <NumberAxis />
-            </yAxis>
-        </BarChart>
-    </ScrollPane>
+<VBox fx:id="mainVBox" styleClass="main" stylesheets="@Graph.css" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.DashboardController">
+    <HBox spacing="10" alignment="CENTER">
+        <ComboBox fx:id="timeIntervalComboBox" />
+    </HBox>
+
+    <BarChart fx:id="logBarChart" barGap="5.0" categoryGap="20.0" prefWidth="1000.0" animated="false">
+        <xAxis>
+            <CategoryAxis />
+        </xAxis>
+        <yAxis>
+            <NumberAxis fx:id="yAxis" tickUnit="1.0" minorTickCount="0" forceZeroInRange="true" />
+        </yAxis>
+    </BarChart>
+    <HBox alignment="CENTER">
+        <VBox fx:id="statusCodeRankingVBox" spacing="5.0" style="-fx-padding: 10;">
+            <TableView fx:id="statusCodeRankingTable" prefHeight="200">
+                <columns>
+                    <TableColumn fx:id="statusCodeColumn" text="Status Code" />
+                    <TableColumn fx:id="statusCodeCountColumn" text="Count" />
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                </columnResizePolicy>
+            </TableView>
+        </VBox>
+        <VBox fx:id="timestampRankingVBox" spacing="5.0" style="-fx-padding: 10;">
+            <TableView fx:id="timestampRankingTable" prefHeight="200">
+                <columns>
+                    <TableColumn fx:id="timestampColumn" text="Timestamp" />
+                    <TableColumn fx:id="timestampCountColumn" text="Log Count" />
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                </columnResizePolicy>
+            </TableView>
+        </VBox>
+    </HBox>
 </VBox>
