@@ -33,6 +33,7 @@ public class WebLogManager extends Application {
 
         Scene scene = new Scene(root, 1200, 800);
         scene.getStylesheets().add(getClass().getResource("/css/WebLog.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/css/Table.css").toExternalForm());
 
         primaryStage.setTitle("Web Log Analyzer");
         primaryStage.setScene(scene);
@@ -42,18 +43,6 @@ public class WebLogManager extends Application {
 
         Controller controller = loader.getController();
         controller.init(primaryStage);
-
-        if (mode == 1) {
-            PieChartVisualizer.CreatePieChart(root);
-        }
-        else if (mode == 2) {
-            TableVisualizer.ShowLogTable(root);
-            scene.getStylesheets().add(getClass().getResource("/css/Table.css").toExternalForm());
-        }
-        else if(mode == 5) {
-            TableVisualizer.ManageLogTable(root);
-            scene.getStylesheets().add(getClass().getResource("/css/Table.css").toExternalForm());
-        }
     }
 
     public static void main(String[] args) {

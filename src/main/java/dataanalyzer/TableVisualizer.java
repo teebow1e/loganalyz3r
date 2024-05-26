@@ -22,7 +22,7 @@ public class TableVisualizer {
     private static Timer timer = new Timer();
 
     public static void LogTable(TableView<String[]> tableView, String columnStyle) throws IOException {
-        List<String> data = read("logs/parsed/modsecurity.csv");
+        List<String> data = read("logs/parsed/log.csv");
         // Clear existing table content
         tableView.getItems().clear();
         tableView.getColumns().clear();
@@ -74,9 +74,7 @@ public class TableVisualizer {
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
-    public static void ShowLogTable(Parent root) throws IOException {
-        VBox mainVBox = (VBox) root.lookup("#mainVBox");
-        TableView<String[]> tableView = (TableView<String[]>) mainVBox.lookup("#Table");
+    public static void ShowLogTable(TableView<String[]> tableView) throws IOException {
         LogTable(tableView, "access-log-table-column-");
 
         timer.scheduleAtFixedRate(new TimerTask() {
@@ -86,15 +84,10 @@ public class TableVisualizer {
             }
         }, 0, 10000); // Update every 10 seconds
 
-        Stage stage = (Stage) root.getScene().getWindow();
-        stage.setOnCloseRequest(event -> {
-            timer.cancel();
-        });
+        // No need to access the stage or set an event handler here
     }
 
-    public static void ManageLogTable(Parent root) throws IOException {
-        VBox mainVBox = (VBox) root.lookup("#mainVBox");
-        TableView<String[]> tableView = (TableView<String[]>) mainVBox.lookup("#Table");
+    public static void ManageLogTable(TableView<String[]> tableView) throws IOException {
         LogTable(tableView, "manage-access-log-table-column-");
 
         // Add a checkbox column
@@ -117,10 +110,7 @@ public class TableVisualizer {
         // Set column resize policy to ensure all columns cover the full width of the table
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        Stage stage = (Stage) root.getScene().getWindow();
-        stage.setOnCloseRequest(event -> {
-            timer.cancel();
-        });
+        // No need to access the stage or set an event handler here
     }
 
     private static void updateTableView(TableView<String[]> tableView) {

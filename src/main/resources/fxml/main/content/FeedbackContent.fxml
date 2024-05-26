@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane HBox.hgrow="ALWAYS" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.FeedbackController">
+    <VBox spacing="10" alignment="CENTER" stylesheets="@../../../css/Feedback.css">
+        <Label text="Feedback Form" styleClass="title-label"/>
+
+        <Label text="Name:"/>
+        <TextField fx:id="nameField" promptText="Enter your name" styleClass="text-field" maxWidth="500"/>
+
+        <Label text="Email:"/>
+        <TextField fx:id="emailField" promptText="Enter your email" styleClass="text-field" maxWidth="500"/>
+
+        <Label text="Feedback:"/>
+        <TextArea fx:id="feedbackArea" promptText="Enter your feedback" prefRowCount="6" styleClass="text-area" maxWidth="500"/>
+
+        <Button text="Submit" styleClass="button" onMouseClicked="#handleSubmit"/>
+    </VBox>
+</StackPane>
