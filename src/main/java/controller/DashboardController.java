@@ -5,6 +5,7 @@ import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -13,6 +14,8 @@ import javafx.scene.layout.VBox;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.*;
 
 public class DashboardController {
@@ -25,6 +28,9 @@ public class DashboardController {
 
     @FXML
     private ComboBox<String> timeIntervalComboBox;
+
+    @FXML
+    private DatePicker datePicker;
 
     @FXML
     private TableView<RankingEntry> statusCodeRankingTable;
@@ -44,16 +50,26 @@ public class DashboardController {
     @FXML
     private TableColumn<RankingEntry, Integer> timestampCountColumn;
 
+    @FXML
+    private TableView<RankingEntry> ipRankingTable;
+
+    @FXML
+    private TableColumn<RankingEntry, String> ipColumn;
+
+    @FXML
+    private TableColumn<RankingEntry, Integer> ipCountColumn;
+
     private List<LogEntry> logEntries;
-    private static final int MAX_DISPLAYED_TIMESTAMPS = 7;
+    private static final int MAX_DISPLAYED_TIMESTAMPS = 10;
 
     @FXML
     private void initialize() {
         try {
             logEntries = parseLogFile("logs/apache_nginx/access_log_50000.log");
             setupComboBox();
+            setupDatePicker();
             setupTableViews();
-            displayLogsByInterval("15 Minutes");
+            displayLogsByInterval("15 Minutes", LocalDate.now());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,12 +79,23 @@ public class DashboardController {
         timeIntervalComboBox.setItems(FXCollections.observableArrayList("15 Minutes", "30 Minutes", "1 Hour", "2 Hours", "12 Hours", "1 Day"));
         timeIntervalComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             try {
-                displayLogsByInterval(newValue);
+                displayLogsByInterval(newValue, datePicker.getValue());
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
         timeIntervalComboBox.getSelectionModel().selectFirst();
+    }
+
+    private void setupDatePicker() {
+        datePicker.setValue(LocalDate.now());
+        datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                displayLogsByInterval(timeIntervalComboBox.getSelectionModel().getSelectedItem(), newValue);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 
     private void setupTableViews() {
@@ -77,6 +104,9 @@ public class DashboardController {
 
         timestampColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         timestampCountColumn.setCellValueFactory(new PropertyValueFactory<>("count"));
+
+        ipColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
+        ipCountColumn.setCellValueFactory(new PropertyValueFactory<>("count"));
     }
 
     private List<LogEntry> parseLogFile(String filePath) throws Exception {
@@ -86,17 +116,18 @@ public class DashboardController {
             String line;
             while ((line = br.readLine()) != null) {
                 String[] parts = line.split(" ");
+                String ipAddress = parts[0];
                 String dateStr = parts[3].substring(1) + " " + parts[4].substring(0, parts[4].length() - 1);
                 Date date = dateFormat.parse(dateStr);
                 int statusCode = Integer.parseInt(parts[8]);
-                entries.add(new LogEntry(date, statusCode));
+                entries.add(new LogEntry(ipAddress, date, statusCode));
             }
         }
         return entries;
     }
 
-    private void displayLogsByInterval(String interval) {
-        Map<String, Map<String, Integer>> groupedLogs = groupLogsByInterval(interval);
+    private void displayLogsByInterval(String interval, LocalDate selectedDate) {
+        Map<String, Map<String, Integer>> groupedLogs = groupLogsByInterval(interval, selectedDate);
 
         // Clear previous data
         logBarChart.getData().clear();
@@ -116,7 +147,7 @@ public class DashboardController {
         // Sort entries by date
         entries.sort(Comparator.comparing(Map.Entry::getKey));
 
-        // Limit to max 6 entries
+        // Limit to max entries
         List<Map.Entry<String, Map<String, Integer>>> displayedEntries = entries.size() > MAX_DISPLAYED_TIMESTAMPS ?
                 entries.subList(0, MAX_DISPLAYED_TIMESTAMPS) : entries;
 
@@ -146,9 +177,10 @@ public class DashboardController {
         // Update rankings
         updateStatusCodeRanking(groupedLogs);
         updateTimestampRanking(groupedLogs);
+        updateIpRanking(groupedLogs, selectedDate);
     }
 
-    private Map<String, Map<String, Integer>> groupLogsByInterval(String interval) {
+    private Map<String, Map<String, Integer>> groupLogsByInterval(String interval, LocalDate selectedDate) {
         Map<String, Map<String, Integer>> groupedLogs = new TreeMap<>();
         SimpleDateFormat dateFormat;
         Calendar calendar = Calendar.getInstance();
@@ -182,11 +214,14 @@ public class DashboardController {
 
         for (LogEntry entry : logEntries) {
             calendar.setTime(entry.date);
-            adjustCalendar(calendar, field, amount);
-            String timeSlot = dateFormat.format(calendar.getTime());
-            String statusRange = getStatusRange(entry.statusCode);
+            LocalDate entryDate = entry.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            if (entryDate.equals(selectedDate)) {
+                adjustCalendar(calendar, field, amount);
+                String timeSlot = dateFormat.format(calendar.getTime());
+                String statusRange = getStatusRange(entry.statusCode);
 
-            groupedLogs.computeIfAbsent(timeSlot, k -> new HashMap<>()).merge(statusRange, 1, Integer::sum);
+                groupedLogs.computeIfAbsent(timeSlot, k -> new HashMap<>()).merge(statusRange, 1, Integer::sum);
+            }
         }
 
         return groupedLogs;
@@ -265,10 +300,38 @@ public class DashboardController {
         });
 
         timestampRankingTable.getItems().clear();
-        for (int i = 0; i < 5; i++) {
+
+        // Ensure we do not access beyond the size of the list
+        int limit = Math.min(sortedTimestamps.size(), 7);
+        for (int i = 0; i < limit; i++) {
             Map.Entry<String, Map<String, Integer>> entry = sortedTimestamps.get(i);
             int sum = entry.getValue().values().stream().mapToInt(Integer::intValue).sum();
             timestampRankingTable.getItems().add(new RankingEntry(entry.getKey(), sum));
+        }
+    }
+
+    private void updateIpRanking(Map<String, Map<String, Integer>> groupedLogs, LocalDate selectedDate) {
+        Map<String, Integer> ipCounts = new HashMap<>();
+
+        // Iterate over log entries to count requests by IP
+        for (LogEntry entry : logEntries) {
+            LocalDate entryDate = entry.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+            if (entryDate.equals(selectedDate)) {
+                ipCounts.merge(entry.ipAddress, 1, Integer::sum);
+            }
+        }
+
+        // Clear previous data in the table
+        ipRankingTable.getItems().clear();
+
+        // Sort the IPs based on their counts
+        List<Map.Entry<String, Integer>> sortedIps = new ArrayList<>(ipCounts.entrySet());
+        sortedIps.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
+
+        // Add the sorted IPs to the table
+        for (int i = 0; i < sortedIps.size(); i++) {
+            Map.Entry<String, Integer> entry = sortedIps.get(i);
+            ipRankingTable.getItems().add(new RankingEntry(entry.getKey(), entry.getValue()));
         }
     }
 
@@ -291,13 +354,14 @@ public class DashboardController {
     }
 
     private static class LogEntry {
+        String ipAddress;
         Date date;
         int statusCode;
 
-        LogEntry(Date date, int statusCode) {
+        LogEntry(String ipAddress, Date date, int statusCode) {
+            this.ipAddress = ipAddress;
             this.date = date;
             this.statusCode = statusCode;
         }
     }
-
 }

@@ -4,7 +4,7 @@
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.ComboBox?>
-<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.HBox?>
@@ -14,6 +14,7 @@
 <VBox fx:id="mainVBox" styleClass="main" stylesheets="@Graph.css" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.DashboardController">
     <HBox spacing="10" alignment="CENTER">
         <ComboBox fx:id="timeIntervalComboBox" />
+        <DatePicker fx:id="datePicker" />
     </HBox>
 
     <BarChart fx:id="logBarChart" barGap="5.0" categoryGap="20.0" prefWidth="1000.0" animated="false">
@@ -41,6 +42,17 @@
                 <columns>
                     <TableColumn fx:id="timestampColumn" text="Timestamp" />
                     <TableColumn fx:id="timestampCountColumn" text="Log Count" />
+                </columns>
+                <columnResizePolicy>
+                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                </columnResizePolicy>
+            </TableView>
+        </VBox>
+        <VBox fx:id="ipRankingVBox" spacing="5.0" style="-fx-padding: 10;">
+            <TableView fx:id="ipRankingTable" prefHeight="200">
+                <columns>
+                    <TableColumn fx:id="ipColumn" text="IP Address" />
+                    <TableColumn fx:id="ipCountColumn" text="Count" />
                 </columns>
                 <columnResizePolicy>
                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
