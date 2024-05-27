@@ -1,6 +1,7 @@
 package controller;
 
 import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
@@ -8,15 +9,17 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
+
+import static dataanalyzer.IpLookUp.IpCheck;
 
 public class DashboardController {
 
@@ -33,31 +36,34 @@ public class DashboardController {
     private DatePicker datePicker;
 
     @FXML
-    private TableView<RankingEntry> statusCodeRankingTable;
+    private TableView<String[]> statusCodeRankingTable;
 
     @FXML
-    private TableColumn<RankingEntry, String> statusCodeColumn;
+    private TableColumn<String[], String> statusCodeColumn;
 
     @FXML
-    private TableColumn<RankingEntry, Integer> statusCodeCountColumn;
+    private TableColumn<String[], Integer> statusCodeCountColumn;
 
     @FXML
-    private TableView<RankingEntry> timestampRankingTable;
+    private TableView<String[]> timestampRankingTable;
 
     @FXML
-    private TableColumn<RankingEntry, String> timestampColumn;
+    private TableColumn<String[], String> timestampColumn;
 
     @FXML
-    private TableColumn<RankingEntry, Integer> timestampCountColumn;
+    private TableColumn<String[], Integer> timestampCountColumn;
 
     @FXML
-    private TableView<RankingEntry> ipRankingTable;
+    private TableView<String[]> ipRankingTable;
 
     @FXML
-    private TableColumn<RankingEntry, String> ipColumn;
+    private TableColumn<String[], String> ipColumn;
 
     @FXML
-    private TableColumn<RankingEntry, Integer> ipCountColumn;
+    private TableColumn<String[], Integer> ipCountColumn;
+
+    @FXML
+    private TableColumn<String[], String> ipCountryColumn;
 
     private List<LogEntry> logEntries;
     private static final int MAX_DISPLAYED_TIMESTAMPS = 10;
@@ -99,14 +105,18 @@ public class DashboardController {
     }
 
     private void setupTableViews() {
-        statusCodeColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        statusCodeCountColumn.setCellValueFactory(new PropertyValueFactory<>("count"));
+        // Setup the status code ranking table
+        statusCodeColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue()[0]));
+        statusCodeCountColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(Integer.parseInt(cellData.getValue()[1])).asObject());
 
-        timestampColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        timestampCountColumn.setCellValueFactory(new PropertyValueFactory<>("count"));
+        // Setup the timestamp ranking table
+        timestampColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue()[0]));
+        timestampCountColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(Integer.parseInt(cellData.getValue()[1])).asObject());
 
-        ipColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
-        ipCountColumn.setCellValueFactory(new PropertyValueFactory<>("count"));
+        // Setup the IP ranking table
+        ipColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue()[0]));
+        ipCountColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(Integer.parseInt(cellData.getValue()[1])).asObject());
+        ipCountryColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue()[2]));
     }
 
     private List<LogEntry> parseLogFile(String filePath) throws Exception {
@@ -126,7 +136,7 @@ public class DashboardController {
         return entries;
     }
 
-    private void displayLogsByInterval(String interval, LocalDate selectedDate) {
+    private void displayLogsByInterval(String interval, LocalDate selectedDate) throws IOException {
         Map<String, Map<String, Integer>> groupedLogs = groupLogsByInterval(interval, selectedDate);
 
         // Clear previous data
@@ -278,16 +288,16 @@ public class DashboardController {
         }
 
         // Clear previous data in the table
-        statusCodeRankingTable.getItems().clear();
+        ObservableList<String[]> items = statusCodeRankingTable.getItems();
+        items.clear();
 
         // Sort the status codes based on their counts
         List<Map.Entry<String, Integer>> sortedStatusCodes = new ArrayList<>(statusCodeCounts.entrySet());
         sortedStatusCodes.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
 
         // Add the sorted status codes to the table
-        for (int i = 0; i < sortedStatusCodes.size(); i++) {
-            Map.Entry<String, Integer> entry = sortedStatusCodes.get(i);
-            statusCodeRankingTable.getItems().add(new RankingEntry(entry.getKey(), entry.getValue()));
+        for (Map.Entry<String, Integer> entry : sortedStatusCodes) {
+            items.add(new String[]{entry.getKey(), entry.getValue().toString()});
         }
     }
 
@@ -299,18 +309,19 @@ public class DashboardController {
             return Integer.compare(sum2, sum1);
         });
 
-        timestampRankingTable.getItems().clear();
+        ObservableList<String[]> items = timestampRankingTable.getItems();
+        items.clear();
 
         // Ensure we do not access beyond the size of the list
         int limit = Math.min(sortedTimestamps.size(), 7);
         for (int i = 0; i < limit; i++) {
             Map.Entry<String, Map<String, Integer>> entry = sortedTimestamps.get(i);
             int sum = entry.getValue().values().stream().mapToInt(Integer::intValue).sum();
-            timestampRankingTable.getItems().add(new RankingEntry(entry.getKey(), sum));
+            items.add(new String[]{entry.getKey(), String.valueOf(sum)});
         }
     }
 
-    private void updateIpRanking(Map<String, Map<String, Integer>> groupedLogs, LocalDate selectedDate) {
+    private void updateIpRanking(Map<String, Map<String, Integer>> groupedLogs, LocalDate selectedDate) throws IOException {
         Map<String, Integer> ipCounts = new HashMap<>();
 
         // Iterate over log entries to count requests by IP
@@ -321,35 +332,16 @@ public class DashboardController {
             }
         }
 
-        // Clear previous data in the table
-        ipRankingTable.getItems().clear();
+        ObservableList<String[]> items = ipRankingTable.getItems();
+        items.clear();
 
         // Sort the IPs based on their counts
         List<Map.Entry<String, Integer>> sortedIps = new ArrayList<>(ipCounts.entrySet());
         sortedIps.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
 
         // Add the sorted IPs to the table
-        for (int i = 0; i < sortedIps.size(); i++) {
-            Map.Entry<String, Integer> entry = sortedIps.get(i);
-            ipRankingTable.getItems().add(new RankingEntry(entry.getKey(), entry.getValue()));
-        }
-    }
-
-    public static class RankingEntry {
-        private final String name;
-        private final int count;
-
-        public RankingEntry(String name, int count) {
-            this.name = name;
-            this.count = count;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public int getCount() {
-            return count;
+        for (Map.Entry<String, Integer> entry : sortedIps) {
+            items.add(new String[]{entry.getKey(), entry.getValue().toString(), IpCheck(entry.getKey())});
         }
     }
 

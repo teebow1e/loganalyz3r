@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.control.Button?>
 
-<VBox fx:id="mainVBox" styleClass="main" stylesheets="@Graph.css" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.DashboardController">
+<VBox fx:id="mainVBox" styleClass="main" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.DashboardController">
     <HBox spacing="10" alignment="CENTER">
         <ComboBox fx:id="timeIntervalComboBox" />
         <DatePicker fx:id="datePicker" />
@@ -53,6 +53,7 @@
                 <columns>
                     <TableColumn fx:id="ipColumn" text="IP Address" />
                     <TableColumn fx:id="ipCountColumn" text="Count" />
+                    <TableColumn fx:id="ipCountryColumn" text="Country" />
                 </columns>
                 <columnResizePolicy>
                     <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
