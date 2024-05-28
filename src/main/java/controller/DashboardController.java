@@ -36,6 +36,9 @@ public class DashboardController {
     private DatePicker datePicker;
 
     @FXML
+    private ComboBox<String> startTimeComboBox;
+
+    @FXML
     private TableView<String[]> statusCodeRankingTable;
 
     @FXML
@@ -74,6 +77,7 @@ public class DashboardController {
             logEntries = parseLogFile("logs/apache_nginx/access_log_50000.log");
             setupComboBox();
             setupDatePicker();
+            setupStartTimeComboBox();
             setupTableViews();
             displayLogsByInterval("15 Minutes", LocalDate.now());
         } catch (Exception e) {
@@ -98,6 +102,22 @@ public class DashboardController {
         datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 displayLogsByInterval(timeIntervalComboBox.getSelectionModel().getSelectedItem(), newValue);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void setupStartTimeComboBox() {
+        ObservableList<String> times = FXCollections.observableArrayList();
+        for (int hour = 0; hour < 24; hour++) {
+            times.add(String.format("%02d:00", hour));
+        }
+        startTimeComboBox.setItems(times);
+        startTimeComboBox.getSelectionModel().select("00:00"); // Default selection
+        startTimeComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            try {
+                displayLogsByInterval(timeIntervalComboBox.getSelectionModel().getSelectedItem(), datePicker.getValue());
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -137,6 +157,12 @@ public class DashboardController {
     }
 
     private void displayLogsByInterval(String interval, LocalDate selectedDate) throws IOException {
+        // Ensure selectedTime is not null
+        String selectedTime = startTimeComboBox.getSelectionModel().getSelectedItem();
+        if (selectedTime == null) {
+            selectedTime = "00:00";
+        }
+
         Map<String, Map<String, Integer>> groupedLogs = groupLogsByInterval(interval, selectedDate);
 
         // Clear previous data
@@ -222,10 +248,16 @@ public class DashboardController {
 
         dateFormat = getDateFormat(interval);
 
+        String selectedTime = startTimeComboBox.getSelectionModel().getSelectedItem();
+        if (selectedTime == null) {
+            selectedTime = "00:00";
+        }
+        int startHour = Integer.parseInt(selectedTime.split(":")[0]);
+
         for (LogEntry entry : logEntries) {
             calendar.setTime(entry.date);
             LocalDate entryDate = entry.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            if (entryDate.equals(selectedDate)) {
+            if (entryDate.equals(selectedDate) && calendar.get(Calendar.HOUR_OF_DAY) >= startHour) {
                 adjustCalendar(calendar, field, amount);
                 String timeSlot = dateFormat.format(calendar.getTime());
                 String statusRange = getStatusRange(entry.statusCode);

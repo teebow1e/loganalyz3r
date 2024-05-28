@@ -15,6 +15,7 @@
     <HBox spacing="10" alignment="CENTER">
         <ComboBox fx:id="timeIntervalComboBox" />
         <DatePicker fx:id="datePicker" />
+        <ComboBox fx:id="startTimeComboBox" />
     </HBox>
 
     <BarChart fx:id="logBarChart" barGap="5.0" categoryGap="20.0" prefWidth="1000.0" animated="false">
