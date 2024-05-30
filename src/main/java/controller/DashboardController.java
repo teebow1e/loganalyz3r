@@ -138,6 +138,8 @@ public class DashboardController {
         modsecRuleColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue()[0]));
         modsecRuleCountColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(Integer.parseInt(cellData.getValue()[1])).asObject());
         updateModsecRuleTable();
+        ruleCountTable.getSortOrder().add(modsecRuleCountColumn);
+        modsecRuleCountColumn.setSortType(TableColumn.SortType.DESCENDING);
     }
 
     private void updateModsecRuleTable() {
@@ -165,6 +167,7 @@ public class DashboardController {
         items.clear();
 
         ruleCounts.forEach((rule, count) -> items.add(new String[]{rule, count.toString()}));
+        ruleCountTable.sort();
     }
 
 
