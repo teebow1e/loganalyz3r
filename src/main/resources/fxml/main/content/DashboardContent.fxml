@@ -9,21 +9,20 @@
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.control.Button?>
 
-<VBox fx:id="mainVBox" styleClass="main" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.DashboardController">
-    <HBox spacing="10" alignment="CENTER">
+<VBox fx:id="mainVBox" styleClass="main" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardController">
+    <HBox alignment="CENTER" spacing="10">
         <ComboBox fx:id="timeIntervalComboBox" />
         <DatePicker fx:id="datePicker" />
         <ComboBox fx:id="startTimeComboBox" />
     </HBox>
 
-    <BarChart fx:id="logBarChart" barGap="5.0" categoryGap="20.0" prefWidth="1000.0" animated="false">
+    <BarChart fx:id="logBarChart" animated="false" barGap="5.0" categoryGap="20.0" prefWidth="1000.0">
         <xAxis>
             <CategoryAxis />
         </xAxis>
         <yAxis>
-            <NumberAxis fx:id="yAxis" tickUnit="1.0" minorTickCount="0" forceZeroInRange="true" />
+            <NumberAxis fx:id="yAxis" forceZeroInRange="true" minorTickCount="0" tickUnit="1.0" />
         </yAxis>
     </BarChart>
     <HBox alignment="CENTER">
@@ -62,4 +61,14 @@
             </TableView>
         </VBox>
     </HBox>
+   <HBox maxWidth="1000.0" prefHeight="100.0" prefWidth="1000.0">
+      <children>
+         <TableView fx:id="ruleCountTable" prefHeight="100.0" prefWidth="1000.0">
+           <columns>
+             <TableColumn fx:id="modsecRuleColumn" prefWidth="800.0" text="Rule" />
+             <TableColumn fx:id="modsecRuleCountColumn" prefWidth="75.0" text="Count" />
+           </columns>
+         </TableView>
+      </children>
+   </HBox>
 </VBox>

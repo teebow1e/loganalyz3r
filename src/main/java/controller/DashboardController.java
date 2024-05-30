@@ -68,6 +68,16 @@ public class DashboardController {
     @FXML
     private TableColumn<String[], String> ipCountryColumn;
 
+    @FXML
+    private TableColumn<String[], String> modsecRuleColumn;
+
+    @FXML
+    private TableColumn<String[], Integer> modsecRuleCountColumn;
+
+    @FXML
+    private TableView<String[]> ruleCountTable;
+
+
     private List<LogEntry> logEntries;
     private static final int MAX_DISPLAYED_TIMESTAMPS = 10;
 
@@ -79,6 +89,7 @@ public class DashboardController {
             setupDatePicker();
             setupStartTimeComboBox();
             setupTableViews();
+            setupModsecTable();
             displayLogsByInterval("15 Minutes", LocalDate.now());
         } catch (Exception e) {
             e.printStackTrace();
@@ -123,6 +134,39 @@ public class DashboardController {
             }
         });
     }
+    private void setupModsecTable() {
+        modsecRuleColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue()[0]));
+        modsecRuleCountColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(Integer.parseInt(cellData.getValue()[1])).asObject());
+        updateModsecRuleTable();
+    }
+
+    private void updateModsecRuleTable() {
+        String filePath = "logs/parsed/modsecurity.csv";
+        Map<String, Integer> ruleCounts = new HashMap<>();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                if (line.startsWith("remoteAddress")) {
+                    continue;
+                }
+                String[] parts = line.split(",");
+                String ruleName = parts[7];
+                if (!ruleName.startsWith("REQUEST")) {
+                    continue;
+                }
+                ruleCounts.merge(ruleName, 1, Integer::sum);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ObservableList<String[]> items = ruleCountTable.getItems();
+        items.clear();
+
+        ruleCounts.forEach((rule, count) -> items.add(new String[]{rule, count.toString()}));
+    }
+
 
     private void setupTableViews() {
         // Setup the status code ranking table

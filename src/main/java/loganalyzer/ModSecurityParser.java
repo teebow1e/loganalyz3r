@@ -23,7 +23,7 @@ public class ModSecurityParser {
 
     public static void main(String[] args) {
         Logger logger = Logger.getLogger(ModSecurityParser.class.getName());
-        String logFilePath = System.getProperty("user.dir") + "/logs/modsecurity/modsec_audit.json";
+        String logFilePath = System.getProperty("user.dir") + "/logs/modsecurity/modsec_audit_new.log";
         Path logPath = Paths.get(logFilePath);
         ObjectMapper objectMapper = new ObjectMapper();
 
