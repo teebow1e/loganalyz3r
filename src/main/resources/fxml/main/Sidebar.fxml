@@ -1,57 +1,67 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox styleClass="sidebar" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.SidebarController">
+<VBox styleClass="sidebar" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SidebarController">
     <VBox spacing="15" styleClass="sidebar-content-wrapper">
-        <Label text="Dashboard" styleClass="sidebar-content-label" onMouseClicked="#handleDashboard">
+        <Label onMouseClicked="#handleDashboard" styleClass="sidebar-content-label" text="Dashboard">
             <graphic>
                 <ImageView>
-                    <Image url="@/img/dashboard.png"/>
+                    <Image url="@/img/dashboard.png" />
                 </ImageView>
             </graphic>
         </Label>
 
-        <Label text="View Logs" styleClass="sidebar-content-label" onMouseClicked="#handleViewlog">
+        <Label onMouseClicked="#handleViewlog" styleClass="sidebar-content-label" text="View Logs">
             <graphic>
                 <ImageView>
-                    <Image url="@/img/log.png"/>
+                    <Image url="@/img/log.png" />
                 </ImageView>
             </graphic>
         </Label>
 
-        <Label text="Feedback" styleClass="sidebar-content-label" onMouseClicked="#handleFeedback">
+        <Label onMouseClicked="#handleFeedback" styleClass="sidebar-content-label" text="Feedback">
             <graphic>
                 <ImageView>
-                    <Image url="@/img/feedback.png"/>
+                    <Image url="@/img/feedback.png" />
                 </ImageView>
             </graphic>
         </Label>
 
-        <Label text="Export" styleClass="sidebar-content-label" onMouseClicked="#handleExport">
+        <Label onMouseClicked="#handleExport" styleClass="sidebar-content-label" text="Export">
             <graphic>
                 <ImageView>
-                    <Image url="@/img/export.png"/>
+                    <Image url="@/img/export.png" />
                 </ImageView>
             </graphic>
         </Label>
 
-        <Label text="Manage logs" styleClass="sidebar-content-label" onMouseClicked="#handleManagelog">
+        <Label onMouseClicked="#handleManagelog" styleClass="sidebar-content-label" text="Manage logs">
             <graphic>
                 <ImageView>
-                    <Image url="@/img/manage.png"/>
+                    <Image url="@/img/manage.png" />
                 </ImageView>
             </graphic>
         </Label>
 
-        <Label text="Log out" styleClass="sidebar-content-label" onMouseClicked="#handleLogout">
+        <Label onMouseClicked="#handleLogout" styleClass="sidebar-content-label" text="Log out">
             <graphic>
                 <ImageView>
-                    <Image url="@/img/logout.png"/>
+                    <Image url="@/img/logout.png" />
                 </ImageView>
             </graphic>
         </Label>
+      <Label onMouseClicked="#handleViewlog" styleClass="sidebar-content-label" text="Modsec-Experiment">
+         <graphic>
+            <ImageView>
+               <image>
+                  <Image url="@/img/log.png" />
+               </image>
+            </ImageView>
+         </graphic>
+      </Label>
     </VBox>
 </VBox>
