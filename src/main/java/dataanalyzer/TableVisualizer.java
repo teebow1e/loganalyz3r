@@ -19,7 +19,7 @@ import java.util.*;
 import static csvgenerator.CSVReader.read;
 
 public class TableVisualizer {
-    private static Timer timer = new Timer();
+//    private static Timer timer = new Timer();
 
     public static void LogTable(TableView<String[]> tableView, String columnStyle) throws IOException {
         List<String> data = read("logs/parsed/log_new.csv");
@@ -76,13 +76,12 @@ public class TableVisualizer {
 
     public static void ShowLogTable(TableView<String[]> tableView) throws IOException {
         LogTable(tableView, "access-log-table-column-");
-
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                updateTableView(tableView);
-            }
-        }, 0, 10000); // Update every 10 seconds
+        updateTableView(tableView);
+//        timer.scheduleAtFixedRate(new TimerTask() {
+//            @Override
+//            public void run() {;
+//            }
+//        }, 0, 10000); // Update every 10 seconds
 
         // No need to access the stage or set an event handler here
     }
@@ -114,13 +113,18 @@ public class TableVisualizer {
     }
 
     private static void updateTableView(TableView<String[]> tableView) {
-        Platform.runLater(() -> {
-            try {
-                LogTable(tableView, "access-log-table-column-");
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        });
+//        Platform.runLater(() -> {
+//            try {
+//                LogTable(tableView, "access-log-table-column-");
+//            } catch (IOException e) {
+//                throw new RuntimeException(e);
+//            }
+//        });
+        try {
+            LogTable(tableView, "access-log-table-column-");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void showRowContent(String[] headers, String[] rowData) {

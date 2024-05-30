@@ -63,4 +63,5 @@ public class SidebarController {
         LoginForm loginForm = new LoginForm();
         loginForm.start(primaryStage);
     }
+
 }

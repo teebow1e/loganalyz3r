@@ -54,14 +54,6 @@
                 </ImageView>
             </graphic>
         </Label>
-      <Label onMouseClicked="#handleViewlog" styleClass="sidebar-content-label" text="Modsec-Experiment">
-         <graphic>
-            <ImageView>
-               <image>
-                  <Image url="@/img/log.png" />
-               </image>
-            </ImageView>
-         </graphic>
-      </Label>
+
     </VBox>
 </VBox>

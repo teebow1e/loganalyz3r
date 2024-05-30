@@ -16,7 +16,6 @@ public class WebLogManager extends Application {
     }
 
     public void start(Stage primaryStage, int mode) throws Exception {
-        primaryStage.setResizable(false);
         FXMLLoader loader = null;
         String fxmlFile = switch (mode) {
             case 1 -> "/fxml/main/Dashboard.fxml";
