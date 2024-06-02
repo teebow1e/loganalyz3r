@@ -9,8 +9,8 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="mainVBox" alignment="TOP_CENTER" HBox.hgrow="ALWAYS" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ViewLogController">
-    <Label alignment="CENTER" contentDisplay="CENTER" styleClass="title-label" text="Apache Logs">
+<VBox fx:id="mainVBox" alignment="TOP_CENTER" HBox.hgrow="ALWAYS" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ViewModSecController">
+    <Label alignment="CENTER" contentDisplay="CENTER" styleClass="title-label" text="Mod Security">
         <font>
             <Font size="24.0" />
         </font>

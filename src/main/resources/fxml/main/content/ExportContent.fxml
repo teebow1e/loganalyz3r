@@ -2,6 +2,6 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<VBox styleClass="main" HBox.hgrow="ALWAYS" style="-fx-background-color: lightgreen;">
+<VBox HBox.hgrow="ALWAYS" style="-fx-background-color: lightgreen;">
 
 </VBox>

@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 import static csvgenerator.CSVReader.read;
 
-public class ViewLogController {
+public class ViewModSecController {
 
     @FXML
     private TableView<String[]> Table;
@@ -49,7 +49,7 @@ public class ViewLogController {
     }
 
     public static void LogTable(TableView<String[]> tableView, LocalDate selectedDate) throws IOException {
-        List<String> data = read("logs/parsed/log_new.csv");
+        List<String> data = read("logs/parsed/modsecurity.csv");
 
         tableView.getItems().clear();
         tableView.getColumns().clear();
@@ -137,7 +137,7 @@ public class ViewLogController {
     }
 
     public static LocalDate parseDate(String inputDate) {
-        DateTimeFormatter INPUT_FORMATTER = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss Z");
+        DateTimeFormatter INPUT_FORMATTER = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss.SSSSSS Z");
         ZonedDateTime zonedDateTime = ZonedDateTime.parse(inputDate, INPUT_FORMATTER);
         return zonedDateTime.toLocalDate();
     }

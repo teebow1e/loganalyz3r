@@ -1,0 +1,31 @@
+/* Add a general style for all tables */
+.table-view {
+    -fx-border-color: #444444;  /* Dark gray border */
+    -fx-border-width: 0.5px;
+}
+
+/* Style for column headers */
+.table-view .column-header {
+
+}
+
+.table-view .column-header .label {
+
+}
+
+/* Specific styles for each table */
+.status-code-table {
+
+}
+
+.timestamp-table {
+
+}
+
+.ip-table {
+
+}
+
+.rule-count-table {
+
+}

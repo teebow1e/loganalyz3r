@@ -1,12 +1,10 @@
 package ui;
 
 import controller.*;
-import dataanalyzer.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.PieChart;
 import javafx.stage.Stage;
 
 public class WebLogManager extends Application {
@@ -20,9 +18,10 @@ public class WebLogManager extends Application {
         String fxmlFile = switch (mode) {
             case 1 -> "/fxml/main/Dashboard.fxml";
             case 2 -> "/fxml/main/Viewlog.fxml";
-            case 3 -> "/fxml/main/Feedback.fxml";
-            case 4 -> "/fxml/main/Export.fxml";
-            case 5 -> "/fxml/main/Managelog.fxml";
+            case 3 -> "/fxml/main/Viewmodsec.fxml";
+            case 4 -> "/fxml/main/Feedback.fxml";
+            case 5 -> "/fxml/main/Export.fxml";
+//            case 6 -> "/fxml/main/Managelog.fxml";
             default -> throw new IllegalArgumentException("Invalid mode specified: " + mode);
         };
 
@@ -31,7 +30,7 @@ public class WebLogManager extends Application {
         Parent root = loader.load();
 
         Scene scene = new Scene(root, 1200, 800);
-        scene.getStylesheets().add(getClass().getResource("/css/WebLog.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/css/Sidebar.css").toExternalForm());
         scene.getStylesheets().add(getClass().getResource("/css/Table.css").toExternalForm());
 
         primaryStage.setTitle("Web Log Analyzer");

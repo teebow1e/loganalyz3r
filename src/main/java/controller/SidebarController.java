@@ -33,7 +33,7 @@ public class SidebarController {
     }
 
     @FXML
-    private void handleFeedback(MouseEvent event) throws Exception {
+    private void handleViewModSec(MouseEvent event) throws Exception {
         Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         WebLogManager webLogManager = new WebLogManager();
@@ -41,7 +41,7 @@ public class SidebarController {
     }
 
     @FXML
-    private void handleExport(MouseEvent event) throws Exception {
+    private void handleFeedback(MouseEvent event) throws Exception {
         Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         WebLogManager webLogManager = new WebLogManager();
@@ -49,11 +49,19 @@ public class SidebarController {
     }
 
     @FXML
-    private void handleManagelog(MouseEvent event) throws Exception {
+    private void handleExport(MouseEvent event) throws Exception {
         Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         WebLogManager webLogManager = new WebLogManager();
         webLogManager.start(primaryStage, 5);
+    }
+
+    @FXML
+    private void handleManagelog(MouseEvent event) throws Exception {
+        Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        WebLogManager webLogManager = new WebLogManager();
+        webLogManager.start(primaryStage, 6);
     }
 
     @FXML

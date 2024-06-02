@@ -1,4 +1,4 @@
-package dataanalyzer;
+package utility;
 
 import com.maxmind.db.MaxMindDbConstructor;
 import com.maxmind.db.MaxMindDbParameter;

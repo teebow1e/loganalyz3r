@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 
-<VBox fx:id="mainVBox" styleClass="main" HBox.hgrow="ALWAYS" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.ManageLogController">
-    <Label styleClass="title-label" text="LOGS"/>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="mainVBox" alignment="TOP_CENTER" HBox.hgrow="ALWAYS" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/21" fx:controller="controller.ManageLogController">
+    <Label styleClass="title-label" text="LOGS">
+      <font>
+         <Font size="24.0" />
+      </font>
+      <padding>
+         <Insets bottom="10.0" top="10.0" />
+      </padding></Label>
     <HBox styleClass="filter-box">
-        <TextField fx:id="filterTextField" promptText="Enter filter text"/>
-        <Button text="Button 1" fx:id="button1"/>
-        <Button text="Button 2" fx:id="button2"/>
-        <Button text="Button 3" fx:id="button3"/>
-        <Button text="Button 4" fx:id="button4"/>
+        <TextField fx:id="filterTextField" promptText="Enter filter text" />
+        <Button fx:id="button1" text="Button 1" />
+        <Button fx:id="button2" text="Button 2" />
+        <Button fx:id="button3" text="Button 3" />
+        <Button fx:id="button4" text="Button 4" />
+      <padding>
+         <Insets bottom="10.0" />
+      </padding>
     </HBox>
     <TableView fx:id="Table" prefHeight="600.0" prefWidth="1000.0">
         <columnResizePolicy>

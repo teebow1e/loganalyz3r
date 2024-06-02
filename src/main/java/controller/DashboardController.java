@@ -3,12 +3,14 @@ package controller;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 
 import java.io.BufferedReader;
@@ -19,7 +21,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 
-import static dataanalyzer.IpLookUp.IpCheck;
+import static utility.IpLookUp.IpCheck;
 
 public class DashboardController {
 
@@ -91,9 +93,20 @@ public class DashboardController {
             setupTableViews();
             setupModsecTable();
             displayLogsByInterval("15 Minutes", LocalDate.now());
+            addClickListenerToMainVBox();  // Add this line
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private void addClickListenerToMainVBox() {
+        mainVBox.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
+            Node clickedNode = event.getPickResult().getIntersectedNode();
+            // Check if the click was outside any TableView
+            if (!(clickedNode instanceof TableView) && !(clickedNode.getParent() instanceof TableView)) {
+                mainVBox.requestFocus(); // Lose focus from TableView
+            }
+        });
     }
 
     private void setupComboBox() {
