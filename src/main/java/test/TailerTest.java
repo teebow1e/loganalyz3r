@@ -5,7 +5,7 @@ import org.apache.commons.io.input.TailerListenerAdapter;
 
 import java.io.File;
 
-public class TestOne {
+public class TailerTest {
     public static void main(String[] args) {
         File file = new File("logs/apache_nginx/access_log_0.log");
         System.out.println(file.length());
