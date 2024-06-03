@@ -1,5 +1,8 @@
 package controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -13,17 +16,21 @@ import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.logging.Logger;
 
-import static csvgenerator.CSVReader.read;
+import loganalyzer.Apache;
+import loganalyzer.ModSecurity;
+import loganalyzer.ModSecurityParser;
+
+import static loganalyzer.ModSecurityParser.*;
+import static utility.Utility.readFile;
 
 public class ViewModSecController {
 
     @FXML
-    private TableView<String[]> Table;
+    private TableView<ModSecurity> Table;
     @FXML
     private DatePicker datePicker;
 
@@ -45,45 +52,68 @@ public class ViewModSecController {
     }
 
     private void viewLog() throws Exception {
-        ShowLogTable((TableView<String[]>) Table, datePicker.getValue());
+        ShowLogTable(Table, datePicker.getValue());
     }
 
-    public static void LogTable(TableView<String[]> tableView, LocalDate selectedDate) throws IOException {
-        List<String> data = read("logs/parsed/modsecurity.csv");
+    public static void LogTable(TableView<ModSecurity> tableView, LocalDate selectedDate) throws JsonProcessingException {
+        List<ModSecurity> parsedData = parseLogs();
 
         tableView.getItems().clear();
         tableView.getColumns().clear();
 
-        String[] headers = data.get(0).split(",");
-        List<Integer> nonEmptyColumnIndices = new ArrayList<>();
-        for (int i = 0; i < headers.length; i++) {
-            if (!headers[i].trim().isEmpty()) {
-                nonEmptyColumnIndices.add(i);
-            }
+        if (parsedData.isEmpty()) {
+            return;
         }
 
-        for (int i = 0; i < (nonEmptyColumnIndices.size()); i++) {
-            if (!headers[i].trim().isEmpty()) {
-                final int columnIndex = i;
-                TableColumn<String[], String> column = new TableColumn<>(headers[i]);
-                column.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue()[columnIndex]));
-                column.setResizable(true);
-                tableView.getColumns().add(column);
-            }
-        }
+        TableColumn<ModSecurity, String> versionColumn = new TableColumn<>("Version");
+        versionColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getVersion()));
 
-        ObservableList<String[]> rows = FXCollections.observableArrayList();
+        TableColumn<ModSecurity, String> timestampColumn = new TableColumn<>("Timestamp");
+        timestampColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTimestamp()));
 
-        for (int i = 1; i < data.size(); i++) {
-            String[] rowData = data.get(i).split(",");
-            String dateStr = rowData[1];
+        TableColumn<ModSecurity, String> transactionIdColumn = new TableColumn<>("Transaction ID");
+        transactionIdColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTransactionId()));
+
+        TableColumn<ModSecurity, String> ipColumn = new TableColumn<>("IP Address");
+        ipColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getRemoteAddress()));
+
+        TableColumn<ModSecurity, String> pathColumn = new TableColumn<>("Request Path");
+        pathColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getRequestPath()));
+
+        TableColumn<ModSecurity, String> methodColumn = new TableColumn<>("Method");
+        methodColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getMethod()));
+
+        TableColumn<ModSecurity, String> protocolColumn = new TableColumn<>("Protocol");
+        protocolColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getProtocol()));
+
+        TableColumn<ModSecurity, Integer> statusCodeColumn = new TableColumn<>("Status Code");
+        statusCodeColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(cellData.getValue().getStatusCode()).asObject());
+
+        TableColumn<ModSecurity, String> userAgentColumn = new TableColumn<>("User Agent");
+        userAgentColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getUserAgent()));
+
+        TableColumn<ModSecurity, String> attackNameColumn = new TableColumn<>("Attack Name");
+        attackNameColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getAttackName()));
+
+        TableColumn<ModSecurity, String> attackMsgColumn = new TableColumn<>("Attack Message");
+        attackMsgColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getAttackMsg()));
+
+        TableColumn<ModSecurity, String> attackDataColumn = new TableColumn<>("Attack Data");
+        attackDataColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getAttackData()));
+
+        TableColumn<ModSecurity, String> severityColumn = new TableColumn<>("Severity");
+        severityColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getSeverity()));
+
+        tableView.getColumns().addAll(versionColumn, timestampColumn, transactionIdColumn, ipColumn, pathColumn, methodColumn, protocolColumn, statusCodeColumn, userAgentColumn, attackNameColumn, attackMsgColumn, attackDataColumn, severityColumn);
+
+        ObservableList<ModSecurity> rows = FXCollections.observableArrayList();
+
+        for (ModSecurity rowData : parsedData) {
+            String dateStr = rowData.getTimestamp();
             LocalDate rowDate = parseDate(dateStr);
 
             if (rowDate.equals(selectedDate)) {
-                String[] filteredRowData = Arrays.stream(rowData)
-                        .filter(s -> !s.trim().isEmpty())
-                        .toArray(String[]::new);
-                rows.add(filteredRowData);
+                rows.add(rowData);
             }
         }
 
@@ -91,43 +121,50 @@ public class ViewModSecController {
         tableView.setEditable(true);
 
         tableView.setRowFactory(tv -> {
-            TableRow<String[]> row = new TableRow<>();
+            TableRow<ModSecurity> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
-                    String[] rowData = row.getItem();
-                    showRowContent(headers, rowData);
-                    System.out.println("Double clicked row: " + Arrays.toString(rowData));
+                    ModSecurity rowData = row.getItem();
+                    showRowContent(rowData);
+                    System.out.println("Double clicked row: " + rowData);
                 }
             });
             return row;
         });
     }
 
-    public static void ShowLogTable(TableView<String[]> tableView, LocalDate selectedDate) throws IOException {
+    public static void ShowLogTable(TableView<ModSecurity> tableView, LocalDate selectedDate) throws JsonProcessingException {
         LogTable(tableView, selectedDate);
         updateTableView(tableView, selectedDate);
     }
 
-    private static void updateTableView(TableView<String[]> tableView, LocalDate selectedDate) {
+    private static void updateTableView(TableView<ModSecurity> tableView, LocalDate selectedDate) {
         try {
             LogTable(tableView, selectedDate);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static void showRowContent(String[] headers, String[] rowData) {
+    private static void showRowContent(ModSecurity rowData) {
         VBox contentBox = new VBox();
         contentBox.setSpacing(5);
 
-        Map<String, String> headerDataMap = Arrays.stream(headers)
-                .filter(header -> !header.trim().isEmpty())
-                .collect(Collectors.toMap(header -> header, header -> rowData[Arrays.asList(headers).indexOf(header)]));
+        Text versionText = new Text("Version: " + rowData.getVersion());
+        Text timestampText = new Text("Timestamp: " + rowData.getTimestamp());
+        Text transactionIdText = new Text("Transaction ID: " + rowData.getTransactionId());
+        Text ipText = new Text("IP Address: " + rowData.getRemoteAddress());
+        Text pathText = new Text("Request Path: " + rowData.getRequestPath());
+        Text methodText = new Text("Method: " + rowData.getMethod());
+        Text protocolText = new Text("Protocol: " + rowData.getProtocol());
+        Text statusCodeText = new Text("Status Code: " + rowData.getStatusCode());
+        Text userAgentText = new Text("User Agent: " + rowData.getUserAgent());
+        Text attackNameText = new Text("Attack Name: " + rowData.getAttackName());
+        Text attackMsgText = new Text("Attack Message: " + rowData.getAttackMsg());
+        Text attackDataText = new Text("Attack Data: " + rowData.getAttackData());
+        Text severityText = new Text("Severity: " + rowData.getSeverity());
 
-        for (Map.Entry<String, String> entry : headerDataMap.entrySet()) {
-            Text text = new Text(entry.getKey() + ": " + entry.getValue());
-            contentBox.getChildren().add(text);
-        }
+        contentBox.getChildren().addAll(versionText, timestampText, transactionIdText, ipText, pathText, methodText, protocolText, statusCodeText, userAgentText, attackNameText, attackMsgText, attackDataText, severityText);
 
         Dialog<Void> dialog = new Dialog<>();
         dialog.getDialogPane().setContent(contentBox);
@@ -140,5 +177,45 @@ public class ViewModSecController {
         DateTimeFormatter INPUT_FORMATTER = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss.SSSSSS Z");
         ZonedDateTime zonedDateTime = ZonedDateTime.parse(inputDate, INPUT_FORMATTER);
         return zonedDateTime.toLocalDate();
+    }
+
+    private static List<ModSecurity> parseLogs() throws JsonProcessingException {
+        Logger logger = Logger.getLogger(ModSecurityParser.class.getName());
+        String logFilePath = System.getProperty("user.dir") + "/logs/modsecurity/modsec_audit_new.log";
+        List<ModSecurity> parsedData = new ArrayList<>();
+        LinkedList<String> logLines = readFile(logFilePath, logger);
+        ObjectMapper objectMapper = new ObjectMapper();
+        for (String line : logLines) {
+            JsonNode jsonNode = objectMapper.readTree(line);
+            String auditData = jsonNode.path("audit_data").path("messages").get(0).asText();
+            String requestLine = jsonNode.path("request").path("request_line").asText();
+            String[] requestParts = requestLine.split(" ");
+            JsonNode versionSection = jsonNode.path("audit_data").path("producer");
+            String potentialVersion;
+            if (versionSection.isMissingNode() || versionSection.isNull()) {
+                potentialVersion = "";
+            } else {
+                potentialVersion = parseVersion(versionSection.get(0).asText());
+            }
+
+
+            ModSecurity parsedLine = new ModSecurity(
+                    potentialVersion,
+                    jsonNode.path("transaction").path("time").asText(),
+                    jsonNode.path("transaction").path("transaction_id").asText(),
+                    jsonNode.path("transaction").path("remote_address").asText(),
+                    requestParts[1],
+                    requestParts[0],
+                    requestParts[2],
+                    jsonNode.path("response").path("status").asInt(),
+                    jsonNode.path("request").path("headers").path("User-Agent").asText(),
+                    parseAttackType(auditData),
+                    parseAttackMsg(auditData),
+                    parseAttackData(auditData),
+                    parseSeverity(auditData)
+            );
+            parsedData.add(parsedLine);
+        }
+        return parsedData;
     }
 }

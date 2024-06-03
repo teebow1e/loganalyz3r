@@ -12,18 +12,20 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import java.util.logging.Level;
 
-import static csvgenerator.CSVReader.read;
+import loganalyzer.Apache;
+import loganalyzer.ApacheParser;
+
+import static utility.Utility.readFile;
 
 public class ViewLogController {
 
     @FXML
-    private TableView<String[]> Table;
+    private TableView<Apache> Table;
     @FXML
     private DatePicker datePicker;
 
@@ -45,45 +47,53 @@ public class ViewLogController {
     }
 
     private void viewLog() throws Exception {
-        ShowLogTable((TableView<String[]>) Table, datePicker.getValue());
+        ShowLogTable(Table, datePicker.getValue());
     }
 
-    public static void LogTable(TableView<String[]> tableView, LocalDate selectedDate) throws IOException {
-        List<String> data = read("logs/parsed/log_new.csv");
+    public static void LogTable(TableView<Apache> tableView, LocalDate selectedDate) {
+        List<Apache> parsedData = parseLogs();
 
         tableView.getItems().clear();
         tableView.getColumns().clear();
 
-        String[] headers = data.get(0).split(",");
-        List<Integer> nonEmptyColumnIndices = new ArrayList<>();
-        for (int i = 0; i < headers.length; i++) {
-            if (!headers[i].trim().isEmpty()) {
-                nonEmptyColumnIndices.add(i);
-            }
+        if (parsedData.isEmpty()) {
+            return;
         }
 
-        for (int i = 0; i < (nonEmptyColumnIndices.size()); i++) {
-            if (!headers[i].trim().isEmpty()) {
-                final int columnIndex = i;
-                TableColumn<String[], String> column = new TableColumn<>(headers[i]);
-                column.setCellValueFactory(param -> new javafx.beans.property.SimpleStringProperty(param.getValue()[columnIndex]));
-                column.setResizable(true);
-                tableView.getColumns().add(column);
-            }
-        }
+        TableColumn<Apache, String> ipColumn = new TableColumn<>("IP Address");
+        ipColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getRemoteAddress()));
 
-        ObservableList<String[]> rows = FXCollections.observableArrayList();
+        TableColumn<Apache, String> timestampColumn = new TableColumn<>("Timestamp");
+        timestampColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTimestamp()));
 
-        for (int i = 1; i < data.size(); i++) {
-            String[] rowData = data.get(i).split(",");
-            String dateStr = rowData[1];
+        TableColumn<Apache, String> methodColumn = new TableColumn<>("Method");
+        methodColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getMethod()));
+
+        TableColumn<Apache, String> protocolColumn = new TableColumn<>("Protocol");
+        protocolColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getProtocol()));
+
+        TableColumn<Apache, String> requestPathColumn = new TableColumn<>("Request Path");
+        requestPathColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getRequestPath()));
+
+        TableColumn<Apache, Integer> statusCodeColumn = new TableColumn<>("Status Code");
+        statusCodeColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(cellData.getValue().getStatusCode()).asObject());
+
+        TableColumn<Apache, Integer> contentLengthColumn = new TableColumn<>("Content Length");
+        contentLengthColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(cellData.getValue().getContentLength()).asObject());
+
+        TableColumn<Apache, String> userAgentColumn = new TableColumn<>("User Agent");
+        userAgentColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getUserAgent()));
+
+        tableView.getColumns().addAll(ipColumn, timestampColumn, methodColumn, protocolColumn, requestPathColumn, statusCodeColumn, contentLengthColumn, userAgentColumn);
+
+        ObservableList<Apache> rows = FXCollections.observableArrayList();
+
+        for (Apache rowData : parsedData) {
+            String dateStr = rowData.getTimestamp();
             LocalDate rowDate = parseDate(dateStr);
 
             if (rowDate.equals(selectedDate)) {
-                String[] filteredRowData = Arrays.stream(rowData)
-                        .filter(s -> !s.trim().isEmpty())
-                        .toArray(String[]::new);
-                rows.add(filteredRowData);
+                rows.add(rowData);
             }
         }
 
@@ -91,43 +101,45 @@ public class ViewLogController {
         tableView.setEditable(true);
 
         tableView.setRowFactory(tv -> {
-            TableRow<String[]> row = new TableRow<>();
+            TableRow<Apache> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
-                    String[] rowData = row.getItem();
-                    showRowContent(headers, rowData);
-                    System.out.println("Double clicked row: " + Arrays.toString(rowData));
+                    Apache rowData = row.getItem();
+                    showRowContent(rowData);
+                    System.out.println("Double clicked row: " + rowData);
                 }
             });
             return row;
         });
     }
 
-    public static void ShowLogTable(TableView<String[]> tableView, LocalDate selectedDate) throws IOException {
+    public static void ShowLogTable(TableView<Apache> tableView, LocalDate selectedDate) {
         LogTable(tableView, selectedDate);
         updateTableView(tableView, selectedDate);
     }
 
-    private static void updateTableView(TableView<String[]> tableView, LocalDate selectedDate) {
+    private static void updateTableView(TableView<Apache> tableView, LocalDate selectedDate) {
         try {
             LogTable(tableView, selectedDate);
-        } catch (IOException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
 
-    private static void showRowContent(String[] headers, String[] rowData) {
+    private static void showRowContent(Apache rowData) {
         VBox contentBox = new VBox();
         contentBox.setSpacing(5);
 
-        Map<String, String> headerDataMap = Arrays.stream(headers)
-                .filter(header -> !header.trim().isEmpty())
-                .collect(Collectors.toMap(header -> header, header -> rowData[Arrays.asList(headers).indexOf(header)]));
+        Text ipText = new Text("IP Address: " + rowData.getRemoteAddress());
+        Text timestampText = new Text("Timestamp: " + rowData.getTimestamp());
+        Text methodText = new Text("Method: " + rowData.getMethod());
+        Text protocolText = new Text("Protocol: " + rowData.getProtocol());
+        Text requestPathText = new Text("Request Path: " + rowData.getRequestPath());
+        Text statusCodeText = new Text("Status Code: " + rowData.getStatusCode());
+        Text contentLengthText = new Text("Content Length: " + rowData.getContentLength());
+        Text userAgentText = new Text("User Agent: " + rowData.getUserAgent());
 
-        for (Map.Entry<String, String> entry : headerDataMap.entrySet()) {
-            Text text = new Text(entry.getKey() + ": " + entry.getValue());
-            contentBox.getChildren().add(text);
-        }
+        contentBox.getChildren().addAll(ipText, timestampText, methodText, protocolText, requestPathText, statusCodeText, contentLengthText, userAgentText);
 
         Dialog<Void> dialog = new Dialog<>();
         dialog.getDialogPane().setContent(contentBox);
@@ -140,5 +152,26 @@ public class ViewLogController {
         DateTimeFormatter INPUT_FORMATTER = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss Z");
         ZonedDateTime zonedDateTime = ZonedDateTime.parse(inputDate, INPUT_FORMATTER);
         return zonedDateTime.toLocalDate();
+    }
+
+    private static List<Apache> parseLogs() {
+        Logger logger = Logger.getLogger(ApacheParser.class.getName());
+        String logFilePath = System.getProperty("user.dir") + "\\logs\\apache_nginx\\access_log_0.log";
+        List<Apache> parsedData = new ArrayList<>();
+        LinkedList<String> logLines = readFile(logFilePath, logger);
+        for (String logLine : logLines) {
+            Apache parsedLine = new Apache(
+                    ApacheParser.parseIpAddress(logLine),
+                    ApacheParser.parseTimestamp(logLine),
+                    ApacheParser.parseAllInOne(logLine)[5].replace("\"", ""),
+                    ApacheParser.parseAllInOne(logLine)[7].replace("\"", ""),
+                    ApacheParser.parseAllInOne(logLine)[6].replace("\"", ""),
+                    Integer.parseInt(ApacheParser.parseAllInOne(logLine)[8]),
+                    Integer.parseInt(ApacheParser.parseAllInOne(logLine)[9]),
+                    ApacheParser.parseUserAgent(logLine)
+            );
+            parsedData.add(parsedLine);
+        }
+        return parsedData;
     }
 }

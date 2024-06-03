@@ -75,7 +75,7 @@ public class ModSecurityParser {
         }
     }
 
-    private static String parseAttackType(String data) {
+    public static String parseAttackType(String data) {
         String regex = "\\[file\\s+\"([^\"]*)\"\\]";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(data);
@@ -89,7 +89,7 @@ public class ModSecurityParser {
         }
     }
 
-    private static String parseAttackMsg(String data) {
+    public static String parseAttackMsg(String data) {
         String regex = "\\[msg\\s+\"([^\"]*)\"\\]";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(data);
@@ -100,7 +100,7 @@ public class ModSecurityParser {
         }
     }
 
-    private static String parseAttackData(String logEntry) {
+    public static String parseAttackData(String logEntry) {
         String regex = "\\[data\\s+\"([^\"]*)\"\\]";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(logEntry);
@@ -111,7 +111,7 @@ public class ModSecurityParser {
         }
     }
 
-    private static String parseSeverity(String data) {
+    public static String parseSeverity(String data) {
         String regex = "\\[severity\\s+\"([^\"]*)\"\\]";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(data);
@@ -122,7 +122,7 @@ public class ModSecurityParser {
         }
     }
 
-    private static String parseVersion(String data) {
+    public static String parseVersion(String data) {
         String regex = "(?<=\\/)(\\d+\\.\\d+\\.\\d+)(?= \\()";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(data);
