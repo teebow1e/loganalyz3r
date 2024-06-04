@@ -7,6 +7,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -32,6 +33,8 @@ public class ViewModSecController {
     @FXML
     private TableView<ModSecurity> Table;
     @FXML
+    private TextField searchField;
+    @FXML
     private DatePicker datePicker;
 
     @FXML
@@ -44,6 +47,17 @@ public class ViewModSecController {
                 e.printStackTrace();
             }
         });
+
+        searchField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                try {
+                    viewLog();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         try {
             viewLog();
         } catch (Exception e) {
@@ -52,10 +66,10 @@ public class ViewModSecController {
     }
 
     private void viewLog() throws Exception {
-        ShowLogTable(Table, datePicker.getValue());
+        ShowLogTable(Table, searchField.getText(), datePicker.getValue());
     }
 
-    public static void LogTable(TableView<ModSecurity> tableView, LocalDate selectedDate) throws JsonProcessingException {
+    public static void LogTable(TableView<ModSecurity> tableView, String textField, LocalDate selectedDate) throws JsonProcessingException {
         List<ModSecurity> parsedData = parseLogs();
 
         tableView.getItems().clear();
@@ -112,7 +126,7 @@ public class ViewModSecController {
             String dateStr = rowData.getTimestamp();
             LocalDate rowDate = parseDate(dateStr);
 
-            if (rowDate.equals(selectedDate)) {
+            if (rowDate.equals(selectedDate) && containsTextField(rowData, textField)) {
                 rows.add(rowData);
             }
         }
@@ -133,17 +147,8 @@ public class ViewModSecController {
         });
     }
 
-    public static void ShowLogTable(TableView<ModSecurity> tableView, LocalDate selectedDate) throws JsonProcessingException {
-        LogTable(tableView, selectedDate);
-        updateTableView(tableView, selectedDate);
-    }
-
-    private static void updateTableView(TableView<ModSecurity> tableView, LocalDate selectedDate) {
-        try {
-            LogTable(tableView, selectedDate);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    public static void ShowLogTable(TableView<ModSecurity> tableView, String textField, LocalDate selectedDate) throws JsonProcessingException {
+        LogTable(tableView, textField, selectedDate);
     }
 
     private static void showRowContent(ModSecurity rowData) {
@@ -218,4 +223,20 @@ public class ViewModSecController {
         }
         return parsedData;
     }
+
+    public static boolean containsTextField(ModSecurity modsec, String textField) {
+        String version = modsec.getVersion();
+        String transactionId = modsec.getTransactionId();
+        String attackName = modsec.getAttackName();
+        String attackMsg = modsec.getAttackMsg();
+        String attackData = modsec.getAttackData();
+        String severity = modsec.getSeverity();
+        return version.contains(textField) ||
+                transactionId.contains(textField) ||
+                attackName.contains(textField) ||
+                attackMsg.contains(textField) ||
+                attackData.contains(textField) ||
+                severity.contains(textField);
+    }
+
 }

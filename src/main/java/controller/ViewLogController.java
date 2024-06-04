@@ -4,18 +4,16 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.logging.Logger;
-import java.util.stream.Collectors;
-import java.util.logging.Level;
 
 import loganalyzer.Apache;
 import loganalyzer.ApacheParser;
@@ -27,11 +25,24 @@ public class ViewLogController {
     @FXML
     private TableView<Apache> Table;
     @FXML
-    private DatePicker datePicker;
+    public static TextField searchField;
+    @FXML
+    private static DatePicker datePicker;
+
+    public static void setField (TextField textField) {
+        searchField = textField;
+    }
+
+    public static void setDate (DatePicker date) {
+        datePicker = date;
+    }
+
 
     @FXML
     private void initialize() {
-        datePicker.setValue(LocalDate.now());
+        if(datePicker == null) {
+            datePicker.setValue(LocalDate.now());
+        }
         datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 viewLog();
@@ -39,6 +50,17 @@ public class ViewLogController {
                 e.printStackTrace();
             }
         });
+
+        searchField.setOnKeyPressed(event -> {
+            if (event.getCode() == KeyCode.ENTER) {
+                try {
+                    viewLog();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
         try {
             viewLog();
         } catch (Exception e) {
@@ -46,11 +68,11 @@ public class ViewLogController {
         }
     }
 
-    private void viewLog() throws Exception {
-        ShowLogTable(Table, datePicker.getValue());
+    public void viewLog() {
+        ShowLogTable(Table, searchField.getText(), datePicker.getValue());
     }
 
-    public static void LogTable(TableView<Apache> tableView, LocalDate selectedDate) {
+    public static void LogTable(TableView<Apache> tableView, String textField, LocalDate selectedDate) {
         List<Apache> parsedData = parseLogs();
 
         tableView.getItems().clear();
@@ -92,7 +114,7 @@ public class ViewLogController {
             String dateStr = rowData.getTimestamp();
             LocalDate rowDate = parseDate(dateStr);
 
-            if (rowDate.equals(selectedDate)) {
+            if (rowDate.equals(selectedDate) && containsTextField(rowData, textField)) {
                 rows.add(rowData);
             }
         }
@@ -113,18 +135,18 @@ public class ViewLogController {
         });
     }
 
-    public static void ShowLogTable(TableView<Apache> tableView, LocalDate selectedDate) {
-        LogTable(tableView, selectedDate);
-        updateTableView(tableView, selectedDate);
+    public static void ShowLogTable(TableView<Apache> tableView, String textField, LocalDate selectedDate) {
+        LogTable(tableView, textField, selectedDate);
+//        updateTableView(tableView, textField, selectedDate);
     }
 
-    private static void updateTableView(TableView<Apache> tableView, LocalDate selectedDate) {
-        try {
-            LogTable(tableView, selectedDate);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
+//    private static void updateTableView(TableView<Apache> tableView, TextField textField, LocalDate selectedDate) {
+//        try {
+//            LogTable(tableView, textField, selectedDate);
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     private static void showRowContent(Apache rowData) {
         VBox contentBox = new VBox();
@@ -156,7 +178,7 @@ public class ViewLogController {
 
     private static List<Apache> parseLogs() {
         Logger logger = Logger.getLogger(ApacheParser.class.getName());
-        String logFilePath = System.getProperty("user.dir") + "\\logs\\apache_nginx\\access_log_0.log";
+        String logFilePath = System.getProperty("user.dir") + "\\logs\\apache_nginx\\access_log_50000.log";
         List<Apache> parsedData = new ArrayList<>();
         LinkedList<String> logLines = readFile(logFilePath, logger);
         for (String logLine : logLines) {
@@ -174,4 +196,21 @@ public class ViewLogController {
         }
         return parsedData;
     }
+
+    public static boolean containsTextField(Apache apache, String textField) {
+        String ip = apache.getRemoteAddress();
+        String timestamp = apache.getTimestamp();
+        String method = apache.getMethod();
+        String protocol = apache.getProtocol();
+        String requestPath = apache.getRequestPath();
+        String userAgent = apache.getUserAgent();
+
+        return ip.contains(textField) ||
+                timestamp.contains(textField) ||
+                method.contains(textField) ||
+                protocol.contains(textField) ||
+                requestPath.contains(textField) ||
+                userAgent.contains(textField);
+    }
+
 }
