@@ -84,40 +84,41 @@ public class ApacheParser {
         Logger logger = Logger.getLogger(ApacheParser.class.getName());
         String logFilePath = System.getProperty("user.dir") + "\\logs\\apache_nginx\\access_log_50000.log";
         Path logPath = Paths.get(logFilePath);
-        LinkedList<String> lines;
         List<Apache> logList = new LinkedList<>();
+        LocalDate selectedDate = datePicker.getValue();
 
         if (Files.exists(logPath)) {
-            lines = readFile(logFilePath, logger);
+            try (BufferedReader br = new BufferedReader(new FileReader(logFilePath))) {
+                String line;
+                while ((line = br.readLine()) != null) {
 
-            LocalDate selectedDate = datePicker.getValue();
+                    String timestamp = parseTimestamp(line);
+                    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss Z", Locale.ENGLISH);
+                    LocalDate logDate = LocalDate.parse(timestamp, formatter);
 
-            for (String workingLine : lines) {
-                String timestamp = parseTimestamp(workingLine);
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss Z", Locale.ENGLISH);
-                LocalDate logDate = LocalDate.parse(timestamp, formatter);
-
-                if (logDate.equals(selectedDate)) {
-                    logList.add(new Apache(
-                            parseIpAddress(workingLine),
-                            timestamp,
-                            parseAllInOne(workingLine)[5].replace("\"", ""),
-                            parseAllInOne(workingLine)[7].replace("\"", ""),
-                            parseAllInOne(workingLine)[6].replace("\"", ""),
-                            Integer.parseInt(parseAllInOne(workingLine)[8]),
-                            Integer.parseInt(parseAllInOne(workingLine)[9]),
-                            parseUserAgent(workingLine)
-                    ));
+                    if (logDate.equals(selectedDate)) {
+                        logList.add(new Apache(
+                                parseIpAddress(line),
+                                timestamp,
+                                parseAllInOne(line)[5].replace("\"", ""),
+                                parseAllInOne(line)[7].replace("\"", ""),
+                                parseAllInOne(line)[6].replace("\"", ""),
+                                Integer.parseInt(parseAllInOne(line)[8]),
+                                Integer.parseInt(parseAllInOne(line)[9]),
+                                parseUserAgent(line)
+                        ));
+                    }
                 }
+            } catch (FileNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-        } else {
+        }
+        else{
             logger.log(Level.SEVERE, "Log file not found at location {0}", logFilePath);
         }
         return logList;
     }
 
-
-    public static void main(String[] args) {
-        parseAndGenerateCSV();
-    }
 }

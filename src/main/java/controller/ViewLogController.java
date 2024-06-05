@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import loganalyzer.Apache;
 import loganalyzer.ApacheParser;
 
+import static loganalyzer.ApacheParser.parseApacheByDate;
 import static utility.Utility.readFile;
 
 public class ViewLogController {
@@ -97,7 +98,7 @@ public class ViewLogController {
         ShowLogTable(Table, ipAddress, dbDate.getValue());
     }
 
-    public static void LogTable(TableView<Apache> tableView, String textField, LocalDate selectedDate) {
+    public void LogTable(TableView<Apache> tableView, String textField, LocalDate selectedDate) {
         tableView.getItems().clear();
         tableView.getColumns().clear();
 
@@ -129,31 +130,8 @@ public class ViewLogController {
 
         ObservableList<Apache> rows = FXCollections.observableArrayList();
 
-        Logger logger = Logger.getLogger(ApacheParser.class.getName());
-        String logFilePath = System.getProperty("user.dir") + "\\logs\\apache_nginx\\access_log_50000.log";
-
-        try (BufferedReader br = new BufferedReader(new FileReader(logFilePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                Apache rowData = new Apache(
-                    ApacheParser.parseIpAddress(line),
-                    ApacheParser.parseTimestamp(line),
-                    ApacheParser.parseAllInOne(line)[5].replace("\"", ""),
-                    ApacheParser.parseAllInOne(line)[7].replace("\"", ""),
-                    ApacheParser.parseAllInOne(line)[6].replace("\"", ""),
-                    Integer.parseInt(ApacheParser.parseAllInOne(line)[8]),
-                    Integer.parseInt(ApacheParser.parseAllInOne(line)[9]),
-                    ApacheParser.parseUserAgent(line)
-                );
-                String dateStr = rowData.getTimestamp();
-                LocalDate rowDate = parseDate(dateStr);
-                if (rowDate.equals(selectedDate) && containsTextField(rowData, textField)) {
-                    rows.add(rowData);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        List<Apache> logEntries = parseApacheByDate(datePicker);
+        rows.addAll(logEntries);
 
         tableView.setItems(rows);
         tableView.setEditable(true);
@@ -171,7 +149,7 @@ public class ViewLogController {
         });
     }
 
-    public static void ShowLogTable(TableView<Apache> tableView, String textField, LocalDate selectedDate) {
+    public void ShowLogTable(TableView<Apache> tableView, String textField, LocalDate selectedDate) {
         LogTable(tableView, textField, selectedDate);
 //        updateTableView(tableView, textField, selectedDate);
     }
@@ -211,27 +189,6 @@ public class ViewLogController {
         ZonedDateTime zonedDateTime = ZonedDateTime.parse(inputDate, INPUT_FORMATTER);
         return zonedDateTime.toLocalDate();
     }
-
-//    private static List<Apache> parseLogs() {
-//        Logger logger = Logger.getLogger(ApacheParser.class.getName());
-//        String logFilePath = System.getProperty("user.dir") + "\\logs\\apache_nginx\\access_log_50000.log";
-//        List<Apache> parsedData = new ArrayList<>();
-//        LinkedList<String> logLines = readFile(logFilePath, logger);
-//        for (String logLine : logLines) {
-//            Apache parsedLine = new Apache(
-//                    ApacheParser.parseIpAddress(logLine),
-//                    ApacheParser.parseTimestamp(logLine),
-//                    ApacheParser.parseAllInOne(logLine)[5].replace("\"", ""),
-//                    ApacheParser.parseAllInOne(logLine)[7].replace("\"", ""),
-//                    ApacheParser.parseAllInOne(logLine)[6].replace("\"", ""),
-//                    Integer.parseInt(ApacheParser.parseAllInOne(logLine)[8]),
-//                    Integer.parseInt(ApacheParser.parseAllInOne(logLine)[9]),
-//                    ApacheParser.parseUserAgent(logLine)
-//            );
-//            parsedData.add(parsedLine);
-//        }
-//        return parsedData;
-//    }
 
     public static boolean containsTextField(Apache apache, String textField) {
         String ip = apache.getRemoteAddress();
