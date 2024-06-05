@@ -170,18 +170,23 @@ public class ViewModSecController {
     private static void showRowContent(ModSecurity rowData) {
         VBox contentBox = new VBox();
         contentBox.setSpacing(5);
-
+        Text versionText = new Text("ModSecurity Version: " + rowData.getVersion());
         Text timestampText = new Text("Timestamp: " + rowData.getTimestamp());
+        Text transactionIdText = new Text("Transaction ID: " + rowData.getTransactionId());
         Text ipText = new Text("IP Address: " + rowData.getRemoteAddress());
         Text pathText = new Text("Request Path: " + rowData.getRequestPath());
         Text methodText = new Text("Method: " + rowData.getMethod());
+        Text protocolText = new Text("Protocol: " + rowData.getProtocol());
+        Text statusCodeText = new Text("Status Code: " + rowData.getStatusCode());
         Text userAgentText = new Text("User Agent: " + rowData.getUserAgent());
         Text attackNameText = new Text("Attack Name: " + rowData.getAttackName());
+        Text attackMsgText = new Text("Attack Message: " + rowData.getAttackMsg());
         Text attackDataText = new Text("Attack Data: " + rowData.getAttackData());
         Text severityText = new Text("Severity: " + rowData.getSeverity());
 
-        contentBox.getChildren().addAll(timestampText, ipText, pathText, methodText,
-                userAgentText, attackNameText, attackDataText, severityText);
+        contentBox.getChildren().addAll(versionText, timestampText, transactionIdText,
+                ipText, pathText, methodText, protocolText, statusCodeText, userAgentText,
+                attackNameText, attackMsgText, attackDataText, severityText);
 
         Dialog<Void> dialog = new Dialog<>();
         dialog.getDialogPane().setContent(contentBox);
