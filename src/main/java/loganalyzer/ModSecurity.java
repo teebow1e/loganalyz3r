@@ -33,7 +33,6 @@ public class ModSecurity extends Log {
         return transactionId;
     }
 
-
     public String getAttackName() {
         return attackName;
     }

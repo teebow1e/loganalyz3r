@@ -6,12 +6,11 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import ui.WebLogManager;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -42,43 +41,33 @@ public class DashboardController {
 
     @FXML
     private TableView<String[]> statusCodeRankingTable;
-
     @FXML
     private TableColumn<String[], String> statusCodeColumn;
-
     @FXML
     private TableColumn<String[], Integer> statusCodeCountColumn;
 
     @FXML
     private TableView<String[]> timestampRankingTable;
-
     @FXML
     private TableColumn<String[], String> timestampColumn;
-
     @FXML
     private TableColumn<String[], Integer> timestampCountColumn;
 
     @FXML
     private TableView<String[]> ipRankingTable;
-
     @FXML
     private TableColumn<String[], String> ipColumn;
-
     @FXML
     private TableColumn<String[], Integer> ipCountColumn;
-
     @FXML
     private TableColumn<String[], String> ipCountryColumn;
 
     @FXML
+    private TableView<String[]> ruleCountTable;
+    @FXML
     private TableColumn<String[], String> modsecRuleColumn;
-
     @FXML
     private TableColumn<String[], Integer> modsecRuleCountColumn;
-
-    @FXML
-    private TableView<String[]> ruleCountTable;
-
 
     private List<LogEntry> logEntries;
     private static final int MAX_DISPLAYED_TIMESTAMPS = 10;
@@ -197,6 +186,18 @@ public class DashboardController {
         ipColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue()[0]));
         ipCountColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(Integer.parseInt(cellData.getValue()[1])).asObject());
         ipCountryColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue()[2]));
+
+
+        ipRankingTable.setRowFactory(tv -> {
+            TableRow<String[]> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                    String[] rowData = row.getItem();
+                    handleIpDoubleClick(rowData[0]);
+                }
+            });
+            return row;
+        });
     }
 
     private List<LogEntry> parseLogFile(String filePath) throws Exception {
@@ -446,6 +447,20 @@ public class DashboardController {
             this.ipAddress = ipAddress;
             this.date = date;
             this.statusCode = statusCode;
+        }
+    }
+
+
+
+    private void handleIpDoubleClick(String ipAddress) {
+        try {
+            Stage primaryStage = (Stage) mainVBox.getScene().getWindow();
+            WebLogManager webLogManager = new WebLogManager();
+            ViewLogController.setField(new TextField(ipAddress));
+            ViewLogController.setDate(datePicker);
+            webLogManager.start(primaryStage, 2);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }
