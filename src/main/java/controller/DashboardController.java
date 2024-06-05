@@ -1,5 +1,7 @@
 package controller;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -20,6 +22,7 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 
+import static loganalyzer.ModSecurityParser.parseAttackType;
 import static utility.IpLookUp.IpCheck;
 
 public class DashboardController {
@@ -80,7 +83,6 @@ public class DashboardController {
             setupDatePicker();
             setupStartTimeComboBox();
             setupTableViews();
-            setupModsecTable();
             displayLogsByInterval("15 Minutes", LocalDate.now());
             addClickListenerToMainVBox();  // Add this line
         } catch (Exception e) {
@@ -136,42 +138,6 @@ public class DashboardController {
             }
         });
     }
-    private void setupModsecTable() {
-        modsecRuleColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue()[0]));
-        modsecRuleCountColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(Integer.parseInt(cellData.getValue()[1])).asObject());
-        updateModsecRuleTable();
-        ruleCountTable.getSortOrder().add(modsecRuleCountColumn);
-        modsecRuleCountColumn.setSortType(TableColumn.SortType.DESCENDING);
-    }
-
-    private void updateModsecRuleTable() {
-        String filePath = "logs/parsed/modsecurity.csv";
-        Map<String, Integer> ruleCounts = new HashMap<>();
-
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                if (line.startsWith("remoteAddress")) {
-                    continue;
-                }
-                String[] parts = line.split(",");
-                String ruleName = parts[7];
-                if (!ruleName.startsWith("REQUEST")) {
-                    continue;
-                }
-                ruleCounts.merge(ruleName, 1, Integer::sum);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        ObservableList<String[]> items = ruleCountTable.getItems();
-        items.clear();
-
-        ruleCounts.forEach((rule, count) -> items.add(new String[]{rule, count.toString()}));
-        ruleCountTable.sort();
-    }
-
 
     private void setupTableViews() {
         // Setup the status code ranking table
@@ -187,6 +153,12 @@ public class DashboardController {
         ipCountColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(Integer.parseInt(cellData.getValue()[1])).asObject());
         ipCountryColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue()[2]));
 
+        modsecRuleColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue()[0]));
+        modsecRuleCountColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(Integer.parseInt(cellData.getValue()[1])).asObject());
+        updateModsecRuleTable();
+        ruleCountTable.getSortOrder().add(modsecRuleCountColumn);
+        modsecRuleCountColumn.setSortType(TableColumn.SortType.DESCENDING);
+
 
         ipRankingTable.setRowFactory(tv -> {
             TableRow<String[]> row = new TableRow<>();
@@ -194,6 +166,17 @@ public class DashboardController {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     String[] rowData = row.getItem();
                     handleIpDoubleClick(rowData[0]);
+                }
+            });
+            return row;
+        });
+
+        ruleCountTable.setRowFactory(tv -> {
+            TableRow<String[]> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                    String[] rowData = row.getItem();
+                    handleModSecDoubleClick(rowData[0]);
                 }
             });
             return row;
@@ -438,6 +421,38 @@ public class DashboardController {
         }
     }
 
+    private void updateModsecRuleTable() {
+        String filePath = "logs/modsecurity/modsec_audit_new.log";
+        Map<String, Integer> ruleCounts = new HashMap<>();
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                JsonNode jsonNode = objectMapper.readTree(line);
+                String auditData = jsonNode.path("audit_data").path("messages").get(0).asText();
+                String ruleName = parseAttackType(auditData);
+
+                if (!ruleName.startsWith("REQUEST")) {
+                    continue;
+                }
+                ruleCounts.merge(ruleName, 1, Integer::sum);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        ObservableList<String[]> items = ruleCountTable.getItems();
+        items.clear();
+
+        ruleCounts.forEach((rule, count) -> items.add(new String[]{rule, count.toString()}));
+        ruleCountTable.sort();
+    }
+
+
+
+
+
     private class LogEntry {
         String ipAddress;
         Date date;
@@ -450,6 +465,18 @@ public class DashboardController {
         }
     }
 
+    private class ModSecEntry {
+        String ruleName;
+        Date date;
+        ModSecEntry(String ruleName, Date date) {
+            this.ruleName = ruleName;
+            this.date = date;
+        }
+    }
+
+
+
+
 
 
     private void handleIpDoubleClick(String ipAddress) {
@@ -458,7 +485,19 @@ public class DashboardController {
             ViewLogController.setIpSearch(ipAddress);
             ViewLogController.setdbDate(datePicker);
             WebLogManager webLogManager = new WebLogManager();
-            webLogManager.start(primaryStage, 2);
+            webLogManager.start(primaryStage, 3);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void handleModSecDoubleClick(String rule) {
+        try {
+            Stage primaryStage = (Stage) mainVBox.getScene().getWindow();
+            ViewModSecController.setdbRule(rule);
+            ViewModSecController.setdbDate(datePicker);
+            WebLogManager webLogManager = new WebLogManager();
+            webLogManager.start(primaryStage, 4);
         } catch (Exception e) {
             e.printStackTrace();
         }

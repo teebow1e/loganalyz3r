@@ -25,7 +25,7 @@ public class SidebarController {
     }
 
     @FXML
-    private void handleViewlog(MouseEvent event) throws Exception {
+    private void handleStream(MouseEvent event) throws Exception {
         Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         WebLogManager webLogManager = new WebLogManager();
@@ -33,7 +33,7 @@ public class SidebarController {
     }
 
     @FXML
-    private void handleViewModSec(MouseEvent event) throws Exception {
+    private void handleViewlog(MouseEvent event) throws Exception {
         Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         WebLogManager webLogManager = new WebLogManager();
@@ -41,7 +41,7 @@ public class SidebarController {
     }
 
     @FXML
-    private void handleFeedback(MouseEvent event) throws Exception {
+    private void handleViewModSec(MouseEvent event) throws Exception {
         Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         WebLogManager webLogManager = new WebLogManager();
@@ -49,7 +49,7 @@ public class SidebarController {
     }
 
     @FXML
-    private void handleExport(MouseEvent event) throws Exception {
+    private void handleFeedback(MouseEvent event) throws Exception {
         Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         WebLogManager webLogManager = new WebLogManager();
@@ -57,11 +57,19 @@ public class SidebarController {
     }
 
     @FXML
-    private void handleManagelog(MouseEvent event) throws Exception {
+    private void handleExport(MouseEvent event) throws Exception {
         Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         WebLogManager webLogManager = new WebLogManager();
         webLogManager.start(primaryStage, 6);
+    }
+
+    @FXML
+    private void handleManagelog(MouseEvent event) throws Exception {
+        Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+
+        WebLogManager webLogManager = new WebLogManager();
+        webLogManager.start(primaryStage, 7);
     }
 
     @FXML

@@ -68,6 +68,6 @@ public class IpLookUp {
     }
 
     public static void main(String[] args) throws IOException {
-        System.out.println(IpCheck("83.135.178.18"));
+        System.out.println(IpCheck("127.0.0.1"));
     }
 }

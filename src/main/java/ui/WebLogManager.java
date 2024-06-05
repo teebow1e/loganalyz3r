@@ -17,11 +17,12 @@ public class WebLogManager extends Application {
         FXMLLoader loader = null;
         String fxmlFile = switch (mode) {
             case 1 -> "/fxml/main/Dashboard.fxml";
-            case 2 -> "/fxml/main/Viewlog.fxml";
-            case 3 -> "/fxml/main/Viewmodsec.fxml";
-            case 4 -> "/fxml/main/Feedback.fxml";
-            case 5 -> "/fxml/main/Export.fxml";
-//            case 6 -> "/fxml/main/Managelog.fxml";
+            case 2 -> "/fxml/main/Stream.fxml";
+            case 3 -> "/fxml/main/Viewlog.fxml";
+            case 4 -> "/fxml/main/Viewmodsec.fxml";
+            case 5 -> "/fxml/main/Feedback.fxml";
+            case 6 -> "/fxml/main/Export.fxml";
+//            case 7 -> "/fxml/main/Managelog.fxml";
             default -> throw new IllegalArgumentException("Invalid mode specified: " + mode);
         };
 

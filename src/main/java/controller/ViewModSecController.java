@@ -37,12 +37,35 @@ public class ViewModSecController {
     @FXML
     private DatePicker datePicker;
 
+    private static String dbRule;
+    private static DatePicker dbDate;
+
+    public static void setdbRule(String rule) {
+        dbRule = rule;
+    }
+
+    public static void setdbDate(DatePicker date) {
+        dbDate = date;
+    }
     @FXML
     private void initialize() {
-        datePicker.setValue(LocalDate.now());
+        if(datePicker.getValue() == null) {
+            if (dbDate == null) {
+                datePicker.setValue(LocalDate.now());
+            }
+            else {
+                datePicker.setValue(dbDate.getValue());
+            }
+        }
+
         datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
             try {
-                viewLog();
+                if (dbRule == null) {
+                    viewLog();
+                }
+                else {
+                    viewLog(dbRule, datePicker);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -59,7 +82,12 @@ public class ViewModSecController {
         });
 
         try {
-            viewLog();
+            if (dbRule == null) {
+                viewLog();
+            }
+            else {
+                viewLog(dbRule, dbDate);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -67,6 +95,10 @@ public class ViewModSecController {
 
     private void viewLog() throws Exception {
         ShowLogTable(Table, searchField.getText(), datePicker.getValue());
+    }
+
+    public void viewLog(String rule, DatePicker dbDate) throws Exception{
+        ShowLogTable(Table, rule, dbDate.getValue());
     }
 
     public static void LogTable(TableView<ModSecurity> tableView, String textField, LocalDate selectedDate) throws JsonProcessingException {

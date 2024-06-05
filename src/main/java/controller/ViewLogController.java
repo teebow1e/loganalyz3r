@@ -9,6 +9,9 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -95,14 +98,8 @@ public class ViewLogController {
     }
 
     public static void LogTable(TableView<Apache> tableView, String textField, LocalDate selectedDate) {
-        List<Apache> parsedData = parseLogs();
-
         tableView.getItems().clear();
         tableView.getColumns().clear();
-
-        if (parsedData.isEmpty()) {
-            return;
-        }
 
         TableColumn<Apache, String> ipColumn = new TableColumn<>("IP Address");
         ipColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getRemoteAddress()));
@@ -132,13 +129,30 @@ public class ViewLogController {
 
         ObservableList<Apache> rows = FXCollections.observableArrayList();
 
-        for (Apache rowData : parsedData) {
-            String dateStr = rowData.getTimestamp();
-            LocalDate rowDate = parseDate(dateStr);
+        Logger logger = Logger.getLogger(ApacheParser.class.getName());
+        String logFilePath = System.getProperty("user.dir") + "\\logs\\apache_nginx\\access_log_50000.log";
 
-            if (rowDate.equals(selectedDate) && containsTextField(rowData, textField)) {
-                rows.add(rowData);
+        try (BufferedReader br = new BufferedReader(new FileReader(logFilePath))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                Apache rowData = new Apache(
+                    ApacheParser.parseIpAddress(line),
+                    ApacheParser.parseTimestamp(line),
+                    ApacheParser.parseAllInOne(line)[5].replace("\"", ""),
+                    ApacheParser.parseAllInOne(line)[7].replace("\"", ""),
+                    ApacheParser.parseAllInOne(line)[6].replace("\"", ""),
+                    Integer.parseInt(ApacheParser.parseAllInOne(line)[8]),
+                    Integer.parseInt(ApacheParser.parseAllInOne(line)[9]),
+                    ApacheParser.parseUserAgent(line)
+                );
+                String dateStr = rowData.getTimestamp();
+                LocalDate rowDate = parseDate(dateStr);
+                if (rowDate.equals(selectedDate) && containsTextField(rowData, textField)) {
+                    rows.add(rowData);
+                }
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
         tableView.setItems(rows);
@@ -198,26 +212,26 @@ public class ViewLogController {
         return zonedDateTime.toLocalDate();
     }
 
-    private static List<Apache> parseLogs() {
-        Logger logger = Logger.getLogger(ApacheParser.class.getName());
-        String logFilePath = System.getProperty("user.dir") + "\\logs\\apache_nginx\\access_log_50000.log";
-        List<Apache> parsedData = new ArrayList<>();
-        LinkedList<String> logLines = readFile(logFilePath, logger);
-        for (String logLine : logLines) {
-            Apache parsedLine = new Apache(
-                    ApacheParser.parseIpAddress(logLine),
-                    ApacheParser.parseTimestamp(logLine),
-                    ApacheParser.parseAllInOne(logLine)[5].replace("\"", ""),
-                    ApacheParser.parseAllInOne(logLine)[7].replace("\"", ""),
-                    ApacheParser.parseAllInOne(logLine)[6].replace("\"", ""),
-                    Integer.parseInt(ApacheParser.parseAllInOne(logLine)[8]),
-                    Integer.parseInt(ApacheParser.parseAllInOne(logLine)[9]),
-                    ApacheParser.parseUserAgent(logLine)
-            );
-            parsedData.add(parsedLine);
-        }
-        return parsedData;
-    }
+//    private static List<Apache> parseLogs() {
+//        Logger logger = Logger.getLogger(ApacheParser.class.getName());
+//        String logFilePath = System.getProperty("user.dir") + "\\logs\\apache_nginx\\access_log_50000.log";
+//        List<Apache> parsedData = new ArrayList<>();
+//        LinkedList<String> logLines = readFile(logFilePath, logger);
+//        for (String logLine : logLines) {
+//            Apache parsedLine = new Apache(
+//                    ApacheParser.parseIpAddress(logLine),
+//                    ApacheParser.parseTimestamp(logLine),
+//                    ApacheParser.parseAllInOne(logLine)[5].replace("\"", ""),
+//                    ApacheParser.parseAllInOne(logLine)[7].replace("\"", ""),
+//                    ApacheParser.parseAllInOne(logLine)[6].replace("\"", ""),
+//                    Integer.parseInt(ApacheParser.parseAllInOne(logLine)[8]),
+//                    Integer.parseInt(ApacheParser.parseAllInOne(logLine)[9]),
+//                    ApacheParser.parseUserAgent(logLine)
+//            );
+//            parsedData.add(parsedLine);
+//        }
+//        return parsedData;
+//    }
 
     public static boolean containsTextField(Apache apache, String textField) {
         String ip = apache.getRemoteAddress();
