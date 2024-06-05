@@ -12,16 +12,19 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import loganalyzer.Apache;
 import ui.WebLogManager;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 
+import static loganalyzer.ApacheParser.parseApacheByDate;
 import static loganalyzer.ModSecurityParser.parseAttackType;
 import static utility.IpLookUp.IpCheck;
 
@@ -72,15 +75,18 @@ public class DashboardController {
     @FXML
     private TableColumn<String[], Integer> modsecRuleCountColumn;
 
-    private List<LogEntry> logEntries;
+    private List<Apache> logEntries;
     private static final int MAX_DISPLAYED_TIMESTAMPS = 10;
 
     @FXML
     private void initialize() {
         try {
-            logEntries = parseLogFile("logs/apache_nginx/access_log_50000.log");
-            setupComboBox();
+            LocalDate initialDate = LocalDate.now();
+            datePicker.setValue(initialDate);
+
             setupDatePicker();
+            logEntries = parseApacheByDate(datePicker);
+            setupComboBox();
             setupStartTimeComboBox();
             setupTableViews();
             displayLogsByInterval("15 Minutes", LocalDate.now());
@@ -113,9 +119,9 @@ public class DashboardController {
     }
 
     private void setupDatePicker() {
-        datePicker.setValue(LocalDate.now());
         datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
             try {
+                logEntries = parseApacheByDate(datePicker);
                 displayLogsByInterval(timeIntervalComboBox.getSelectionModel().getSelectedItem(), newValue);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -183,24 +189,7 @@ public class DashboardController {
         });
     }
 
-    private List<LogEntry> parseLogFile(String filePath) throws Exception {
-        List<LogEntry> entries = new ArrayList<>();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MMM/yyyy:HH:mm:ss Z", Locale.ENGLISH);
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] parts = line.split(" ");
-                String ipAddress = parts[0];
-                String dateStr = parts[3].substring(1) + " " + parts[4].substring(0, parts[4].length() - 1);
-                Date date = dateFormat.parse(dateStr);
-                int statusCode = Integer.parseInt(parts[8]);
-                entries.add(new LogEntry(ipAddress, date, statusCode));
-            }
-        }
-        return entries;
-    }
-
-    private void displayLogsByInterval(String interval, LocalDate selectedDate) throws IOException {
+    private void displayLogsByInterval(String interval, LocalDate selectedDate) throws IOException, ParseException {
         // Ensure selectedTime is not null
         String selectedTime = startTimeComboBox.getSelectionModel().getSelectedItem();
         if (selectedTime == null) {
@@ -260,7 +249,7 @@ public class DashboardController {
         updateIpRanking(groupedLogs, selectedDate);
     }
 
-    private Map<String, Map<String, Integer>> groupLogsByInterval(String interval, LocalDate selectedDate) {
+    private Map<String, Map<String, Integer>> groupLogsByInterval(String interval, LocalDate selectedDate) throws ParseException {
         Map<String, Map<String, Integer>> groupedLogs = new TreeMap<>();
         SimpleDateFormat dateFormat;
         Calendar calendar = Calendar.getInstance();
@@ -298,13 +287,14 @@ public class DashboardController {
         }
         int startHour = Integer.parseInt(selectedTime.split(":")[0]);
 
-        for (LogEntry entry : logEntries) {
-            calendar.setTime(entry.date);
-            LocalDate entryDate = entry.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        for (Apache entry : logEntries) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd/MMM/yyyy:HH:mm:ss Z", Locale.ENGLISH);
+            calendar.setTime(sdf.parse(entry.getTimestamp()));
+            LocalDate entryDate = calendar.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             if (entryDate.equals(selectedDate) && calendar.get(Calendar.HOUR_OF_DAY) >= startHour) {
                 adjustCalendar(calendar, field, amount);
                 String timeSlot = dateFormat.format(calendar.getTime());
-                String statusRange = getStatusRange(entry.statusCode);
+                String statusRange = getStatusRange(entry.getStatusCode());
 
                 groupedLogs.computeIfAbsent(timeSlot, k -> new HashMap<>()).merge(statusRange, 1, Integer::sum);
             }
@@ -399,12 +389,11 @@ public class DashboardController {
 
     private void updateIpRanking(Map<String, Map<String, Integer>> groupedLogs, LocalDate selectedDate) throws IOException {
         Map<String, Integer> ipCounts = new HashMap<>();
-
-        // Iterate over log entries to count requests by IP
-        for (LogEntry entry : logEntries) {
-            LocalDate entryDate = entry.date.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        Calendar calendar = Calendar.getInstance();
+        for (Apache entry : logEntries) {
+            LocalDate entryDate = calendar.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             if (entryDate.equals(selectedDate)) {
-                ipCounts.merge(entry.ipAddress, 1, Integer::sum);
+                ipCounts.merge(entry.getRemoteAddress(), 1, Integer::sum);
             }
         }
 
@@ -448,36 +437,6 @@ public class DashboardController {
         ruleCounts.forEach((rule, count) -> items.add(new String[]{rule, count.toString()}));
         ruleCountTable.sort();
     }
-
-
-
-
-
-    private class LogEntry {
-        String ipAddress;
-        Date date;
-        int statusCode;
-
-        LogEntry(String ipAddress, Date date, int statusCode) {
-            this.ipAddress = ipAddress;
-            this.date = date;
-            this.statusCode = statusCode;
-        }
-    }
-
-    private class ModSecEntry {
-        String ruleName;
-        Date date;
-        ModSecEntry(String ruleName, Date date) {
-            this.ruleName = ruleName;
-            this.date = date;
-        }
-    }
-
-
-
-
-
 
     private void handleIpDoubleClick(String ipAddress) {
         try {
