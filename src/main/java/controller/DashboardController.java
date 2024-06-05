@@ -438,7 +438,7 @@ public class DashboardController {
         }
     }
 
-    private static class LogEntry {
+    private class LogEntry {
         String ipAddress;
         Date date;
         int statusCode;
@@ -455,9 +455,9 @@ public class DashboardController {
     private void handleIpDoubleClick(String ipAddress) {
         try {
             Stage primaryStage = (Stage) mainVBox.getScene().getWindow();
+            ViewLogController.setIpSearch(ipAddress);
+            ViewLogController.setdbDate(datePicker);
             WebLogManager webLogManager = new WebLogManager();
-            ViewLogController.setField(new TextField(ipAddress));
-            ViewLogController.setDate(datePicker);
             webLogManager.start(primaryStage, 2);
         } catch (Exception e) {
             e.printStackTrace();

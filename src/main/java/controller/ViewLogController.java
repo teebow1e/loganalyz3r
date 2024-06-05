@@ -25,27 +25,46 @@ public class ViewLogController {
     @FXML
     private TableView<Apache> Table;
     @FXML
-    public static TextField searchField;
+    public TextField searchField;
     @FXML
-    private static DatePicker datePicker;
+    public DatePicker datePicker;
 
-    public static void setField (TextField textField) {
-        searchField = textField;
+    private static String dbSearch;
+    private static DatePicker dbDate;
+
+    public static void setIpSearch(String address) {
+        dbSearch = address;
     }
 
-    public static void setDate (DatePicker date) {
-        datePicker = date;
+    public static void setdbDate(DatePicker date) {
+        dbDate = date;
     }
-
 
     @FXML
     private void initialize() {
-        if(datePicker == null) {
-            datePicker.setValue(LocalDate.now());
+        if(datePicker.getValue() == null) {
+            if (dbDate == null) {
+                datePicker.setValue(LocalDate.now());
+            }
+            else {
+                datePicker.setValue(dbDate.getValue());
+            }
         }
+
+        if (searchField.getText() == null) {
+            if (dbSearch != null) {
+                searchField.setText(dbSearch);
+            }
+        }
+
         datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
             try {
-                viewLog();
+                if (dbSearch == null) {
+                    viewLog();
+                }
+                else {
+                    viewLog(dbSearch, datePicker);
+                }
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -62,7 +81,12 @@ public class ViewLogController {
         });
 
         try {
-            viewLog();
+            if (dbSearch == null) {
+                viewLog();
+            }
+            else {
+                viewLog(dbSearch, dbDate);
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -70,6 +94,10 @@ public class ViewLogController {
 
     public void viewLog() {
         ShowLogTable(Table, searchField.getText(), datePicker.getValue());
+    }
+
+    public void viewLog(String ipAddress, DatePicker dbDate) {
+        ShowLogTable(Table, ipAddress, dbDate.getValue());
     }
 
     public static void LogTable(TableView<Apache> tableView, String textField, LocalDate selectedDate) {
