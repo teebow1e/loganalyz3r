@@ -51,12 +51,6 @@ public class ViewLogController {
             }
         }
 
-        if (searchField.getText() == null) {
-            if (dbSearch != null) {
-                searchField.setText(dbSearch);
-            }
-        }
-
         datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 if (dbSearch == null) {

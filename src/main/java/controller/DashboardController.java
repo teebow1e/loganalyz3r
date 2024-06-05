@@ -91,9 +91,9 @@ public class DashboardController {
     private void addClickListenerToMainVBox() {
         mainVBox.addEventFilter(MouseEvent.MOUSE_CLICKED, event -> {
             Node clickedNode = event.getPickResult().getIntersectedNode();
-            // Check if the click was outside any TableView
-            if (!(clickedNode instanceof TableView) && !(clickedNode.getParent() instanceof TableView)) {
-                mainVBox.requestFocus(); // Lose focus from TableView
+            if (!(clickedNode instanceof TableView) && !(clickedNode.getParent() instanceof TableView)
+                    && !(clickedNode instanceof ComboBox) && !(clickedNode.getParent() instanceof ComboBox)) {
+                mainVBox.requestFocus();
             }
         });
     }

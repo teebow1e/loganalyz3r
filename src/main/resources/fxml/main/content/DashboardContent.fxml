@@ -12,7 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox id="mainVBox" fx:id="mainVBox" stylesheets="@../../../css/Dashboard.css" HBox.hgrow="ALWAYS" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardController">
+<VBox id="mainVBox" fx:id="mainVBox" stylesheets="@../../../css/Dashboard.css" HBox.hgrow="ALWAYS" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardController">
     <HBox alignment="CENTER" spacing="10">
         <Label text="Time Interval" />
         <ComboBox fx:id="timeIntervalComboBox" />
