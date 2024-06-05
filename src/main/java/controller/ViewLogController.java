@@ -131,7 +131,12 @@ public class ViewLogController {
         ObservableList<Apache> rows = FXCollections.observableArrayList();
 
         List<Apache> logEntries = parseApacheByDate(datePicker);
-        rows.addAll(logEntries);
+
+        for (Apache row: logEntries) {
+            if (containsTextField(row, textField)) {
+                rows.add(row);
+            }
+        }
 
         tableView.setItems(rows);
         tableView.setEditable(true);
@@ -151,16 +156,7 @@ public class ViewLogController {
 
     public void ShowLogTable(TableView<Apache> tableView, String textField, LocalDate selectedDate) {
         LogTable(tableView, textField, selectedDate);
-//        updateTableView(tableView, textField, selectedDate);
     }
-
-//    private static void updateTableView(TableView<Apache> tableView, TextField textField, LocalDate selectedDate) {
-//        try {
-//            LogTable(tableView, textField, selectedDate);
-//        } catch (Exception e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
 
     private static void showRowContent(Apache rowData) {
         VBox contentBox = new VBox();
@@ -184,11 +180,6 @@ public class ViewLogController {
         dialog.showAndWait();
     }
 
-    public static LocalDate parseDate(String inputDate) {
-        DateTimeFormatter INPUT_FORMATTER = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss Z");
-        ZonedDateTime zonedDateTime = ZonedDateTime.parse(inputDate, INPUT_FORMATTER);
-        return zonedDateTime.toLocalDate();
-    }
 
     public static boolean containsTextField(Apache apache, String textField) {
         String ip = apache.getRemoteAddress();

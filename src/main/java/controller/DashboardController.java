@@ -22,6 +22,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static loganalyzer.ApacheParser.parseApacheByDate;
@@ -83,7 +84,6 @@ public class DashboardController {
         try {
             LocalDate initialDate = LocalDate.now();
             datePicker.setValue(initialDate);
-
             setupDatePicker();
             logEntries = parseApacheByDate(datePicker);
             setupComboBox();
@@ -123,6 +123,7 @@ public class DashboardController {
             try {
                 logEntries = parseApacheByDate(datePicker);
                 displayLogsByInterval(timeIntervalComboBox.getSelectionModel().getSelectedItem(), newValue);
+                setupTableViews();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -389,10 +390,11 @@ public class DashboardController {
 
     private void updateIpRanking(Map<String, Map<String, Integer>> groupedLogs, LocalDate selectedDate) throws IOException {
         Map<String, Integer> ipCounts = new HashMap<>();
-        Calendar calendar = Calendar.getInstance();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss Z", Locale.ENGLISH);
+
         for (Apache entry : logEntries) {
-            LocalDate entryDate = calendar.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-            if (entryDate.equals(selectedDate)) {
+            LocalDate logDate = LocalDate.parse(entry.getTimestamp(), formatter);
+            if (logDate.equals(selectedDate)) {
                 ipCounts.merge(entry.getRemoteAddress(), 1, Integer::sum);
             }
         }
@@ -406,9 +408,14 @@ public class DashboardController {
 
         // Add the sorted IPs to the table
         for (Map.Entry<String, Integer> entry : sortedIps) {
-            items.add(new String[]{entry.getKey(), entry.getValue().toString(), IpCheck(entry.getKey())});
+            String ipAddress = entry.getKey();
+            int count = entry.getValue();
+            String country = IpCheck(ipAddress);
+            items.add(new String[]{ipAddress, String.valueOf(count), country});
         }
     }
+
+
 
     private void updateModsecRuleTable() {
         String filePath = "logs/modsecurity/modsec_audit_new.log";
