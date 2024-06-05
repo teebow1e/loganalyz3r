@@ -12,7 +12,6 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -21,7 +20,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
-import loganalyzer.Apache;
 import loganalyzer.ModSecurity;
 import loganalyzer.ModSecurityParser;
 
@@ -101,7 +99,8 @@ public class ViewModSecController {
         ShowLogTable(Table, rule, dbDate.getValue());
     }
 
-    public static void LogTable(TableView<ModSecurity> tableView, String textField, LocalDate selectedDate) throws JsonProcessingException {
+    public static void LogTable(TableView<ModSecurity> tableView, String textField, LocalDate selectedDate)
+            throws JsonProcessingException {
         List<ModSecurity> parsedData = parseLogs();
 
         tableView.getItems().clear();
@@ -110,15 +109,8 @@ public class ViewModSecController {
         if (parsedData.isEmpty()) {
             return;
         }
-
-        TableColumn<ModSecurity, String> versionColumn = new TableColumn<>("Version");
-        versionColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getVersion()));
-
         TableColumn<ModSecurity, String> timestampColumn = new TableColumn<>("Timestamp");
         timestampColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTimestamp()));
-
-        TableColumn<ModSecurity, String> transactionIdColumn = new TableColumn<>("Transaction ID");
-        transactionIdColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTransactionId()));
 
         TableColumn<ModSecurity, String> ipColumn = new TableColumn<>("IP Address");
         ipColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getRemoteAddress()));
@@ -129,20 +121,11 @@ public class ViewModSecController {
         TableColumn<ModSecurity, String> methodColumn = new TableColumn<>("Method");
         methodColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getMethod()));
 
-        TableColumn<ModSecurity, String> protocolColumn = new TableColumn<>("Protocol");
-        protocolColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getProtocol()));
-
-        TableColumn<ModSecurity, Integer> statusCodeColumn = new TableColumn<>("Status Code");
-        statusCodeColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(cellData.getValue().getStatusCode()).asObject());
-
         TableColumn<ModSecurity, String> userAgentColumn = new TableColumn<>("User Agent");
         userAgentColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getUserAgent()));
 
         TableColumn<ModSecurity, String> attackNameColumn = new TableColumn<>("Attack Name");
         attackNameColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getAttackName()));
-
-        TableColumn<ModSecurity, String> attackMsgColumn = new TableColumn<>("Attack Message");
-        attackMsgColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getAttackMsg()));
 
         TableColumn<ModSecurity, String> attackDataColumn = new TableColumn<>("Attack Data");
         attackDataColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getAttackData()));
@@ -150,7 +133,7 @@ public class ViewModSecController {
         TableColumn<ModSecurity, String> severityColumn = new TableColumn<>("Severity");
         severityColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getSeverity()));
 
-        tableView.getColumns().addAll(versionColumn, timestampColumn, transactionIdColumn, ipColumn, pathColumn, methodColumn, protocolColumn, statusCodeColumn, userAgentColumn, attackNameColumn, attackMsgColumn, attackDataColumn, severityColumn);
+        tableView.getColumns().addAll(timestampColumn, ipColumn, pathColumn, methodColumn, userAgentColumn, attackNameColumn, attackDataColumn, severityColumn);
 
         ObservableList<ModSecurity> rows = FXCollections.observableArrayList();
 
@@ -179,7 +162,8 @@ public class ViewModSecController {
         });
     }
 
-    public static void ShowLogTable(TableView<ModSecurity> tableView, String textField, LocalDate selectedDate) throws JsonProcessingException {
+    public static void ShowLogTable(TableView<ModSecurity> tableView, String textField, LocalDate selectedDate)
+            throws JsonProcessingException {
         LogTable(tableView, textField, selectedDate);
     }
 
@@ -187,21 +171,17 @@ public class ViewModSecController {
         VBox contentBox = new VBox();
         contentBox.setSpacing(5);
 
-        Text versionText = new Text("Version: " + rowData.getVersion());
         Text timestampText = new Text("Timestamp: " + rowData.getTimestamp());
-        Text transactionIdText = new Text("Transaction ID: " + rowData.getTransactionId());
         Text ipText = new Text("IP Address: " + rowData.getRemoteAddress());
         Text pathText = new Text("Request Path: " + rowData.getRequestPath());
         Text methodText = new Text("Method: " + rowData.getMethod());
-        Text protocolText = new Text("Protocol: " + rowData.getProtocol());
-        Text statusCodeText = new Text("Status Code: " + rowData.getStatusCode());
         Text userAgentText = new Text("User Agent: " + rowData.getUserAgent());
         Text attackNameText = new Text("Attack Name: " + rowData.getAttackName());
-        Text attackMsgText = new Text("Attack Message: " + rowData.getAttackMsg());
         Text attackDataText = new Text("Attack Data: " + rowData.getAttackData());
         Text severityText = new Text("Severity: " + rowData.getSeverity());
 
-        contentBox.getChildren().addAll(versionText, timestampText, transactionIdText, ipText, pathText, methodText, protocolText, statusCodeText, userAgentText, attackNameText, attackMsgText, attackDataText, severityText);
+        contentBox.getChildren().addAll(timestampText, ipText, pathText, methodText,
+                userAgentText, attackNameText, attackDataText, severityText);
 
         Dialog<Void> dialog = new Dialog<>();
         dialog.getDialogPane().setContent(contentBox);
