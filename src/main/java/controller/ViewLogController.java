@@ -16,6 +16,7 @@ import javafx.scene.text.Text;
 
 import java.time.LocalDate;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import loganalyzer.Apache;
 
@@ -37,10 +38,16 @@ public class ViewLogController {
     private static String dbSearch;
     private static DatePicker dbDate;
 
+    private List<String> appliedFilter = new LinkedList<>();
+
     private ObservableList<ComboBoxItemWrap<String>> filterList = FXCollections.observableArrayList(
-            new ComboBoxItemWrap<>("hihi"),
-            new ComboBoxItemWrap<>("quan ngooo"),
-            new ComboBoxItemWrap<>("lmao")
+            new ComboBoxItemWrap<>("IP Address"),
+            new ComboBoxItemWrap<>("Timestamp"),
+            new ComboBoxItemWrap<>("Method"),
+            new ComboBoxItemWrap<>("Protocol"),
+            new ComboBoxItemWrap<>("Request Path"),
+            new ComboBoxItemWrap<>("Status Code"),
+            new ComboBoxItemWrap<>("Content Length")
     );
 
     public static void setIpSearch(String address) {
@@ -49,6 +56,14 @@ public class ViewLogController {
 
     public static void setdbDate(DatePicker date) {
         dbDate = date;
+    }
+
+    public AtomicInteger getNumberOfSelectedFilter() {
+        AtomicInteger counter = new AtomicInteger();
+        filterComboBox.getItems().
+                filtered(f -> f.getCheck())
+                .forEach(item -> counter.getAndIncrement());
+        return counter;
     }
 
     @FXML
@@ -82,10 +97,7 @@ public class ViewLogController {
         filterComboBox.setItems(filterList);
 
         searchBtn.setOnAction(event -> {
-            filterComboBox.getItems().filtered(
-                    f -> f.getCheck()).forEach(item -> System.out.printf("%s ", item.getItem())
-            );
-            System.out.println();
+            System.out.println("this button does nothing hehe");
         });
 
         if(datePicker.getValue() == null) {
@@ -113,7 +125,18 @@ public class ViewLogController {
         searchField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 try {
-                    viewLog();
+                    System.out.println(getNumberOfSelectedFilter().get());
+                    if (getNumberOfSelectedFilter().get() > 0) {
+                        appliedFilter.clear();
+                        filterComboBox.getItems().filtered(
+                                f -> f.getCheck()).forEach(item -> appliedFilter.add(item.getItem())
+                        );
+                        System.out.println("called view log with filter");
+                        viewLog(appliedFilter);
+                    } else {
+                        System.out.println("called view log with no filter");
+                        viewLog();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -133,14 +156,18 @@ public class ViewLogController {
     }
 
     public void viewLog() {
-        LogTable(Table, searchField.getText(), datePicker.getValue());
+        LogTable(Table, searchField.getText(), datePicker.getValue(), new ArrayList<>());
     }
 
     public void viewLog(String ipAddress, DatePicker dbDate) {
-        LogTable(Table, ipAddress, dbDate.getValue());
+        LogTable(Table, ipAddress, dbDate.getValue(), new ArrayList<>());
     }
 
-    public void LogTable(TableView<Apache> tableView, String textField, LocalDate selectedDate) {
+    public void viewLog(List<String> appliedFilter) {
+        LogTable(Table, searchField.getText(), datePicker.getValue(), appliedFilter);
+    }
+
+    public void LogTable(TableView<Apache> tableView, String textField, LocalDate selectedDate, List<String> appliedFilter) {
         tableView.getItems().clear();
         tableView.getColumns().clear();
 
@@ -175,7 +202,7 @@ public class ViewLogController {
         List<Apache> logEntries = parseApacheByDate(datePicker);
 
         for (Apache row: logEntries) {
-            if (containsTextField(row, textField)) {
+            if (containsTextField(row, textField, appliedFilter)) {
                 rows.add(row);
             }
         }
@@ -219,21 +246,65 @@ public class ViewLogController {
     }
 
 
-    public static boolean containsTextField(Apache apache, String textField) {
-        String ip = apache.getRemoteAddress();
-        String timestamp = apache.getTimestamp();
-        String method = apache.getMethod();
-        String protocol = apache.getProtocol();
-        String requestPath = apache.getRequestPath();
-        String userAgent = apache.getUserAgent();
-
-        return ip.contains(textField) ||
+//    public static boolean containsTextField(Apache apache, String textField) {
+//        String ip = apache.getRemoteAddress();
+//        String timestamp = apache.getTimestamp();
+//        String method = apache.getMethod();
+//        String protocol = apache.getProtocol();
+//        String requestPath = apache.getRequestPath();
+//        String userAgent = apache.getUserAgent();
+//
+//        return ip.contains(textField) ||
+//                timestamp.contains(textField) ||
+//                method.contains(textField) ||
+//                protocol.contains(textField) ||
+//                requestPath.contains(textField) ||
+//                userAgent.contains(textField);
+//    }
+    public static boolean containsTextField(Apache apache, String textField, List<String> fields) {
+        System.out.println(textField);
+        System.out.println(fields);
+        boolean found = false;
+        if (fields.isEmpty()) {
+            String ip = apache.getRemoteAddress();
+            String timestamp = apache.getTimestamp();
+            String method = apache.getMethod();
+            String protocol = apache.getProtocol();
+            String requestPath = apache.getRequestPath();
+            String userAgent = apache.getUserAgent();
+            return ip.contains(textField) ||
                 timestamp.contains(textField) ||
                 method.contains(textField) ||
                 protocol.contains(textField) ||
                 requestPath.contains(textField) ||
                 userAgent.contains(textField);
+        }
+        for (String field : fields) {
+            switch (field) {
+                case "IP Address":
+                    found = textField != null && apache.getRemoteAddress().contains(textField);
+                    break;
+                case "Timestamp":
+                    found = textField != null && apache.getTimestamp().contains(textField);
+                    break;
+                case "Method":
+                    found = textField != null && apache.getMethod().contains(textField);
+                    break;
+                case "Protocol":
+                    found = textField != null && apache.getProtocol().contains(textField);
+                    break;
+                case "Request Path":
+                    found = textField != null && apache.getRequestPath().contains(textField);
+                    break;
+                case "User Agent":
+                    found = textField != null && apache.getUserAgent().contains(textField);
+                    break;
+            }
+            if (!found) break;
+        }
+        return found;
     }
+
     public class ComboBoxItemWrap<T> {
 
         private BooleanProperty check = new SimpleBooleanProperty(false);
