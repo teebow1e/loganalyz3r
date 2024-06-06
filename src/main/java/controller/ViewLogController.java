@@ -46,8 +46,7 @@ public class ViewLogController {
             new ComboBoxItemWrap<>("Method"),
             new ComboBoxItemWrap<>("Protocol"),
             new ComboBoxItemWrap<>("Request Path"),
-            new ComboBoxItemWrap<>("Status Code"),
-            new ComboBoxItemWrap<>("Content Length")
+            new ComboBoxItemWrap<>("User-Agent")
     );
 
     public static void setIpSearch(String address) {
@@ -245,22 +244,6 @@ public class ViewLogController {
         dialog.showAndWait();
     }
 
-
-//    public static boolean containsTextField(Apache apache, String textField) {
-//        String ip = apache.getRemoteAddress();
-//        String timestamp = apache.getTimestamp();
-//        String method = apache.getMethod();
-//        String protocol = apache.getProtocol();
-//        String requestPath = apache.getRequestPath();
-//        String userAgent = apache.getUserAgent();
-//
-//        return ip.contains(textField) ||
-//                timestamp.contains(textField) ||
-//                method.contains(textField) ||
-//                protocol.contains(textField) ||
-//                requestPath.contains(textField) ||
-//                userAgent.contains(textField);
-//    }
     public static boolean containsTextField(Apache apache, String textField, List<String> fields) {
         System.out.println(textField);
         System.out.println(fields);
@@ -280,26 +263,17 @@ public class ViewLogController {
                 userAgent.contains(textField);
         }
         for (String field : fields) {
-            switch (field) {
-                case "IP Address":
-                    found = textField != null && apache.getRemoteAddress().contains(textField);
-                    break;
-                case "Timestamp":
-                    found = textField != null && apache.getTimestamp().contains(textField);
-                    break;
-                case "Method":
-                    found = textField != null && apache.getMethod().contains(textField);
-                    break;
-                case "Protocol":
-                    found = textField != null && apache.getProtocol().contains(textField);
-                    break;
-                case "Request Path":
-                    found = textField != null && apache.getRequestPath().contains(textField);
-                    break;
-                case "User Agent":
-                    found = textField != null && apache.getUserAgent().contains(textField);
-                    break;
-            }
+            // we should add more field here, so that user dont have to uncheck everything
+            // just to search for one value
+            found = switch (field) {
+                case "IP Address" -> textField != null && apache.getRemoteAddress().contains(textField);
+                case "Timestamp" -> textField != null && apache.getTimestamp().contains(textField);
+                case "Method" -> textField != null && apache.getMethod().contains(textField);
+                case "Protocol" -> textField != null && apache.getProtocol().contains(textField);
+                case "Request Path" -> textField != null && apache.getRequestPath().contains(textField);
+                case "User-Agent" -> textField != null && apache.getUserAgent().contains(textField);
+                default -> found;
+            };
             if (!found) break;
         }
         return found;
