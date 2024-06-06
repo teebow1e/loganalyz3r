@@ -5,10 +5,8 @@ import javafx.fxml.FXML;
 import javafx.scene.control.TableView;
 
 public class ManageLogController {
-
     @FXML
-    private TableView<?> Table; // This should match the fx:id defined in your FXML
-
+    private TableView<String[]> Table;
     @FXML
     private void initialize() {
         try {
@@ -17,8 +15,7 @@ public class ManageLogController {
             e.printStackTrace();
         }
     }
-
     private void manageLog() throws Exception {
-        TableVisualizer.ManageLogTable((TableView<String[]>) Table);
+        TableVisualizer.ManageLogTable(Table);
     }
 }

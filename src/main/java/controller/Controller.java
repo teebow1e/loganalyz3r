@@ -14,6 +14,8 @@ import ui.WebLogManager;
 import usermanagement.User;
 import usermanagement.UserManagement;
 
+import static utility.Utility.showAlert;
+
 import javax.swing.JOptionPane;
 
 import java.io.File;
@@ -28,10 +30,8 @@ public class Controller {
 
     @FXML
     private TextField usernameField;
-
     @FXML
     private TextField passwordField;
-
     @FXML
     private TextField rePasswordField;
 
@@ -87,7 +87,7 @@ public class Controller {
             webLogManager.start(stage);
         } else {
             logger.log(Level.INFO, "Login failed");
-            JOptionPane.showMessageDialog(null, "Nhap sai password roi cu!");
+            showAlert("Wrong Password", "Nhap sai password roi cu!");
         }
     }
 }

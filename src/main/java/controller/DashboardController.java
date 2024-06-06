@@ -27,36 +27,28 @@ import static loganalyzer.ModSecurityParser.*;
 import static utility.IpLookUp.IpCheck;
 
 public class DashboardController {
-
     @FXML
     private VBox mainVBox;
-
     @FXML
     private LineChart<String, Number> logLineChart;
-
     @FXML
     private ComboBox<String> timeIntervalComboBox;
-
     @FXML
     private DatePicker datePicker;
-
     @FXML
     private ComboBox<String> startTimeComboBox;
-
     @FXML
     private TableView<String[]> statusCodeRankingTable;
     @FXML
     private TableColumn<String[], String> statusCodeColumn;
     @FXML
     private TableColumn<String[], Integer> statusCodeCountColumn;
-
     @FXML
     private TableView<String[]> timestampRankingTable;
     @FXML
     private TableColumn<String[], String> timestampColumn;
     @FXML
     private TableColumn<String[], Integer> timestampCountColumn;
-
     @FXML
     private TableView<String[]> ipRankingTable;
     @FXML
@@ -65,7 +57,6 @@ public class DashboardController {
     private TableColumn<String[], Integer> ipCountColumn;
     @FXML
     private TableColumn<String[], String> ipCountryColumn;
-
     @FXML
     private TableView<String[]> ruleCountTable;
     @FXML
@@ -105,14 +96,26 @@ public class DashboardController {
     }
 
     private void setupComboBox() {
-        timeIntervalComboBox.setItems(FXCollections.observableArrayList("15 Minutes", "30 Minutes", "1 Hour", "2 Hours", "12 Hours", "1 Day"));
-        timeIntervalComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            try {
-                displayLogsByInterval(newValue, datePicker.getValue());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+        timeIntervalComboBox.setItems(FXCollections.observableArrayList(
+                "15 Minutes",
+                "30 Minutes",
+                "1 Hour",
+                "2 Hours",
+                "12 Hours",
+                "1 Day"
+        ));
+        timeIntervalComboBox
+                .getSelectionModel()
+                .selectedItemProperty()
+                .addListener(
+                        (observable, oldValue, newValue) -> {
+                            try {
+                                displayLogsByInterval(newValue, datePicker.getValue());
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+        );
         timeIntervalComboBox.getSelectionModel().selectFirst();
     }
 
@@ -121,7 +124,10 @@ public class DashboardController {
             try {
                 logEntries = parseApacheByDate(datePicker);
                 modsecEntries = parseModSecByDate(datePicker);
-                displayLogsByInterval(timeIntervalComboBox.getSelectionModel().getSelectedItem(), newValue);
+                displayLogsByInterval(
+                        timeIntervalComboBox.getSelectionModel().getSelectedItem(),
+                        newValue
+                );
                 setupTableViews();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -136,7 +142,10 @@ public class DashboardController {
         }
         startTimeComboBox.setItems(times);
         startTimeComboBox.getSelectionModel().select("00:00"); // Default selection
-        startTimeComboBox.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+        startTimeComboBox
+                .getSelectionModel()
+                .selectedItemProperty()
+                .addListener((observable, oldValue, newValue) -> {
             try {
                 displayLogsByInterval(timeIntervalComboBox.getSelectionModel().getSelectedItem(), datePicker.getValue());
             } catch (Exception e) {
@@ -182,7 +191,8 @@ public class DashboardController {
         });
     }
 
-    private void displayLogsByInterval(String interval, LocalDate selectedDate) throws IOException, ParseException {
+    private void displayLogsByInterval(String interval, LocalDate selectedDate)
+            throws IOException, ParseException {
         XYChart.Series<String, Number> logSeries = new XYChart.Series<>();
         logSeries.setName("Log Count");
 

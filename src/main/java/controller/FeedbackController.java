@@ -3,19 +3,16 @@ package controller;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
+
+import static utility.Utility.showAlert;
 
 public class FeedbackController {
     @FXML
     private TextField nameField;
-
     @FXML
     private TextField emailField;
-
     @FXML
     private TextArea feedbackArea;
-
     @FXML
     private void handleSubmit() {
         String name = nameField.getText();
@@ -29,11 +26,5 @@ public class FeedbackController {
         }
     }
 
-    private void showAlert(String title, String message) {
-        Alert alert = new Alert(AlertType.INFORMATION);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
+
 }
