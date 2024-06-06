@@ -51,6 +51,7 @@ public class ViewLogController {
 
     private static String dbSearch;
     private static DatePicker dbDate;
+    private static String comboBoxElementToBeTicked;
 
     private List<String> appliedFilter = new LinkedList<>();
 
@@ -69,6 +70,10 @@ public class ViewLogController {
 
     public static void setdbDate(DatePicker date) {
         dbDate = date;
+    }
+
+    public static void setComboBoxElementTick(String data) {
+        comboBoxElementToBeTicked = data;
     }
 
     public AtomicInteger getNumberOfSelectedFilter() {
@@ -106,6 +111,23 @@ public class ViewLogController {
 
             return cell;
         });
+
+        if (comboBoxElementToBeTicked != null) {
+            switch (comboBoxElementToBeTicked) {
+                case "IP Address":
+                    filterComboBox.setPromptText(comboBoxElementToBeTicked);
+                    filterList.stream()
+                            .filter(item -> item.getItem().equals(comboBoxElementToBeTicked))
+                            .findFirst()
+                            .ifPresent(item -> item.setCheck(true));
+                    break;
+                default:
+                    filterComboBox.setPromptText("Choose Filter");
+                    break;
+            }
+        } else {
+            filterComboBox.setPromptText("Choose Filter");
+        }
 
         filterComboBox.setItems(filterList);
 
