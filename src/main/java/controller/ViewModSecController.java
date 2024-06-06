@@ -3,6 +3,7 @@ package controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -20,9 +21,11 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Logger;
 
+import loganalyzer.Apache;
 import loganalyzer.ModSecurity;
 import loganalyzer.ModSecurityParser;
 
+import static loganalyzer.ApacheParser.parseApacheByDate;
 import static loganalyzer.ModSecurityParser.*;
 import static utility.Utility.readFile;
 
@@ -30,6 +33,22 @@ public class ViewModSecController {
 
     @FXML
     private TableView<ModSecurity> Table;
+    @FXML
+    private TableColumn<ModSecurity, String> timestampColumn;
+    @FXML
+    private TableColumn<ModSecurity, String> ipColumn;
+    @FXML
+    private TableColumn<ModSecurity, String> pathColumn;
+    @FXML
+    private TableColumn<ModSecurity, String> methodColumn;
+    @FXML
+    private TableColumn<ModSecurity, String> userAgentColumn;
+    @FXML
+    private TableColumn<ModSecurity, String> attackNameColumn;
+    @FXML
+    private TableColumn<ModSecurity, String> attackDataColumn;
+    @FXML
+    private TableColumn<ModSecurity, String> severityColumn;
     @FXML
     private TextField searchField;
     @FXML
@@ -92,56 +111,37 @@ public class ViewModSecController {
     }
 
     private void viewLog() throws Exception {
-        ShowLogTable(Table, searchField.getText(), datePicker.getValue());
+        ShowLogTable(Table, searchField.getText(), datePicker);
     }
 
-    public void viewLog(String rule, DatePicker dbDate) throws Exception{
-        ShowLogTable(Table, rule, dbDate.getValue());
+    public void viewLog(String rule, DatePicker datePicker) throws Exception{
+        ShowLogTable(Table, rule, datePicker);
     }
 
-    public static void LogTable(TableView<ModSecurity> tableView, String textField, LocalDate selectedDate)
-            throws JsonProcessingException {
-        List<ModSecurity> parsedData = parseLogs();
-
+    public void LogTable(TableView<ModSecurity> tableView, String textField, DatePicker datePicker) {
         tableView.getItems().clear();
         tableView.getColumns().clear();
 
-        if (parsedData.isEmpty()) {
-            return;
-        }
-        TableColumn<ModSecurity, String> timestampColumn = new TableColumn<>("Timestamp");
-        timestampColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTimestamp()));
-
-        TableColumn<ModSecurity, String> ipColumn = new TableColumn<>("IP Address");
-        ipColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getRemoteAddress()));
-
-        TableColumn<ModSecurity, String> pathColumn = new TableColumn<>("Request Path");
-        pathColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getRequestPath()));
-
-        TableColumn<ModSecurity, String> methodColumn = new TableColumn<>("Method");
-        methodColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getMethod()));
-
-        TableColumn<ModSecurity, String> userAgentColumn = new TableColumn<>("User Agent");
-        userAgentColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getUserAgent()));
-
-        TableColumn<ModSecurity, String> attackNameColumn = new TableColumn<>("Attack Name");
-        attackNameColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getAttackName()));
-
-        TableColumn<ModSecurity, String> attackDataColumn = new TableColumn<>("Attack Data");
-        attackDataColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getAttackData()));
-
-        TableColumn<ModSecurity, String> severityColumn = new TableColumn<>("Severity");
-        severityColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getSeverity()));
+        timestampColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTimestamp()));
+        ipColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRemoteAddress()));
+        pathColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRequestPath()));
+        methodColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getMethod()));
+        userAgentColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUserAgent()));
+        attackNameColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAttackName()));
+        attackDataColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getAttackData()));
+        severityColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getSeverity()));
 
         tableView.getColumns().addAll(timestampColumn, ipColumn, pathColumn, methodColumn, userAgentColumn, attackNameColumn, attackDataColumn, severityColumn);
 
         ObservableList<ModSecurity> rows = FXCollections.observableArrayList();
 
-        for (ModSecurity rowData : parsedData) {
+        List<ModSecurity> modSecEntries = parseModSecByDate(datePicker);
+
+        for (ModSecurity rowData : modSecEntries) {
             String dateStr = rowData.getTimestamp();
             LocalDate rowDate = parseDate(dateStr);
 
-            if (rowDate.equals(selectedDate) && containsTextField(rowData, textField)) {
+            if (containsTextField(rowData, textField)) {
                 rows.add(rowData);
             }
         }
@@ -162,9 +162,9 @@ public class ViewModSecController {
         });
     }
 
-    public static void ShowLogTable(TableView<ModSecurity> tableView, String textField, LocalDate selectedDate)
+    public void ShowLogTable(TableView<ModSecurity> tableView, String textField, DatePicker datePicker)
             throws JsonProcessingException {
-        LogTable(tableView, textField, selectedDate);
+        LogTable(tableView, textField, datePicker);
     }
 
     private static void showRowContent(ModSecurity rowData) {
@@ -201,45 +201,6 @@ public class ViewModSecController {
         return zonedDateTime.toLocalDate();
     }
 
-    private static List<ModSecurity> parseLogs() throws JsonProcessingException {
-        Logger logger = Logger.getLogger(ModSecurityParser.class.getName());
-        String logFilePath = System.getProperty("user.dir") + "/logs/modsecurity/modsec_audit_new.log";
-        List<ModSecurity> parsedData = new ArrayList<>();
-        LinkedList<String> logLines = readFile(logFilePath, logger);
-        ObjectMapper objectMapper = new ObjectMapper();
-        for (String line : logLines) {
-            JsonNode jsonNode = objectMapper.readTree(line);
-            String auditData = jsonNode.path("audit_data").path("messages").get(0).asText();
-            String requestLine = jsonNode.path("request").path("request_line").asText();
-            String[] requestParts = requestLine.split(" ");
-            JsonNode versionSection = jsonNode.path("audit_data").path("producer");
-            String potentialVersion;
-            if (versionSection.isMissingNode() || versionSection.isNull()) {
-                potentialVersion = "";
-            } else {
-                potentialVersion = parseVersion(versionSection.get(0).asText());
-            }
-
-
-            ModSecurity parsedLine = new ModSecurity(
-                    potentialVersion,
-                    jsonNode.path("transaction").path("time").asText(),
-                    jsonNode.path("transaction").path("transaction_id").asText(),
-                    jsonNode.path("transaction").path("remote_address").asText(),
-                    requestParts[1],
-                    requestParts[0],
-                    requestParts[2],
-                    jsonNode.path("response").path("status").asInt(),
-                    jsonNode.path("request").path("headers").path("User-Agent").asText(),
-                    parseAttackType(auditData),
-                    parseAttackMsg(auditData),
-                    parseAttackData(auditData),
-                    parseSeverity(auditData)
-            );
-            parsedData.add(parsedLine);
-        }
-        return parsedData;
-    }
 
     public static boolean containsTextField(ModSecurity modsec, String textField) {
         String version = modsec.getVersion();

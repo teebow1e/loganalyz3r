@@ -18,7 +18,7 @@
         <Label onMouseClicked="#handleStream" styleClass="sidebar-content-label" text="Stream" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: black; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;">
             <graphic>
                 <ImageView>
-                    <Image url="@/img/dashboard.png" />
+                    <Image url="@/img/stream.png" />
                 </ImageView>
             </graphic>
         </Label>
@@ -26,7 +26,7 @@
         <Label onMouseClicked="#handleViewlog" styleClass="sidebar-content-label" text="View Logs" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: black; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;">
             <graphic>
                 <ImageView>
-                    <Image url="@/img/log.png" />
+                    <Image url="@/img/access.png" />
                 </ImageView>
             </graphic>
         </Label>
@@ -34,7 +34,7 @@
         <Label onMouseClicked="#handleViewModSec" styleClass="sidebar-content-label" text="View Mod Sec" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: black; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;">
             <graphic>
                 <ImageView>
-                    <Image url="@/img/log.png" />
+                    <Image url="@/img/modsec.png" />
                 </ImageView>
             </graphic>
         </Label>

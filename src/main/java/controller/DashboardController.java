@@ -1,24 +1,19 @@
 package controller;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.chart.LineChart;
-import javafx.scene.chart.XYChart;
 import javafx.stage.Stage;
 import loganalyzer.Apache;
+import loganalyzer.ModSecurity;
 import ui.WebLogManager;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -27,8 +22,8 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
-import static loganalyzer.ApacheParser.parseApacheByDate;
-import static loganalyzer.ModSecurityParser.parseAttackType;
+import static loganalyzer.ApacheParser.*;
+import static loganalyzer.ModSecurityParser.*;
 import static utility.IpLookUp.IpCheck;
 
 public class DashboardController {
@@ -79,6 +74,7 @@ public class DashboardController {
     private TableColumn<String[], Integer> modsecRuleCountColumn;
 
     private List<Apache> logEntries;
+    private List<ModSecurity> modsecEntries;
 
     @FXML
     private void initialize() {
@@ -87,11 +83,12 @@ public class DashboardController {
             datePicker.setValue(initialDate);
             setupDatePicker();
             logEntries = parseApacheByDate(datePicker);
+            modsecEntries = parseModSecByDate(datePicker);
             setupComboBox();
             setupStartTimeComboBox();
             setupTableViews();
             displayLogsByInterval("15 Minutes", LocalDate.now());
-            addClickListenerToMainVBox();  // Add this line
+            addClickListenerToMainVBox();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -123,6 +120,7 @@ public class DashboardController {
         datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
             try {
                 logEntries = parseApacheByDate(datePicker);
+                modsecEntries = parseModSecByDate(datePicker);
                 displayLogsByInterval(timeIntervalComboBox.getSelectionModel().getSelectedItem(), newValue);
                 setupTableViews();
             } catch (Exception e) {
@@ -148,25 +146,18 @@ public class DashboardController {
     }
 
     private void setupTableViews() {
-        // Setup the status code ranking table
         statusCodeColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue()[0]));
         statusCodeCountColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(Integer.parseInt(cellData.getValue()[1])).asObject());
 
-        // Setup the timestamp ranking table
         timestampColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue()[0]));
         timestampCountColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(Integer.parseInt(cellData.getValue()[1])).asObject());
 
-        // Setup the IP ranking table
         ipColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue()[0]));
         ipCountColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(Integer.parseInt(cellData.getValue()[1])).asObject());
         ipCountryColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue()[2]));
 
         modsecRuleColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue()[0]));
         modsecRuleCountColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(Integer.parseInt(cellData.getValue()[1])).asObject());
-        updateModsecRuleTable();
-        ruleCountTable.getSortOrder().add(modsecRuleCountColumn);
-        modsecRuleCountColumn.setSortType(TableColumn.SortType.DESCENDING);
-
 
         ipRankingTable.setRowFactory(tv -> {
             TableRow<String[]> row = new TableRow<>();
@@ -192,27 +183,18 @@ public class DashboardController {
     }
 
     private void displayLogsByInterval(String interval, LocalDate selectedDate) throws IOException, ParseException {
-        // Ensure selectedTime is not null
+        XYChart.Series<String, Number> logSeries = new XYChart.Series<>();
+        logSeries.setName("Log Count");
+
         String selectedTime = startTimeComboBox.getSelectionModel().getSelectedItem();
         if (selectedTime == null) {
             selectedTime = "00:00";
         }
 
         Map<String, Map<String, Integer>> groupedLogs = groupLogsByInterval(interval, selectedDate);
-
-        // Clear previous data
         logLineChart.getData().clear();
-
-        // Create series
-        XYChart.Series<String, Number> logSeries = new XYChart.Series<>();
-        logSeries.setName("Log Count");
-
         List<Map.Entry<String, Map<String, Integer>>> entries = new ArrayList<>(groupedLogs.entrySet());
-
-        // Sort entries by date
         entries.sort(Comparator.comparing(Map.Entry::getKey));
-
-        // Limit to max entries
         List<Map.Entry<String, Map<String, Integer>>> displayedEntries = entries;
 
         for (Map.Entry<String, Map<String, Integer>> entry : displayedEntries) {
@@ -226,10 +208,10 @@ public class DashboardController {
 
         logLineChart.getData().add(logSeries);
 
-        // Update rankings
         updateStatusCodeRanking(groupedLogs);
         updateTimestampRanking(groupedLogs);
-        updateIpRanking(groupedLogs, selectedDate);
+        updateIpRanking(selectedDate);
+        updateModsecRuleTable(selectedDate);
     }
 
     private Map<String, Map<String, Integer>> groupLogsByInterval(String interval, LocalDate selectedDate) throws ParseException {
@@ -370,7 +352,7 @@ public class DashboardController {
         }
     }
 
-    private void updateIpRanking(Map<String, Map<String, Integer>> groupedLogs, LocalDate selectedDate) throws IOException {
+    private void updateIpRanking(LocalDate selectedDate) throws IOException {
         Map<String, Integer> ipCounts = new HashMap<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss Z", Locale.ENGLISH);
 
@@ -397,34 +379,28 @@ public class DashboardController {
         }
     }
 
-
-
-    private void updateModsecRuleTable() {
-        String filePath = "logs/modsecurity/modsec_audit_new.log";
+    private void updateModsecRuleTable(LocalDate selectedDate) throws IOException {
         Map<String, Integer> ruleCounts = new HashMap<>();
-        ObjectMapper objectMapper = new ObjectMapper();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss.SSSSSS Z", Locale.ENGLISH);
 
-        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                JsonNode jsonNode = objectMapper.readTree(line);
-                String auditData = jsonNode.path("audit_data").path("messages").get(0).asText();
-                String ruleName = parseAttackType(auditData);
-
-                if (!ruleName.startsWith("REQUEST")) {
-                    continue;
-                }
-                ruleCounts.merge(ruleName, 1, Integer::sum);
+        for (ModSecurity entry : modsecEntries) {
+            LocalDate logDate = LocalDate.parse(entry.getTimestamp(), formatter);
+            if (logDate.equals(selectedDate)) {
+                ruleCounts.merge(entry.getAttackName(), 1, Integer::sum);
             }
-        } catch (IOException e) {
-            e.printStackTrace();
         }
 
         ObservableList<String[]> items = ruleCountTable.getItems();
         items.clear();
 
-        ruleCounts.forEach((rule, count) -> items.add(new String[]{rule, count.toString()}));
-        ruleCountTable.sort();
+        List<Map.Entry<String, Integer>> sortedRules = new ArrayList<>(ruleCounts.entrySet());
+        sortedRules.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
+
+        for (Map.Entry<String, Integer> entry : sortedRules) {
+            String rule = entry.getKey();
+            int count = entry.getValue();
+            items.add(new String[]{rule, String.valueOf(count)});
+        }
     }
 
     private void handleIpDoubleClick(String ipAddress) {

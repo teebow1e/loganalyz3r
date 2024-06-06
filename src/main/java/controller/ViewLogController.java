@@ -1,16 +1,12 @@
 package controller;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.*;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -27,6 +23,22 @@ public class ViewLogController {
     @FXML
     private TableView<Apache> Table;
     @FXML
+    private TableColumn<Apache, String> ipColumn;
+    @FXML
+    private TableColumn<Apache, String> timestampColumn;
+    @FXML
+    private TableColumn<Apache, String> methodColumn;
+    @FXML
+    private TableColumn<Apache, String> protocolColumn;
+    @FXML
+    private TableColumn<Apache, String> requestPathColumn;
+    @FXML
+    private TableColumn<Apache, Integer> statusCodeColumn;
+    @FXML
+    private TableColumn<Apache, Integer> contentLengthColumn;
+    @FXML
+    private TableColumn<Apache, String> userAgentColumn;
+    @FXML
     public TextField searchField;
     @FXML
     public DatePicker datePicker;
@@ -42,10 +54,10 @@ public class ViewLogController {
 
     private ObservableList<ComboBoxItemWrap<String>> filterList = FXCollections.observableArrayList(
             new ComboBoxItemWrap<>("IP Address"),
-            new ComboBoxItemWrap<>("Timestamp"),
             new ComboBoxItemWrap<>("Method"),
             new ComboBoxItemWrap<>("Protocol"),
             new ComboBoxItemWrap<>("Request Path"),
+            new ComboBoxItemWrap<>("Status Code"),
             new ComboBoxItemWrap<>("User-Agent")
     );
 
@@ -59,51 +71,34 @@ public class ViewLogController {
 
     public AtomicInteger getNumberOfSelectedFilter() {
         AtomicInteger counter = new AtomicInteger();
-        filterComboBox.getItems().
-                filtered(f -> f.getCheck())
+        filterComboBox.getItems()
+                .filtered(f -> f.getCheck())
                 .forEach(item -> counter.getAndIncrement());
         return counter;
     }
 
     @FXML
     private void initialize() {
-        filterComboBox.setCellFactory( c -> {
-            ListCell<ComboBoxItemWrap<String>> cell = new ListCell<>(){
-                @Override
-                protected void updateItem(ComboBoxItemWrap<String> item, boolean empty) {
-                    super.updateItem(item, empty);
-                    if (!empty) {
-                        final CheckBox filterComboBox = new CheckBox(item.toString());
-                        filterComboBox.selectedProperty().bind(item.checkProperty());
-                        setGraphic(filterComboBox);
-                    }
+        filterComboBox.setCellFactory(c -> new ListCell<>() {
+            @Override
+            protected void updateItem(ComboBoxItemWrap<String> item, boolean empty) {
+                super.updateItem(item, empty);
+                if (!empty) {
+                    final CheckBox filterComboBox = new CheckBox(item.toString());
+                    filterComboBox.selectedProperty().bind(item.checkProperty());
+                    setGraphic(filterComboBox);
                 }
-            };
-
-            cell.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
-                cell.getItem().checkProperty().set(!cell.getItem().checkProperty().get());
-                StringBuilder sb = new StringBuilder();
-                filterComboBox.getItems().filtered( f-> f!=null).filtered( f-> f.getCheck()).forEach( p -> {
-                    sb.append("; "+p.getItem());
-                });
-                final String string = sb.toString();
-                filterComboBox.setPromptText(string.substring(Integer.min(2, string.length())));
-            });
-
-            return cell;
+            }
         });
 
         filterComboBox.setItems(filterList);
 
-        searchBtn.setOnAction(event -> {
-            System.out.println("this button does nothing hehe");
-        });
+        searchBtn.setOnAction(event -> System.out.println("this button does nothing hehe"));
 
-        if(datePicker.getValue() == null) {
+        if (datePicker.getValue() == null) {
             if (dbDate == null) {
                 datePicker.setValue(LocalDate.now());
-            }
-            else {
+            } else {
                 datePicker.setValue(dbDate.getValue());
             }
         }
@@ -112,9 +107,8 @@ public class ViewLogController {
             try {
                 if (dbSearch == null) {
                     viewLog();
-                }
-                else {
-                    viewLog(dbSearch, datePicker);
+                } else {
+                    viewLog(dbSearch);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
@@ -124,12 +118,10 @@ public class ViewLogController {
         searchField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 try {
-                    System.out.println(getNumberOfSelectedFilter().get());
                     if (getNumberOfSelectedFilter().get() > 0) {
                         appliedFilter.clear();
-                        filterComboBox.getItems().filtered(
-                                f -> f.getCheck()).forEach(item -> appliedFilter.add(item.getItem())
-                        );
+                        filterComboBox.getItems().filtered(f -> f.getCheck())
+                                .forEach(item -> appliedFilter.add(item.getItem()));
                         System.out.println("called view log with filter");
                         viewLog(appliedFilter);
                     } else {
@@ -145,9 +137,8 @@ public class ViewLogController {
         try {
             if (dbSearch == null) {
                 viewLog();
-            }
-            else {
-                viewLog(dbSearch, dbDate);
+            } else {
+                viewLog(dbSearch);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -155,44 +146,29 @@ public class ViewLogController {
     }
 
     public void viewLog() {
-        LogTable(Table, searchField.getText(), datePicker.getValue(), new ArrayList<>());
+        LogTable(Table, searchField.getText(), new ArrayList<>());
     }
 
-    public void viewLog(String ipAddress, DatePicker dbDate) {
-        LogTable(Table, ipAddress, dbDate.getValue(), new ArrayList<>());
+    public void viewLog(String ipAddress) {
+        LogTable(Table, ipAddress, new ArrayList<>());
     }
 
     public void viewLog(List<String> appliedFilter) {
-        LogTable(Table, searchField.getText(), datePicker.getValue(), appliedFilter);
+        LogTable(Table, searchField.getText(), appliedFilter);
     }
 
-    public void LogTable(TableView<Apache> tableView, String textField, LocalDate selectedDate, List<String> appliedFilter) {
+    public void LogTable(TableView<Apache> tableView, String textField, List<String> appliedFilter) {
         tableView.getItems().clear();
         tableView.getColumns().clear();
 
-        TableColumn<Apache, String> ipColumn = new TableColumn<>("IP Address");
-        ipColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getRemoteAddress()));
-
-        TableColumn<Apache, String> timestampColumn = new TableColumn<>("Timestamp");
-        timestampColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTimestamp()));
-
-        TableColumn<Apache, String> methodColumn = new TableColumn<>("Method");
-        methodColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getMethod()));
-
-        TableColumn<Apache, String> protocolColumn = new TableColumn<>("Protocol");
-        protocolColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getProtocol()));
-
-        TableColumn<Apache, String> requestPathColumn = new TableColumn<>("Request Path");
-        requestPathColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getRequestPath()));
-
-        TableColumn<Apache, Integer> statusCodeColumn = new TableColumn<>("Status Code");
-        statusCodeColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(cellData.getValue().getStatusCode()).asObject());
-
-        TableColumn<Apache, Integer> contentLengthColumn = new TableColumn<>("Content Length");
-        contentLengthColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(cellData.getValue().getContentLength()).asObject());
-
-        TableColumn<Apache, String> userAgentColumn = new TableColumn<>("User Agent");
-        userAgentColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getUserAgent()));
+        ipColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRemoteAddress()));
+        timestampColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTimestamp()));
+        methodColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getMethod()));
+        protocolColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getProtocol()));
+        requestPathColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRequestPath()));
+        statusCodeColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getStatusCode()).asObject());
+        contentLengthColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getContentLength()).asObject());
+        userAgentColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUserAgent()));
 
         tableView.getColumns().addAll(ipColumn, timestampColumn, methodColumn, protocolColumn, requestPathColumn, statusCodeColumn, contentLengthColumn, userAgentColumn);
 
@@ -200,7 +176,7 @@ public class ViewLogController {
 
         List<Apache> logEntries = parseApacheByDate(datePicker);
 
-        for (Apache row: logEntries) {
+        for (Apache row : logEntries) {
             if (containsTextField(row, textField, appliedFilter)) {
                 rows.add(row);
             }
@@ -236,7 +212,6 @@ public class ViewLogController {
         Text userAgentText = new Text("User Agent: " + rowData.getUserAgent());
 
         contentBox.getChildren().addAll(ipText, timestampText, methodText, protocolText, requestPathText, statusCodeText, contentLengthText, userAgentText);
-
         Dialog<Void> dialog = new Dialog<>();
         dialog.getDialogPane().setContent(contentBox);
         dialog.setTitle("Row Details");
@@ -245,8 +220,6 @@ public class ViewLogController {
     }
 
     public static boolean containsTextField(Apache apache, String textField, List<String> fields) {
-        System.out.println(textField);
-        System.out.println(fields);
         boolean found = false;
         if (fields.isEmpty()) {
             String ip = apache.getRemoteAddress();
@@ -256,21 +229,19 @@ public class ViewLogController {
             String requestPath = apache.getRequestPath();
             String userAgent = apache.getUserAgent();
             return ip.contains(textField) ||
-                timestamp.contains(textField) ||
-                method.contains(textField) ||
-                protocol.contains(textField) ||
-                requestPath.contains(textField) ||
-                userAgent.contains(textField);
+                    timestamp.contains(textField) ||
+                    method.contains(textField) ||
+                    protocol.contains(textField) ||
+                    requestPath.contains(textField) ||
+                    userAgent.contains(textField);
         }
         for (String field : fields) {
-            // we should add more field here, so that user dont have to uncheck everything
-            // just to search for one value
             found = switch (field) {
                 case "IP Address" -> textField != null && apache.getRemoteAddress().contains(textField);
-                case "Timestamp" -> textField != null && apache.getTimestamp().contains(textField);
                 case "Method" -> textField != null && apache.getMethod().contains(textField);
                 case "Protocol" -> textField != null && apache.getProtocol().contains(textField);
                 case "Request Path" -> textField != null && apache.getRequestPath().contains(textField);
+                case "Status Code" -> textField != null && Integer.toString(apache.getStatusCode()).contains(textField);
                 case "User-Agent" -> textField != null && apache.getUserAgent().contains(textField);
                 default -> found;
             };
@@ -325,5 +296,4 @@ public class ViewLogController {
             return item.getValue().toString();
         }
     }
-
 }

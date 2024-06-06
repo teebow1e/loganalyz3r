@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.HBox?>
@@ -33,6 +34,16 @@
         </padding>
     </HBox>
     <TableView fx:id="Table" prefHeight="600.0" prefWidth="1000.0">
+        <columns>
+            <TableColumn fx:id="timestampColumn" text="Timestamp" />
+            <TableColumn fx:id="ipColumn" text="IP Address" />
+            <TableColumn fx:id="pathColumn" text="Request Path" />
+            <TableColumn fx:id="methodColumn" text="Method" />
+            <TableColumn fx:id="userAgentColumn" text="User Agent" />
+            <TableColumn fx:id="attackNameColumn" text="Attack Name" />
+            <TableColumn fx:id="attackDataColumn" text="Attack Data" />
+            <TableColumn fx:id="severityColumn" text="Severity" />
+        </columns>
         <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
         </columnResizePolicy>
