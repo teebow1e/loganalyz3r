@@ -11,6 +11,8 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.XYChart;
 import javafx.stage.Stage;
 import loganalyzer.Apache;
 import ui.WebLogManager;
@@ -35,7 +37,7 @@ public class DashboardController {
     private VBox mainVBox;
 
     @FXML
-    private BarChart<String, Number> logBarChart;
+    private LineChart<String, Number> logLineChart;
 
     @FXML
     private ComboBox<String> timeIntervalComboBox;
@@ -77,7 +79,6 @@ public class DashboardController {
     private TableColumn<String[], Integer> modsecRuleCountColumn;
 
     private List<Apache> logEntries;
-    private static final int MAX_DISPLAYED_TIMESTAMPS = 10;
 
     @FXML
     private void initialize() {
@@ -200,17 +201,11 @@ public class DashboardController {
         Map<String, Map<String, Integer>> groupedLogs = groupLogsByInterval(interval, selectedDate);
 
         // Clear previous data
-        logBarChart.getData().clear();
+        logLineChart.getData().clear();
 
-        // Create series color
-        XYChart.Series<String, Number> series200 = new XYChart.Series<>();
-        series200.setName("200-299");
-        XYChart.Series<String, Number> series300 = new XYChart.Series<>();
-        series300.setName("300-399");
-        XYChart.Series<String, Number> series400 = new XYChart.Series<>();
-        series400.setName("400-499");
-        XYChart.Series<String, Number> series500 = new XYChart.Series<>();
-        series500.setName("500-599");
+        // Create series
+        XYChart.Series<String, Number> logSeries = new XYChart.Series<>();
+        logSeries.setName("Log Count");
 
         List<Map.Entry<String, Map<String, Integer>>> entries = new ArrayList<>(groupedLogs.entrySet());
 
@@ -218,31 +213,18 @@ public class DashboardController {
         entries.sort(Comparator.comparing(Map.Entry::getKey));
 
         // Limit to max entries
-        List<Map.Entry<String, Map<String, Integer>>> displayedEntries = entries.size() > MAX_DISPLAYED_TIMESTAMPS ?
-                entries.subList(0, MAX_DISPLAYED_TIMESTAMPS) : entries;
+        List<Map.Entry<String, Map<String, Integer>>> displayedEntries = entries;
 
         for (Map.Entry<String, Map<String, Integer>> entry : displayedEntries) {
             String timeSlot = entry.getKey();
             Map<String, Integer> statusCounts = entry.getValue();
+            int totalLogs = statusCounts.values().stream().mapToInt(Integer::intValue).sum();
 
-            XYChart.Data<String, Number> data200 = new XYChart.Data<>(timeSlot, statusCounts.getOrDefault("200-299", 0));
-            XYChart.Data<String, Number> data300 = new XYChart.Data<>(timeSlot, statusCounts.getOrDefault("300-399", 0));
-            XYChart.Data<String, Number> data400 = new XYChart.Data<>(timeSlot, statusCounts.getOrDefault("400-499", 0));
-            XYChart.Data<String, Number> data500 = new XYChart.Data<>(timeSlot, statusCounts.getOrDefault("500-599", 0));
-
-            series200.getData().add(data200);
-            series300.getData().add(data300);
-            series400.getData().add(data400);
-            series500.getData().add(data500);
+            XYChart.Data<String, Number> data = new XYChart.Data<>(timeSlot, totalLogs);
+            logSeries.getData().add(data);
         }
 
-        List<XYChart.Series<String, Number>> seriesList = new ArrayList<>();
-        seriesList.add(series200);
-        seriesList.add(series300);
-        seriesList.add(series400);
-        seriesList.add(series500);
-
-        logBarChart.getData().addAll(seriesList);
+        logLineChart.getData().add(logSeries);
 
         // Update rankings
         updateStatusCodeRanking(groupedLogs);

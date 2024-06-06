@@ -22,5 +22,6 @@ public class TailerTest {
         Thread thread = new Thread(tailer);
         System.out.println("tailer ready to run");
         thread.start();
+
     }
 }
