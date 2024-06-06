@@ -413,6 +413,7 @@ public class DashboardController {
         }
     }
 
+    // todo: filterComboBox IPAddr should be ticked
     private void handleIpDoubleClick(String ipAddress) {
         try {
             Stage primaryStage = (Stage) mainVBox.getScene().getWindow();

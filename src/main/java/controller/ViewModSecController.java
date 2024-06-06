@@ -1,8 +1,5 @@
 package controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -10,6 +7,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -19,15 +17,13 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Logger;
 
-import loganalyzer.Apache;
 import loganalyzer.ModSecurity;
-import loganalyzer.ModSecurityParser;
+import ui.ComboBoxItemWrap;
 
-import static loganalyzer.ApacheParser.parseApacheByDate;
 import static loganalyzer.ModSecurityParser.*;
-import static utility.Utility.readFile;
 
 public class ViewModSecController {
 
@@ -53,9 +49,21 @@ public class ViewModSecController {
     private TextField searchField;
     @FXML
     private DatePicker datePicker;
-
+    @FXML
+    private ComboBox<ComboBoxItemWrap<String>> filterComboBox;
     private static String dbRule;
     private static DatePicker dbDate;
+    private List<String> appliedFilter = new LinkedList<>();
+
+    private ObservableList<ComboBoxItemWrap<String>> filterList = FXCollections.observableArrayList(
+            new ComboBoxItemWrap<>("Remote Address"),
+            new ComboBoxItemWrap<>("Path"),
+            new ComboBoxItemWrap<>("Method"),
+            new ComboBoxItemWrap<>("User Agent"),
+            new ComboBoxItemWrap<>("Attack Name"),
+            new ComboBoxItemWrap<>("Attack Data"),
+            new ComboBoxItemWrap<>("Severity")
+    );
 
     public static void setdbRule(String rule) {
         dbRule = rule;
@@ -64,8 +72,44 @@ public class ViewModSecController {
     public static void setdbDate(DatePicker date) {
         dbDate = date;
     }
+
+    public AtomicInteger getNumberOfSelectedFilter() {
+        AtomicInteger counter = new AtomicInteger();
+        filterComboBox.getItems().
+                filtered(f -> f.getCheck())
+                .forEach(item -> counter.getAndIncrement());
+        return counter;
+    }
+
     @FXML
     private void initialize() {
+        filterComboBox.setCellFactory( c -> {
+            ListCell<ComboBoxItemWrap<String>> cell = new ListCell<>(){
+                @Override
+                protected void updateItem(ComboBoxItemWrap<String> item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (!empty) {
+                        final CheckBox filterComboBox = new CheckBox(item.toString());
+                        filterComboBox.selectedProperty().bind(item.checkProperty());
+                        setGraphic(filterComboBox);
+                    }
+                }
+            };
+
+            cell.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
+                cell.getItem().checkProperty().set(!cell.getItem().checkProperty().get());
+                StringBuilder sb = new StringBuilder();
+                filterComboBox.getItems().filtered( f-> f!=null).filtered( f-> f.getCheck()).forEach( p -> {
+                    sb.append("; "+p.getItem());
+                });
+                final String string = sb.toString();
+                filterComboBox.setPromptText(string.substring(Integer.min(2, string.length())));
+            });
+
+            return cell;
+        });
+
+        filterComboBox.setItems(filterList);
         if(datePicker.getValue() == null) {
             if (dbDate == null) {
                 datePicker.setValue(LocalDate.now());
@@ -91,7 +135,17 @@ public class ViewModSecController {
         searchField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 try {
-                    viewLog();
+                    if (getNumberOfSelectedFilter().get() > 0) {
+                        appliedFilter.clear();
+                        filterComboBox.getItems().filtered(
+                                f -> f.getCheck()).forEach(item -> appliedFilter.add(item.getItem())
+                        );
+                        System.out.println("called view log with filter");
+                        viewLog(appliedFilter);
+                    } else {
+                        System.out.println("called view log with no filter");
+                        viewLog();
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -110,15 +164,19 @@ public class ViewModSecController {
         }
     }
 
-    private void viewLog() throws Exception {
-        ShowLogTable(Table, searchField.getText(), datePicker);
+    private void viewLog() {
+        ShowLogTable(Table, searchField.getText(), datePicker, new ArrayList<>());
+    }
+    private void viewLog(List<String> appliedFilter) {
+        ShowLogTable(Table, searchField.getText(), datePicker, appliedFilter);
     }
 
-    public void viewLog(String rule, DatePicker datePicker) throws Exception{
-        ShowLogTable(Table, rule, datePicker);
+    public void viewLog(String rule, DatePicker datePicker) {
+        ShowLogTable(Table, rule, datePicker, new ArrayList<>());
     }
 
-    public void LogTable(TableView<ModSecurity> tableView, String textField, DatePicker datePicker) {
+    public void LogTable(TableView<ModSecurity> tableView,
+                         String textField, DatePicker datePicker, List<String> appliedFilter) {
         tableView.getItems().clear();
         tableView.getColumns().clear();
 
@@ -141,7 +199,7 @@ public class ViewModSecController {
             String dateStr = rowData.getTimestamp();
             LocalDate rowDate = parseDate(dateStr);
 
-            if (containsTextField(rowData, textField)) {
+            if (containsTextField(rowData, textField, appliedFilter)) {
                 rows.add(rowData);
             }
         }
@@ -162,9 +220,9 @@ public class ViewModSecController {
         });
     }
 
-    public void ShowLogTable(TableView<ModSecurity> tableView, String textField, DatePicker datePicker)
-            throws JsonProcessingException {
-        LogTable(tableView, textField, datePicker);
+    public void ShowLogTable(TableView<ModSecurity> tableView,
+                             String textField, DatePicker datePicker, List<String> appliedFilter) {
+        LogTable(tableView, textField, datePicker, appliedFilter);
     }
 
     private static void showRowContent(ModSecurity rowData) {
@@ -202,19 +260,37 @@ public class ViewModSecController {
     }
 
 
-    public static boolean containsTextField(ModSecurity modsec, String textField) {
-        String version = modsec.getVersion();
-        String transactionId = modsec.getTransactionId();
+    public static boolean containsTextField(ModSecurity modsec, String textField, List<String> appliedFilter) {
+        boolean found = false;
+        String remoteAddr = modsec.getRemoteAddress();
+        String requestPath = modsec.getRequestPath();
+        String method = modsec.getMethod();
+        String userAgent = modsec.getUserAgent();
         String attackName = modsec.getAttackName();
-        String attackMsg = modsec.getAttackMsg();
         String attackData = modsec.getAttackData();
         String severity = modsec.getSeverity();
-        return version.contains(textField) ||
-                transactionId.contains(textField) ||
-                attackName.contains(textField) ||
-                attackMsg.contains(textField) ||
-                attackData.contains(textField) ||
-                severity.contains(textField);
+        if (appliedFilter.isEmpty()) {
+            return remoteAddr.contains(textField) ||
+                    requestPath.contains(textField) ||
+                    method.contains(textField) ||
+                    userAgent.contains(textField) ||
+                    attackName.contains(textField) ||
+                    attackData.contains(textField) ||
+                    severity.contains(textField);
+        }
+        for (String filter : appliedFilter) {
+            found = switch (filter) {
+                case "Remote Address" -> textField != null && remoteAddr.contains(textField);
+                case "Path" -> textField != null && requestPath.contains(textField);
+                case "Method" -> textField != null && method.contains(textField);
+                case "User Agent" -> textField != null && userAgent.contains(textField);
+                case "Attack Name" -> textField != null && attackName.contains(textField);
+                case "Attack Data" -> textField != null && attackData.contains(textField);
+                case "Severity" -> textField != null && severity.contains(textField);
+                default -> found;
+            };
+            if (!found) break;
+        }
+        return found;
     }
-
 }

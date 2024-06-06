@@ -1,9 +1,5 @@
 package controller;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -17,6 +13,8 @@ import javafx.scene.text.Text;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+
+import ui.ComboBoxItemWrap;
 
 import loganalyzer.Apache;
 
@@ -246,13 +244,13 @@ public class ViewLogController {
 
     public static boolean containsTextField(Apache apache, String textField, List<String> fields) {
         boolean found = false;
+        String ip = apache.getRemoteAddress();
+        String timestamp = apache.getTimestamp();
+        String method = apache.getMethod();
+        String protocol = apache.getProtocol();
+        String requestPath = apache.getRequestPath();
+        String userAgent = apache.getUserAgent();
         if (fields.isEmpty()) {
-            String ip = apache.getRemoteAddress();
-            String timestamp = apache.getTimestamp();
-            String method = apache.getMethod();
-            String protocol = apache.getProtocol();
-            String requestPath = apache.getRequestPath();
-            String userAgent = apache.getUserAgent();
             return ip.contains(textField) ||
                     timestamp.contains(textField) ||
                     method.contains(textField) ||
@@ -261,67 +259,20 @@ public class ViewLogController {
                     userAgent.contains(textField);
         }
         for (String field : fields) {
-            // we should add more field here, so that user dont have to uncheck everything
+            // we should add more field here, so that user don't have to uncheck everything
             // just to search for one value
             found = switch (field) {
-                case "IP Address" -> textField != null && apache.getRemoteAddress().contains(textField);
-                case "Method" -> textField != null && apache.getMethod().contains(textField);
-                case "Protocol" -> textField != null && apache.getProtocol().contains(textField);
-                case "Request Path" -> textField != null && apache.getRequestPath().contains(textField);
+                case "IP Address" -> textField != null && ip.contains(textField);
+                case "Method" -> textField != null && method.contains(textField);
+                case "Protocol" -> textField != null && protocol.contains(textField);
+                case "Request Path" -> textField != null && requestPath.contains(textField);
                 case "Status Code" -> textField != null && Integer.toString(apache.getStatusCode()).contains(textField);
-                case "User-Agent" -> textField != null && apache.getUserAgent().contains(textField);
+                case "User-Agent" -> textField != null && userAgent.contains(textField);
                 default -> found;
             };
             if (!found) break;
         }
         return found;
-    }
-
-    public class ComboBoxItemWrap<T> {
-
-        private BooleanProperty check = new SimpleBooleanProperty(false);
-        private ObjectProperty<T> item = new SimpleObjectProperty<>();
-
-        ComboBoxItemWrap() {
-        }
-
-        ComboBoxItemWrap(T item) {
-            this.item.set(item);
-        }
-
-        ComboBoxItemWrap(T item, Boolean check) {
-            this.item.set(item);
-            this.check.set(check);
-        }
-
-        public BooleanProperty checkProperty() {
-            return check;
-        }
-
-        public Boolean getCheck() {
-            return check.getValue();
-        }
-
-        public void setCheck(Boolean value) {
-            check.set(value);
-        }
-
-        public ObjectProperty<T> itemProperty() {
-            return item;
-        }
-
-        public T getItem() {
-            return item.getValue();
-        }
-
-        public void setItem(T value) {
-            item.setValue(value);
-        }
-
-        @Override
-        public String toString() {
-            return item.getValue().toString();
-        }
     }
 
 }
