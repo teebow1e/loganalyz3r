@@ -1,12 +1,16 @@
 package controller;
 
-import javafx.beans.property.*;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
@@ -71,34 +75,51 @@ public class ViewLogController {
 
     public AtomicInteger getNumberOfSelectedFilter() {
         AtomicInteger counter = new AtomicInteger();
-        filterComboBox.getItems()
-                .filtered(f -> f.getCheck())
+        filterComboBox.getItems().
+                filtered(f -> f.getCheck())
                 .forEach(item -> counter.getAndIncrement());
         return counter;
     }
 
     @FXML
     private void initialize() {
-        filterComboBox.setCellFactory(c -> new ListCell<>() {
-            @Override
-            protected void updateItem(ComboBoxItemWrap<String> item, boolean empty) {
-                super.updateItem(item, empty);
-                if (!empty) {
-                    final CheckBox filterComboBox = new CheckBox(item.toString());
-                    filterComboBox.selectedProperty().bind(item.checkProperty());
-                    setGraphic(filterComboBox);
+        filterComboBox.setCellFactory( c -> {
+            ListCell<ComboBoxItemWrap<String>> cell = new ListCell<>(){
+                @Override
+                protected void updateItem(ComboBoxItemWrap<String> item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (!empty) {
+                        final CheckBox filterComboBox = new CheckBox(item.toString());
+                        filterComboBox.selectedProperty().bind(item.checkProperty());
+                        setGraphic(filterComboBox);
+                    }
                 }
-            }
+            };
+
+            cell.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
+                cell.getItem().checkProperty().set(!cell.getItem().checkProperty().get());
+                StringBuilder sb = new StringBuilder();
+                filterComboBox.getItems().filtered( f-> f!=null).filtered( f-> f.getCheck()).forEach( p -> {
+                    sb.append("; "+p.getItem());
+                });
+                final String string = sb.toString();
+                filterComboBox.setPromptText(string.substring(Integer.min(2, string.length())));
+            });
+
+            return cell;
         });
 
         filterComboBox.setItems(filterList);
 
-        searchBtn.setOnAction(event -> System.out.println("this button does nothing hehe"));
+        searchBtn.setOnAction(event -> {
+            System.out.println("this button does nothing hehe");
+        });
 
-        if (datePicker.getValue() == null) {
+        if(datePicker.getValue() == null) {
             if (dbDate == null) {
                 datePicker.setValue(LocalDate.now());
-            } else {
+            }
+            else {
                 datePicker.setValue(dbDate.getValue());
             }
         }
@@ -107,7 +128,8 @@ public class ViewLogController {
             try {
                 if (dbSearch == null) {
                     viewLog();
-                } else {
+                }
+                else {
                     viewLog(dbSearch);
                 }
             } catch (Exception e) {
@@ -120,8 +142,9 @@ public class ViewLogController {
                 try {
                     if (getNumberOfSelectedFilter().get() > 0) {
                         appliedFilter.clear();
-                        filterComboBox.getItems().filtered(f -> f.getCheck())
-                                .forEach(item -> appliedFilter.add(item.getItem()));
+                        filterComboBox.getItems().filtered(
+                                f -> f.getCheck()).forEach(item -> appliedFilter.add(item.getItem())
+                        );
                         System.out.println("called view log with filter");
                         viewLog(appliedFilter);
                     } else {
@@ -137,7 +160,8 @@ public class ViewLogController {
         try {
             if (dbSearch == null) {
                 viewLog();
-            } else {
+            }
+            else {
                 viewLog(dbSearch);
             }
         } catch (Exception e) {
@@ -161,14 +185,14 @@ public class ViewLogController {
         tableView.getItems().clear();
         tableView.getColumns().clear();
 
-        ipColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRemoteAddress()));
-        timestampColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTimestamp()));
-        methodColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getMethod()));
-        protocolColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getProtocol()));
-        requestPathColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRequestPath()));
-        statusCodeColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getStatusCode()).asObject());
-        contentLengthColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getContentLength()).asObject());
-        userAgentColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUserAgent()));
+        ipColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getRemoteAddress()));
+        timestampColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTimestamp()));
+        methodColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getMethod()));
+        protocolColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getProtocol()));
+        requestPathColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getRequestPath()));
+        statusCodeColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(cellData.getValue().getStatusCode()).asObject());
+        contentLengthColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(cellData.getValue().getContentLength()).asObject());
+        userAgentColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getUserAgent()));
 
         tableView.getColumns().addAll(ipColumn, timestampColumn, methodColumn, protocolColumn, requestPathColumn, statusCodeColumn, contentLengthColumn, userAgentColumn);
 
@@ -176,7 +200,7 @@ public class ViewLogController {
 
         List<Apache> logEntries = parseApacheByDate(datePicker);
 
-        for (Apache row : logEntries) {
+        for (Apache row: logEntries) {
             if (containsTextField(row, textField, appliedFilter)) {
                 rows.add(row);
             }
@@ -212,6 +236,7 @@ public class ViewLogController {
         Text userAgentText = new Text("User Agent: " + rowData.getUserAgent());
 
         contentBox.getChildren().addAll(ipText, timestampText, methodText, protocolText, requestPathText, statusCodeText, contentLengthText, userAgentText);
+
         Dialog<Void> dialog = new Dialog<>();
         dialog.getDialogPane().setContent(contentBox);
         dialog.setTitle("Row Details");
@@ -236,6 +261,8 @@ public class ViewLogController {
                     userAgent.contains(textField);
         }
         for (String field : fields) {
+            // we should add more field here, so that user dont have to uncheck everything
+            // just to search for one value
             found = switch (field) {
                 case "IP Address" -> textField != null && apache.getRemoteAddress().contains(textField);
                 case "Method" -> textField != null && apache.getMethod().contains(textField);
@@ -296,4 +323,5 @@ public class ViewLogController {
             return item.getValue().toString();
         }
     }
+
 }
