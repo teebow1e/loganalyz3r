@@ -12,6 +12,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
+<?import javafx.scene.chart.LineChart?>
 <VBox id="mainVBox" fx:id="mainVBox" stylesheets="@../../../css/Dashboard.css" HBox.hgrow="ALWAYS" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.DashboardController">
     <HBox alignment="CENTER" spacing="10">
         <Label text="Time Interval" />
@@ -25,14 +26,14 @@
         </VBox.margin>
     </HBox>
 
-    <BarChart fx:id="logBarChart" animated="false" barGap="5.0" categoryGap="20.0" prefWidth="860.0">
+    <LineChart fx:id="logLineChart" animated="false" createSymbols="true" legendVisible="true" VBox.vgrow="ALWAYS">
         <xAxis>
-            <CategoryAxis />
+            <CategoryAxis label="Time" />
         </xAxis>
         <yAxis>
-            <NumberAxis fx:id="yAxis" forceZeroInRange="true" minorTickCount="0" tickUnit="1.0" />
+            <NumberAxis fx:id="yAxis" label="Log Count" forceZeroInRange="true" minorTickCount="0" tickUnit="1.0" />
         </yAxis>
-    </BarChart>
+    </LineChart>
 
     <HBox alignment="CENTER" spacing="10.0">
         <TableView fx:id="statusCodeRankingTable" prefHeight="150.0" prefWidth="300.0" styleClass="status-code-table">

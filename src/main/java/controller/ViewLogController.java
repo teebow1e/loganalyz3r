@@ -133,11 +133,11 @@ public class ViewLogController {
     }
 
     public void viewLog() {
-        ShowLogTable(Table, searchField.getText(), datePicker.getValue());
+        LogTable(Table, searchField.getText(), datePicker.getValue());
     }
 
     public void viewLog(String ipAddress, DatePicker dbDate) {
-        ShowLogTable(Table, ipAddress, dbDate.getValue());
+        LogTable(Table, ipAddress, dbDate.getValue());
     }
 
     public void LogTable(TableView<Apache> tableView, String textField, LocalDate selectedDate) {
@@ -194,10 +194,6 @@ public class ViewLogController {
             });
             return row;
         });
-    }
-
-    public void ShowLogTable(TableView<Apache> tableView, String textField, LocalDate selectedDate) {
-        LogTable(tableView, textField, selectedDate);
     }
 
     private static void showRowContent(Apache rowData) {
