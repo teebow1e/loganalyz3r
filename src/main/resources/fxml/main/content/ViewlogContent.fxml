@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TableView?>
@@ -9,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="mainVBox" alignment="TOP_CENTER" HBox.hgrow="ALWAYS" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ViewLogController">
+<VBox fx:id="mainVBox" alignment="TOP_CENTER" HBox.hgrow="ALWAYS" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ViewLogController">
     <Label alignment="CENTER" contentDisplay="CENTER" styleClass="title-label" text="Apache Logs">
         <font>
             <Font size="24.0" />
@@ -24,6 +26,9 @@
             <TextField fx:id="searchField" />
             <Label text="Date" />
             <DatePicker fx:id="datePicker" />
+         <Label text="Filter" />
+         <ComboBox fx:id="filterComboBox" prefHeight="25.0" prefWidth="175.0" promptText="Choose Filter" />
+         <Button fx:id="searchBtn" mnemonicParsing="false" text="Search" />
         </children>
         <opaqueInsets>
             <Insets />

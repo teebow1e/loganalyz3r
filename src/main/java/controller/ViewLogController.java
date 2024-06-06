@@ -1,28 +1,25 @@
 package controller;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ObjectProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
 import java.time.LocalDate;
-import java.time.ZonedDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
-import java.util.logging.Logger;
 
 import loganalyzer.Apache;
-import loganalyzer.ApacheParser;
 
 import static loganalyzer.ApacheParser.parseApacheByDate;
-import static utility.Utility.readFile;
 
 public class ViewLogController {
 
@@ -32,9 +29,19 @@ public class ViewLogController {
     public TextField searchField;
     @FXML
     public DatePicker datePicker;
+    @FXML
+    private Button searchBtn;
+    @FXML
+    private ComboBox<ComboBoxItemWrap<String>> filterComboBox;
 
     private static String dbSearch;
     private static DatePicker dbDate;
+
+    private ObservableList<ComboBoxItemWrap<String>> filterList = FXCollections.observableArrayList(
+            new ComboBoxItemWrap<>("hihi"),
+            new ComboBoxItemWrap<>("quan ngooo"),
+            new ComboBoxItemWrap<>("lmao")
+    );
 
     public static void setIpSearch(String address) {
         dbSearch = address;
@@ -46,6 +53,41 @@ public class ViewLogController {
 
     @FXML
     private void initialize() {
+        filterComboBox.setCellFactory( c -> {
+            ListCell<ComboBoxItemWrap<String>> cell = new ListCell<>(){
+                @Override
+                protected void updateItem(ComboBoxItemWrap<String> item, boolean empty) {
+                    super.updateItem(item, empty);
+                    if (!empty) {
+                        final CheckBox filterComboBox = new CheckBox(item.toString());
+                        filterComboBox.selectedProperty().bind(item.checkProperty());
+                        setGraphic(filterComboBox);
+                    }
+                }
+            };
+
+            cell.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
+                cell.getItem().checkProperty().set(!cell.getItem().checkProperty().get());
+                StringBuilder sb = new StringBuilder();
+                filterComboBox.getItems().filtered( f-> f!=null).filtered( f-> f.getCheck()).forEach( p -> {
+                    sb.append("; "+p.getItem());
+                });
+                final String string = sb.toString();
+                filterComboBox.setPromptText(string.substring(Integer.min(2, string.length())));
+            });
+
+            return cell;
+        });
+
+        filterComboBox.setItems(filterList);
+
+        searchBtn.setOnAction(event -> {
+            filterComboBox.getItems().filtered(
+                    f -> f.getCheck()).forEach(item -> System.out.printf("%s ", item.getItem())
+            );
+            System.out.println();
+        });
+
         if(datePicker.getValue() == null) {
             if (dbDate == null) {
                 datePicker.setValue(LocalDate.now());
@@ -195,6 +237,52 @@ public class ViewLogController {
                 protocol.contains(textField) ||
                 requestPath.contains(textField) ||
                 userAgent.contains(textField);
+    }
+    public class ComboBoxItemWrap<T> {
+
+        private BooleanProperty check = new SimpleBooleanProperty(false);
+        private ObjectProperty<T> item = new SimpleObjectProperty<>();
+
+        ComboBoxItemWrap() {
+        }
+
+        ComboBoxItemWrap(T item) {
+            this.item.set(item);
+        }
+
+        ComboBoxItemWrap(T item, Boolean check) {
+            this.item.set(item);
+            this.check.set(check);
+        }
+
+        public BooleanProperty checkProperty() {
+            return check;
+        }
+
+        public Boolean getCheck() {
+            return check.getValue();
+        }
+
+        public void setCheck(Boolean value) {
+            check.set(value);
+        }
+
+        public ObjectProperty<T> itemProperty() {
+            return item;
+        }
+
+        public T getItem() {
+            return item.getValue();
+        }
+
+        public void setItem(T value) {
+            item.setValue(value);
+        }
+
+        @Override
+        public String toString() {
+            return item.getValue().toString();
+        }
     }
 
 }
