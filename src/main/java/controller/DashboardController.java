@@ -170,23 +170,34 @@ public class DashboardController {
         modsecRuleColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue()[0]));
         modsecRuleCountColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(Integer.parseInt(cellData.getValue()[1])).asObject());
 
-        ipRankingTable.setRowFactory(tv -> {
-            TableRow<String[]> row = new TableRow<>();
-            row.setOnMouseClicked(event -> {
-                if (event.getClickCount() == 2 && (!row.isEmpty())) {
-                    String[] rowData = row.getItem();
-                    handleIpDoubleClick(rowData[0]);
-                }
-            });
-            return row;
-        });
-
         statusCodeRankingTable.setRowFactory(tv -> {
             TableRow<String[]> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (event.getClickCount() == 2 && (!row.isEmpty())) {
                     String[] rowData = row.getItem();
                     handleStatusCodeDoubleClick(rowData[0]);
+                }
+            });
+            return row;
+        });
+
+        timestampRankingTable.setRowFactory(tv -> {
+            TableRow<String[]> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                    String[] rowData = row.getItem();
+                    handleTimeStampDoubleClick(rowData[0]);
+                }
+            });
+            return row;
+        });
+
+        ipRankingTable.setRowFactory(tv -> {
+            TableRow<String[]> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                    String[] rowData = row.getItem();
+                    handleIpDoubleClick(rowData[0]);
                 }
             });
             return row;
@@ -229,7 +240,16 @@ public class DashboardController {
             data.nodeProperty().addListener((observable, oldNode, newNode) -> {
                 if (newNode != null) {
                     newNode.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-                        System.out.println("Clicked on time: " + timeSlot);
+                        try {
+                            Stage primaryStage = (Stage) mainVBox.getScene().getWindow();
+                            ViewLogController.setComboBoxElementTick("Time Stamp");
+                            ViewLogController.setIpSearch(timeSlot);
+                            ViewLogController.setdbDate(datePicker);
+                            WebLogManager webLogManager = new WebLogManager();
+                            webLogManager.start(primaryStage, 3);
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     });
                 }
             });
@@ -447,6 +467,19 @@ public class DashboardController {
         }
     }
 
+    private void handleTimeStampDoubleClick (String timeStamp) {
+        try {
+            Stage primaryStage = (Stage) mainVBox.getScene().getWindow();
+            ViewLogController.setComboBoxElementTick("Time Stamp");
+            ViewLogController.setIpSearch(timeStamp);
+            ViewLogController.setdbDate(datePicker);
+            WebLogManager webLogManager = new WebLogManager();
+            webLogManager.start(primaryStage, 3);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     private void handleIpDoubleClick(String ipAddress) {
         try {
             Stage primaryStage = (Stage) mainVBox.getScene().getWindow();
@@ -463,6 +496,7 @@ public class DashboardController {
     private void handleModSecDoubleClick(String rule) {
         try {
             Stage primaryStage = (Stage) mainVBox.getScene().getWindow();
+//            ViewModSecController.setComboBoxElementTick("IP Address");
             ViewModSecController.setdbRule(rule);
             ViewModSecController.setdbDate(datePicker);
             WebLogManager webLogManager = new WebLogManager();

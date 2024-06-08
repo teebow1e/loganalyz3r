@@ -31,8 +31,6 @@ public class WebLogManager extends Application {
         Parent root = loader.load();
 
         Scene scene = new Scene(root, 1200, 800);
-        scene.getStylesheets().add(getClass().getResource("/css/Sidebar.css").toExternalForm());
-        scene.getStylesheets().add(getClass().getResource("/css/Table.css").toExternalForm());
 
         primaryStage.setTitle("Web Log Analyzer");
         primaryStage.setScene(scene);

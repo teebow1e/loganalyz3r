@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="mainVBox" alignment="TOP_CENTER" HBox.hgrow="ALWAYS" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ViewLogController">
+<VBox fx:id="mainVBox" alignment="TOP_CENTER" minHeight="600.0" minWidth="1000.0" style="-fx-background-color: white;" HBox.hgrow="ALWAYS" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ViewLogController">
     <Label alignment="CENTER" contentDisplay="CENTER" styleClass="title-label" text="Apache Logs">
         <font>
             <Font size="24.0" />
@@ -36,7 +36,7 @@
             <Insets bottom="10.0" left="10.0" top="10.0" />
         </padding>
     </HBox>
-    <TableView fx:id="Table" prefHeight="600.0" prefWidth="1000.0">
+    <TableView fx:id="Table" prefHeight="600.0" prefWidth="1000.0" VBox.vgrow="ALWAYS">
         <columns>
             <TableColumn fx:id="ipColumn" text="IP Address" />
             <TableColumn fx:id="timestampColumn" text="Timestamp" />

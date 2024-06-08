@@ -8,7 +8,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<VBox alignment="TOP_CENTER" spacing="10.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.StreamController">
+<VBox alignment="TOP_CENTER" HBox.hgrow="ALWAYS" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.StreamController">
     <Label alignment="CENTER" contentDisplay="CENTER" styleClass="title-label" text="Logs stream">
         <font>
             <Font size="24.0" />
@@ -19,16 +19,14 @@
     </Label>
     <HBox alignment="TOP_RIGHT">
         <children>
-            <Button fx:id="startStopButton" mnemonicParsing="false" text="Start" onAction="#handleStartStopButtonAction"/>
+            <Button fx:id="startStopButton" mnemonicParsing="false" onAction="#handleStartStopButtonAction" text="Start">
+            </Button>
         </children>
         <opaqueInsets>
             <Insets />
         </opaqueInsets>
-        <padding>
-            <Insets right="10.0" />
-        </padding>
     </HBox>
-    <TableView fx:id="Table" prefHeight="600.0" prefWidth="1000.0">
+    <TableView fx:id="Table" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="600.0" minWidth="1000.0" VBox.vgrow="ALWAYS">
         <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
         </columnResizePolicy>

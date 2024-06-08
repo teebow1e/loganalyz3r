@@ -11,6 +11,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -56,6 +58,7 @@ public class ViewLogController {
 
     private ObservableList<ComboBoxItemWrap<String>> filterList = FXCollections.observableArrayList(
             new ComboBoxItemWrap<>("IP Address"),
+            new ComboBoxItemWrap<>("Time Stamp"),
             new ComboBoxItemWrap<>("Method"),
             new ComboBoxItemWrap<>("Protocol"),
             new ComboBoxItemWrap<>("Request Path"),
@@ -117,6 +120,7 @@ public class ViewLogController {
 
         if (comboBoxElementToBeTicked != null) {
             switch (comboBoxElementToBeTicked) {
+                case "Time Stamp":
                 case "Status Code":
                 case "IP Address":
                     filterComboBox.setPromptText(comboBoxElementToBeTicked);
@@ -193,7 +197,6 @@ public class ViewLogController {
         filterComboBox.getItems().filtered(
                 f -> f.getCheck()).forEach(item -> appliedFilter.add(item.getItem())
         );
-        System.out.println(appliedFilter);
         LogTable(Table, search, appliedFilter);
     }
 
@@ -289,6 +292,21 @@ public class ViewLogController {
         for (String field : fields) {
             found = switch (field) {
                 case "IP Address" -> textField != null && ip.contains(textField);
+                case "Time Stamp" -> {
+                    DateTimeFormatter APACHE_TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss Z");
+                    DateTimeFormatter TEXTFIELD_TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+                    if (textField != null) {
+                        try {
+                            LocalDateTime apacheDateTime = LocalDateTime.parse(timestamp, APACHE_TIMESTAMP_FORMATTER);
+                            LocalDateTime textFieldDateTime = LocalDateTime.parse(textField, TEXTFIELD_TIMESTAMP_FORMATTER);
+                            yield apacheDateTime.isAfter(textFieldDateTime);
+                        } catch (Exception e) {
+                            yield false;
+                        }
+                    } else {
+                        yield false;
+                    }
+                }
                 case "Method" -> textField != null && method.contains(textField);
                 case "Protocol" -> textField != null && protocol.contains(textField);
                 case "Request Path" -> textField != null && requestPath.contains(textField);
