@@ -64,8 +64,8 @@ public class ViewLogController {
             new ComboBoxItemWrap<>("User-Agent")
     );
 
-    public static void setIpSearch(String address) {
-        dbSearch = address;
+    public static void setIpSearch(String search) {
+        dbSearch = search;
     }
 
     public static void setdbDate(DatePicker date) {
@@ -83,6 +83,10 @@ public class ViewLogController {
                 .forEach(item -> counter.getAndIncrement());
         return counter;
     }
+
+
+
+
 
     @FXML
     private void initialize() {
@@ -102,7 +106,7 @@ public class ViewLogController {
             cell.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
                 cell.getItem().checkProperty().set(!cell.getItem().checkProperty().get());
                 StringBuilder sb = new StringBuilder();
-                filterComboBox.getItems().filtered( f-> f!=null).filtered( f-> f.getCheck()).forEach( p -> {
+                filterComboBox.getItems().filtered(f-> f!=null).filtered( f-> f.getCheck()).forEach( p -> {
                     sb.append("; "+p.getItem());
                 });
                 final String string = sb.toString();
@@ -114,6 +118,7 @@ public class ViewLogController {
 
         if (comboBoxElementToBeTicked != null) {
             switch (comboBoxElementToBeTicked) {
+                case "Status Code":
                 case "IP Address":
                     filterComboBox.setPromptText(comboBoxElementToBeTicked);
                     filterList.stream()
@@ -189,17 +194,31 @@ public class ViewLogController {
         }
     }
 
+
+
+
+
+
     public void viewLog() {
         LogTable(Table, searchField.getText(), new ArrayList<>());
     }
 
-    public void viewLog(String ipAddress) {
-        LogTable(Table, ipAddress, new ArrayList<>());
+    public void viewLog(String search) {
+        filterComboBox.getItems().filtered(
+                f -> f.getCheck()).forEach(item -> appliedFilter.add(item.getItem())
+        );
+        System.out.println(appliedFilter);
+        LogTable(Table, search, appliedFilter);
     }
 
     public void viewLog(List<String> appliedFilter) {
         LogTable(Table, searchField.getText(), appliedFilter);
     }
+
+
+
+
+
 
     public void LogTable(TableView<Apache> tableView, String textField, List<String> appliedFilter) {
         tableView.getItems().clear();
@@ -271,6 +290,7 @@ public class ViewLogController {
         String method = apache.getMethod();
         String protocol = apache.getProtocol();
         String requestPath = apache.getRequestPath();
+        int statusCode = apache.getStatusCode();
         String userAgent = apache.getUserAgent();
         if (fields.isEmpty()) {
             return ip.contains(textField) ||
@@ -281,14 +301,33 @@ public class ViewLogController {
                     userAgent.contains(textField);
         }
         for (String field : fields) {
-            // we should add more field here, so that user don't have to uncheck everything
-            // just to search for one value
             found = switch (field) {
                 case "IP Address" -> textField != null && ip.contains(textField);
                 case "Method" -> textField != null && method.contains(textField);
                 case "Protocol" -> textField != null && protocol.contains(textField);
                 case "Request Path" -> textField != null && requestPath.contains(textField);
-                case "Status Code" -> textField != null && Integer.toString(apache.getStatusCode()).contains(textField);
+                case "Status Code" -> {
+                    if (textField != null) {
+                        if (textField.contains("-")) {
+                            String[] range = textField.split("-");
+                            if (range.length == 2) {
+                                try {
+                                    int lowerBound = Integer.parseInt(range[0]);
+                                    int upperBound = Integer.parseInt(range[1]);
+                                    yield statusCode >= lowerBound && statusCode <= upperBound;
+                                } catch (NumberFormatException e) {
+                                    yield false;
+                                }
+                            } else {
+                                yield false;
+                            }
+                        } else {
+                            yield Integer.toString(statusCode).contains(textField);
+                        }
+                    } else {
+                        yield false;
+                    }
+                }
                 case "User-Agent" -> textField != null && userAgent.contains(textField);
                 default -> found;
             };

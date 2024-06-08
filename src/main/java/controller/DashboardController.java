@@ -1,5 +1,6 @@
 package controller;
 
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -14,6 +15,7 @@ import loganalyzer.Apache;
 import loganalyzer.ModSecurity;
 import ui.WebLogManager;
 
+import javax.swing.event.ChangeListener;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -179,6 +181,17 @@ public class DashboardController {
             return row;
         });
 
+        statusCodeRankingTable.setRowFactory(tv -> {
+            TableRow<String[]> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && (!row.isEmpty())) {
+                    String[] rowData = row.getItem();
+                    handleStatusCodeDoubleClick(rowData[0]);
+                }
+            });
+            return row;
+        });
+
         ruleCountTable.setRowFactory(tv -> {
             TableRow<String[]> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -191,8 +204,7 @@ public class DashboardController {
         });
     }
 
-    private void displayLogsByInterval(String interval, LocalDate selectedDate)
-            throws IOException, ParseException {
+    private void displayLogsByInterval(String interval, LocalDate selectedDate) throws IOException, ParseException {
         XYChart.Series<String, Number> logSeries = new XYChart.Series<>();
         logSeries.setName("Log Count");
 
@@ -204,7 +216,7 @@ public class DashboardController {
         Map<String, Map<String, Integer>> groupedLogs = groupLogsByInterval(interval, selectedDate);
         logLineChart.getData().clear();
         List<Map.Entry<String, Map<String, Integer>>> entries = new ArrayList<>(groupedLogs.entrySet());
-        entries.sort(Comparator.comparing(Map.Entry::getKey));
+        entries.sort(Map.Entry.comparingByKey());
         List<Map.Entry<String, Map<String, Integer>>> displayedEntries = entries;
 
         for (Map.Entry<String, Map<String, Integer>> entry : displayedEntries) {
@@ -213,6 +225,15 @@ public class DashboardController {
             int totalLogs = statusCounts.values().stream().mapToInt(Integer::intValue).sum();
 
             XYChart.Data<String, Number> data = new XYChart.Data<>(timeSlot, totalLogs);
+
+            data.nodeProperty().addListener((observable, oldNode, newNode) -> {
+                if (newNode != null) {
+                    newNode.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+                        System.out.println("Clicked on time: " + timeSlot);
+                    });
+                }
+            });
+
             logSeries.getData().add(data);
         }
 
@@ -410,6 +431,19 @@ public class DashboardController {
             String rule = entry.getKey();
             int count = entry.getValue();
             items.add(new String[]{rule, String.valueOf(count)});
+        }
+    }
+
+    private void handleStatusCodeDoubleClick (String statusCode) {
+        try {
+            Stage primaryStage = (Stage) mainVBox.getScene().getWindow();
+            ViewLogController.setComboBoxElementTick("Status Code");
+            ViewLogController.setIpSearch(statusCode);
+            ViewLogController.setdbDate(datePicker);
+            WebLogManager webLogManager = new WebLogManager();
+            webLogManager.start(primaryStage, 3);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
