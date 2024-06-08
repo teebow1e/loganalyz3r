@@ -44,8 +44,7 @@ public class ViewLogController {
     public TextField searchField;
     @FXML
     public DatePicker datePicker;
-    @FXML
-    private Button searchBtn;
+
     @FXML
     private ComboBox<ComboBoxItemWrap<String>> filterComboBox;
 
@@ -136,10 +135,6 @@ public class ViewLogController {
 
         filterComboBox.setItems(filterList);
 
-        searchBtn.setOnAction(event -> {
-            System.out.println("this button does nothing hehe");
-        });
-
         if(datePicker.getValue() == null) {
             if (dbDate == null) {
                 datePicker.setValue(LocalDate.now());
@@ -150,16 +145,7 @@ public class ViewLogController {
         }
 
         datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
-            try {
-                if (dbSearch == null) {
-                    viewLog();
-                }
-                else {
-                    viewLog(dbSearch);
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            viewLog(searchField.getText());
         });
 
         searchField.setOnKeyPressed(event -> {

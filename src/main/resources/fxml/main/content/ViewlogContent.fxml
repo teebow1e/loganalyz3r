@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
@@ -29,7 +28,6 @@
             <DatePicker fx:id="datePicker" />
             <Label text="Filter" />
             <ComboBox fx:id="filterComboBox" prefHeight="25.0" prefWidth="175.0" promptText="Choose Filter" />
-            <Button fx:id="searchBtn" mnemonicParsing="false" text="Search" />
         </children>
         <opaqueInsets>
             <Insets />
