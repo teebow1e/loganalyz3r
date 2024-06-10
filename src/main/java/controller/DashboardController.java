@@ -5,6 +5,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
+import javafx.scene.chart.PieChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
@@ -65,6 +66,8 @@ public class DashboardController {
     private TableColumn<String[], String> modsecRuleColumn;
     @FXML
     private TableColumn<String[], Integer> modsecRuleCountColumn;
+    @FXML
+    private PieChart pieChartData;
 
     private List<Apache> logEntries;
     private List<ModSecurity> modsecEntries;
@@ -80,6 +83,7 @@ public class DashboardController {
             setupComboBox();
             setupStartTimeComboBox();
             setupTableViews();
+            setupPieChartDemo();
             displayLogsByInterval("15 Minutes", LocalDate.now());
             addClickListenerToMainVBox();
         } catch (Exception e) {
@@ -213,6 +217,21 @@ public class DashboardController {
             });
             return row;
         });
+    }
+
+    private void setupPieChartDemo() {
+        ObservableList<PieChart.Data> piechartActualData =
+                FXCollections.observableArrayList(
+                        new PieChart.Data("Electronics", 35),
+                        new PieChart.Data("Clothing", 25),
+                        new PieChart.Data("Groceries", 15),
+                        new PieChart.Data("Home & Kitchen", 10),
+                        new PieChart.Data("Books", 8),
+                        new PieChart.Data("Others", 7)
+                );
+        pieChartData.setTitle("Demo PieChart");
+        pieChartData.setData(piechartActualData);
+
     }
 
     private void displayLogsByInterval(String interval, LocalDate selectedDate) throws IOException, ParseException {

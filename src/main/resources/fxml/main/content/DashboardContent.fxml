@@ -4,6 +4,7 @@
 <?import javafx.scene.chart.CategoryAxis?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.chart.PieChart?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.DatePicker?>
 <?import javafx.scene.control.Label?>
@@ -42,51 +43,60 @@
             <NumberAxis fx:id="yAxis" forceZeroInRange="true" label="Log Count" minorTickCount="0" tickUnit="1.0" />
         </yAxis>
     </LineChart>
-
-    <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="10.0" VBox.vgrow="ALWAYS">
-        <TableView fx:id="statusCodeRankingTable" maxHeight="250.0" minHeight="200.0" minWidth="300.0" styleClass="status-code-table">
-            <columns>
-                <TableColumn fx:id="statusCodeColumn" text="Status Code" />
-                <TableColumn fx:id="statusCodeCountColumn" text="Count" />
-            </columns>
-            <columnResizePolicy>
-                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-            </columnResizePolicy>
-        </TableView>
-        <TableView fx:id="timestampRankingTable" maxHeight="250.0" minHeight="200.0" minWidth="300.0" styleClass="timestamp-table">
-            <columns>
-                <TableColumn fx:id="timestampColumn" text="Timestamp" />
-                <TableColumn fx:id="timestampCountColumn" text="Log Count" />
-            </columns>
-            <columnResizePolicy>
-                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-            </columnResizePolicy>
-        </TableView>
-        <TableView fx:id="ipRankingTable" maxHeight="250.0" minHeight="200.0" minWidth="300.0" styleClass="ip-table">
-            <columns>
-                <TableColumn fx:id="ipColumn" text="IP Address" />
-                <TableColumn fx:id="ipCountColumn" text="Count" />
-                <TableColumn fx:id="ipCountryColumn" text="Country" />
-            </columns>
-            <columnResizePolicy>
-                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-            </columnResizePolicy>
-        </TableView>
-
-        <padding>
-            <Insets bottom="10.0" />
-        </padding>
-    </HBox>
-
-    <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" VBox.vgrow="ALWAYS">
-        <TableView fx:id="ruleCountTable" maxHeight="200.0" minWidth="920.0" styleClass="rule-count-table">
-            <columns>
-                <TableColumn fx:id="modsecRuleColumn" maxWidth="1000.0" minWidth="600.0" prefWidth="-1.0" text="Rule" />
-                <TableColumn fx:id="modsecRuleCountColumn" prefWidth="75.0" text="Count" />
-            </columns>
-            <columnResizePolicy>
-                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-            </columnResizePolicy>
-        </TableView>
-    </HBox>
+   <HBox prefHeight="100.0" prefWidth="200.0">
+      <children>
+         <VBox prefHeight="200.0" prefWidth="100.0">
+            <children>
+            
+                <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="10.0" VBox.vgrow="ALWAYS">
+                    <TableView fx:id="statusCodeRankingTable" maxHeight="250.0" minHeight="200.0" minWidth="300.0" styleClass="status-code-table">
+                        <columns>
+                            <TableColumn fx:id="statusCodeColumn" text="Status Code" />
+                            <TableColumn fx:id="statusCodeCountColumn" text="Count" />
+                        </columns>
+                        <columnResizePolicy>
+                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                        </columnResizePolicy>
+                    </TableView>
+                    <TableView fx:id="timestampRankingTable" maxHeight="250.0" minHeight="200.0" minWidth="300.0" styleClass="timestamp-table">
+                        <columns>
+                            <TableColumn fx:id="timestampColumn" text="Timestamp" />
+                            <TableColumn fx:id="timestampCountColumn" text="Log Count" />
+                        </columns>
+                        <columnResizePolicy>
+                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                        </columnResizePolicy>
+                    </TableView>
+            
+                    <padding>
+                        <Insets bottom="10.0" />
+                    </padding>
+                </HBox>
+            
+                <HBox alignment="CENTER" maxWidth="1.7976931348623157E308" spacing="10.0" VBox.vgrow="ALWAYS">
+                    <TableView fx:id="ruleCountTable" maxHeight="200.0" minHeight="300.0" minWidth="300.0" styleClass="rule-count-table">
+                        <columns>
+                            <TableColumn fx:id="modsecRuleColumn" maxWidth="1000.0" minWidth="15.0" prefWidth="120.0" text="Rule" />
+                            <TableColumn fx:id="modsecRuleCountColumn" minWidth="5.0" text="Count" />
+                        </columns>
+                        <columnResizePolicy>
+                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                        </columnResizePolicy>
+                    </TableView>
+                    <TableView fx:id="ipRankingTable" maxHeight="250.0" minHeight="300.0" minWidth="300.0" styleClass="ip-table">
+                        <columns>
+                            <TableColumn fx:id="ipColumn" text="IP Address" />
+                            <TableColumn fx:id="ipCountColumn" text="Count" />
+                            <TableColumn fx:id="ipCountryColumn" text="Country" />
+                        </columns>
+                        <columnResizePolicy>
+                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                        </columnResizePolicy>
+                    </TableView>
+                </HBox>
+            </children>
+         </VBox>
+         <PieChart fx:id="pieChartData" title="PieChartNe" />
+      </children>
+   </HBox>
 </VBox>
