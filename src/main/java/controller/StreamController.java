@@ -2,11 +2,13 @@ package controller;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
+import javafx.stage.FileChooser;
 import loganalyzer.Apache;
 import org.apache.commons.io.input.Tailer;
 import org.apache.commons.io.input.TailerListenerAdapter;
@@ -14,22 +16,42 @@ import org.apache.commons.io.input.TailerListenerAdapter;
 import java.io.File;
 
 import static loganalyzer.ApacheParser.*;
+import static utility.Utility.*;
 
 public class StreamController {
-    // todo: add a file selector here
     @FXML
     private TableView<Apache> Table;
     @FXML
     private Button startStopButton;
+    @FXML
+    private Button chooseFileBtn;
+
+    @FXML
+    private Text chosenFileText;
 
     private Tailer tailer;
     private Thread tailerThread;
     private boolean isTailerRunning = false;
 
+    private String fileToStreamPath;
+
     @FXML
     private void initialize() {
         streamTable(Table);
         startStopButton.setText("Start");
+    }
+
+    @FXML
+    void chooseFile(ActionEvent event) {
+        FileChooser fc = new FileChooser();
+        fc.setTitle("Choose a file");
+        File file = fc.showOpenDialog(null);
+        if (file != null) {
+            chosenFileText.setText("You selected: " + file.getAbsolutePath());
+            fileToStreamPath = file.getAbsolutePath();
+            System.out.println("File name: " + file.getName());
+            System.out.println("File size: " + file.length() + " bytes");
+        }
     }
 
     @FXML
@@ -89,8 +111,14 @@ public class StreamController {
 
     private void startTailer() {
         ObservableList<Apache> rows = FXCollections.observableArrayList();
-        // CONSTANT VALUE HERE
-        File file = new File("logs/apache_nginx/access_log_100.log");
+        File file = new File(fileToStreamPath);
+
+        if (!file.canRead()) {
+            showAlert("ERROR",
+                    "This file is unreadable or you does not have the required permission to read. The program can not continue.");
+            return;
+        }
+
         TailerListenerAdapter listener = new TailerListenerAdapter() {
             @Override
             public void handle(String line) {

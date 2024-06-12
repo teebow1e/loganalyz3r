@@ -7,8 +7,9 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<VBox alignment="TOP_CENTER" HBox.hgrow="ALWAYS" style="-fx-background-color: white;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.StreamController">
+<VBox alignment="TOP_CENTER" style="-fx-background-color: white;" HBox.hgrow="ALWAYS" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.StreamController">
     <Label alignment="CENTER" contentDisplay="CENTER" styleClass="title-label" text="Logs stream">
         <font>
             <Font size="24.0" />
@@ -19,6 +20,8 @@
     </Label>
     <HBox alignment="TOP_RIGHT">
         <children>
+         <Button fx:id="chooseFileBtn" mnemonicParsing="false" onAction="#chooseFile" text="Button" />
+         <Text fx:id="chosenFileText" strokeType="OUTSIDE" strokeWidth="0.0" text="You selected: /etc/passwd" textAlignment="CENTER" />
             <Button fx:id="startStopButton" mnemonicParsing="false" onAction="#handleStartStopButtonAction" text="Start">
             </Button>
         </children>
