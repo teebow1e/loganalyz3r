@@ -84,7 +84,6 @@ public class DashboardController {
             setupComboBox();
             setupStartTimeComboBox();
             setupTableViews();
-            setupPieChartDemo();
             displayLogsByInterval("15 Minutes", LocalDate.now());
             addClickListenerToMainVBox();
         } catch (Exception e) {
@@ -220,21 +219,6 @@ public class DashboardController {
         });
     }
 
-    private void setupPieChartDemo() {
-        ObservableList<PieChart.Data> piechartActualData =
-                FXCollections.observableArrayList(
-                        new PieChart.Data("Electronics", 35),
-                        new PieChart.Data("Clothing", 25),
-                        new PieChart.Data("Groceries", 15),
-                        new PieChart.Data("Home & Kitchen", 10),
-                        new PieChart.Data("Books", 8),
-                        new PieChart.Data("Others", 7)
-                );
-        pieChartData.setTitle("Demo PieChart");
-        pieChartData.setData(piechartActualData);
-
-    }
-
     private void displayLogsByInterval(String interval, LocalDate selectedDate) throws IOException, ParseException {
         XYChart.Series<String, Number> logSeries = new XYChart.Series<>();
         logSeries.setName("Log Count");
@@ -252,10 +236,11 @@ public class DashboardController {
 
         for (Map.Entry<String, Map<String, Integer>> entry : displayedEntries) {
             String timeSlot = entry.getKey();
+            String timeOnly = timeSlot.substring(11, 16);
             Map<String, Integer> statusCounts = entry.getValue();
             int totalLogs = statusCounts.values().stream().mapToInt(Integer::intValue).sum();
 
-            XYChart.Data<String, Number> data = new XYChart.Data<>(timeSlot, totalLogs);
+            XYChart.Data<String, Number> data = new XYChart.Data<>(timeOnly, totalLogs);
 
             data.nodeProperty().addListener((observable, oldNode, newNode) -> {
                 if (newNode != null) {
@@ -263,6 +248,7 @@ public class DashboardController {
                         try {
                             Stage primaryStage = (Stage) mainVBox.getScene().getWindow();
                             ViewLogController.setComboBoxElementTick("Time Stamp");
+                            ViewLogController.setSearchBoxData(timeSlot);
                             ViewLogController.setIpSearch(timeSlot);
                             ViewLogController.setdbDate(datePicker);
                             WebLogManager webLogManager = new WebLogManager();
@@ -425,12 +411,15 @@ public class DashboardController {
 
     private void updateIpRanking(LocalDate selectedDate) throws IOException {
         Map<String, Integer> ipCounts = new HashMap<>();
+        Map<String, Integer> countryCounts = new HashMap<>();
+
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss Z", Locale.ENGLISH);
 
         for (Apache entry : logEntries) {
             LocalDate logDate = LocalDate.parse(entry.getTimestamp(), formatter);
             if (logDate.equals(selectedDate)) {
                 ipCounts.merge(entry.getRemoteAddress(), 1, Integer::sum);
+                countryCounts.merge(IpCheck(entry.getRemoteAddress()), 1, Integer::sum);
             }
         }
 
@@ -441,6 +430,12 @@ public class DashboardController {
         List<Map.Entry<String, Integer>> sortedIps = new ArrayList<>(ipCounts.entrySet());
         sortedIps.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
 
+        // Sort the countries based on their counts
+        List<Map.Entry<String, Integer>> sortedCountries = new ArrayList<>(countryCounts.entrySet());
+        sortedCountries.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
+
+        ObservableList<PieChart.Data> piechartActualData = FXCollections.observableArrayList();
+
         // Add the sorted IPs to the table
         for (Map.Entry<String, Integer> entry : sortedIps) {
             String ipAddress = entry.getKey();
@@ -448,6 +443,20 @@ public class DashboardController {
             String country = IpCheck(ipAddress);
             items.add(new String[]{ipAddress, String.valueOf(count), country});
         }
+
+        // Create pie chart data for top 6 countries
+        int count = 0;
+        for (Map.Entry<String, Integer> entry : sortedCountries) {
+            if (count >= 6) {
+                break;
+            }
+            String country = entry.getKey();
+            int countryCount = entry.getValue();
+            piechartActualData.add(new PieChart.Data(country, countryCount));
+            count++;
+        }
+
+        pieChartData.setData(piechartActualData);
     }
 
     private void updateModsecRuleTable(LocalDate selectedDate) throws IOException {
