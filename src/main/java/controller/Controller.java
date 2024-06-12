@@ -16,8 +16,6 @@ import usermanagement.UserManagement;
 
 import static utility.Utility.showAlert;
 
-import javax.swing.JOptionPane;
-
 import java.io.File;
 import java.util.List;
 import java.util.logging.Logger;

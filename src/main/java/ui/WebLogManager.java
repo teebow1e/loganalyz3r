@@ -26,22 +26,17 @@ public class WebLogManager extends Application {
             default -> throw new IllegalArgumentException("Invalid mode specified: " + mode);
         };
 
-        // System.out.println("FXML File Path: " + getClass().getResource(fxmlFile));
         loader = new FXMLLoader(getClass().getResource(fxmlFile));
         Parent root = loader.load();
-
         Scene scene = new Scene(root, 1200, 800);
 
         primaryStage.setTitle("Web Log Analyzer");
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        // root.setOnMouseClicked(event -> scene.getRoot().requestFocus());
-
         Controller controller = loader.getController();
         controller.init(primaryStage);
     }
-
     public static void main(String[] args) {
         launch(args);
     }

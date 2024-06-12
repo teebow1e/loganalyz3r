@@ -3,7 +3,6 @@ package utility;
 import com.maxmind.db.MaxMindDbConstructor;
 import com.maxmind.db.MaxMindDbParameter;
 import com.maxmind.db.Reader;
-import com.maxmind.db.DatabaseRecord;
 
 import java.io.File;
 import java.io.IOException;
@@ -14,26 +13,13 @@ public class IpLookUp {
         File database = new File("GeoLite2-Country.mmdb");
         try (Reader reader = new Reader(database)) {
             InetAddress address = InetAddress.getByName(host);
-
-            // get() returns just the data for the associated record
             LookupResult result = reader.get(address, LookupResult.class);
-
-            //System.out.println(result.getCountry().getIsoCode());
-
-            // getRecord() returns a DatabaseRecord class that contains both
-            // the data for the record and associated metadata.
-            DatabaseRecord<LookupResult> record
-                    = reader.getRecord(address, LookupResult.class);
-
-            //System.out.println(record.getData().getCountry().getIsoCode());
-            //System.out.println(record.getNetwork());
 
             if (result != null && result.getCountry() != null) {
                 return result.getCountry().getIsoCode();
             } else {
                 return "None";
             }
-
         }
     }
 
@@ -48,13 +34,12 @@ public class IpLookUp {
         }
 
         public Country getCountry() {
-            return (this.country != null) ? this.country : null;
+            return this.country;
         }
     }
 
     public static class Country {
         private final String isoCode;
-
         @MaxMindDbConstructor
         public Country (
                 @MaxMindDbParameter(name="iso_code") String isoCode
@@ -68,6 +53,6 @@ public class IpLookUp {
     }
 
     public static void main(String[] args) throws IOException {
-        System.out.println(IpCheck("127.0.0.1"));
+        System.out.println(IpCheck("202.191.57.199"));
     }
 }

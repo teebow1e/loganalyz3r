@@ -22,5 +22,4 @@ public class Apache extends Log{
     @CsvBindByName(column = "contentLength", required = true)
     @CsvBindByPosition(position = 7)
     private final int contentLength;
-
 }

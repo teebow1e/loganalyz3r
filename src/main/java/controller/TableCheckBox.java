@@ -6,7 +6,6 @@ import javafx.beans.property.SimpleBooleanProperty;
 public class TableCheckBox {
     private BooleanProperty selected;
     private String[] data;
-
     public TableCheckBox(String[] data) {
         this.data = data;
         this.selected = new SimpleBooleanProperty(false);

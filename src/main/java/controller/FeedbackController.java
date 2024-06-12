@@ -25,6 +25,4 @@ public class FeedbackController {
             showAlert("Success", "Thank you for your feedback!");
         }
     }
-
-
 }

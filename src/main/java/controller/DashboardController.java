@@ -1,6 +1,5 @@
 package controller;
 
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -16,8 +15,6 @@ import loganalyzer.Apache;
 import loganalyzer.ModSecurity;
 import ui.WebLogManager;
 
-import javax.swing.event.ChangeListener;
-import javax.swing.text.View;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -368,22 +365,18 @@ public class DashboardController {
     private void updateStatusCodeRanking(Map<String, Map<String, Integer>> groupedLogs) {
         Map<String, Integer> statusCodeCounts = new HashMap<>();
 
-        // Iterate over the grouped logs for the selected time interval
         for (Map<String, Integer> statusCounts : groupedLogs.values()) {
             for (Map.Entry<String, Integer> entry : statusCounts.entrySet()) {
                 statusCodeCounts.merge(entry.getKey(), entry.getValue(), Integer::sum);
             }
         }
 
-        // Clear previous data in the table
         ObservableList<String[]> items = statusCodeRankingTable.getItems();
         items.clear();
 
-        // Sort the status codes based on their counts
         List<Map.Entry<String, Integer>> sortedStatusCodes = new ArrayList<>(statusCodeCounts.entrySet());
         sortedStatusCodes.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
 
-        // Add the sorted status codes to the table
         for (Map.Entry<String, Integer> entry : sortedStatusCodes) {
             items.add(new String[]{entry.getKey(), entry.getValue().toString()});
         }
@@ -400,7 +393,6 @@ public class DashboardController {
         ObservableList<String[]> items = timestampRankingTable.getItems();
         items.clear();
 
-        // Ensure we do not access beyond the size of the list
         int limit = Math.min(sortedTimestamps.size(), 7);
         for (int i = 0; i < limit; i++) {
             Map.Entry<String, Map<String, Integer>> entry = sortedTimestamps.get(i);
@@ -426,17 +418,14 @@ public class DashboardController {
         ObservableList<String[]> items = ipRankingTable.getItems();
         items.clear();
 
-        // Sort the IPs based on their counts
         List<Map.Entry<String, Integer>> sortedIps = new ArrayList<>(ipCounts.entrySet());
         sortedIps.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
 
-        // Sort the countries based on their counts
         List<Map.Entry<String, Integer>> sortedCountries = new ArrayList<>(countryCounts.entrySet());
         sortedCountries.sort((e1, e2) -> e2.getValue().compareTo(e1.getValue()));
 
         ObservableList<PieChart.Data> piechartActualData = FXCollections.observableArrayList();
 
-        // Add the sorted IPs to the table
         for (Map.Entry<String, Integer> entry : sortedIps) {
             String ipAddress = entry.getKey();
             int count = entry.getValue();
@@ -444,7 +433,6 @@ public class DashboardController {
             items.add(new String[]{ipAddress, String.valueOf(count), country});
         }
 
-        // Create pie chart data for top 6 countries
         int count = 0;
         for (Map.Entry<String, Integer> entry : sortedCountries) {
             if (count >= 6) {

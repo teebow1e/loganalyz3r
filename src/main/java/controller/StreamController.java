@@ -16,6 +16,7 @@ import java.io.File;
 import static loganalyzer.ApacheParser.*;
 
 public class StreamController {
+    // todo: add a file selector here
     @FXML
     private TableView<Apache> Table;
     @FXML
@@ -88,6 +89,7 @@ public class StreamController {
 
     private void startTailer() {
         ObservableList<Apache> rows = FXCollections.observableArrayList();
+        // CONSTANT VALUE HERE
         File file = new File("logs/apache_nginx/access_log_100.log");
         TailerListenerAdapter listener = new TailerListenerAdapter() {
             @Override

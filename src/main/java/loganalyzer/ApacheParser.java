@@ -120,5 +120,4 @@ public class ApacheParser {
         }
         return logList;
     }
-
 }

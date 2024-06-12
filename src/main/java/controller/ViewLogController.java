@@ -23,7 +23,6 @@ import loganalyzer.Apache;
 import static loganalyzer.ApacheParser.parseApacheByDate;
 
 public class ViewLogController {
-
     @FXML
     private TableView<Apache> Table;
     @FXML
@@ -46,7 +45,6 @@ public class ViewLogController {
     public TextField searchField;
     @FXML
     public DatePicker datePicker;
-
     @FXML
     private ComboBox<ComboBoxItemWrap<String>> filterComboBox;
 
@@ -188,11 +186,6 @@ public class ViewLogController {
         }
     }
 
-
-
-
-
-
     public void viewLog() {
         LogTable(Table, searchField.getText(), new ArrayList<>());
     }
@@ -207,11 +200,6 @@ public class ViewLogController {
     public void viewLog(List<String> appliedFilter) {
         LogTable(Table, searchField.getText(), appliedFilter);
     }
-
-
-
-
-
 
     public void LogTable(TableView<Apache> tableView, String textField, List<String> appliedFilter) {
         tableView.getItems().clear();
@@ -343,5 +331,4 @@ public class ViewLogController {
         }
         return found;
     }
-
 }

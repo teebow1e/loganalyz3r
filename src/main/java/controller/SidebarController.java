@@ -4,14 +4,11 @@ import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
-import javafx.scene.control.*;
 import ui.LoginForm;
 import ui.WebLogManager;
 
 public class SidebarController {
-
     private Stage stage;
-
     public void init(Stage stage) {
         this.stage = stage;
     }
@@ -79,5 +76,4 @@ public class SidebarController {
         LoginForm loginForm = new LoginForm();
         loginForm.start(primaryStage);
     }
-
 }

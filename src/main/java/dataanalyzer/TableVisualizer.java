@@ -16,11 +16,8 @@ import java.util.*;
 import static csvgenerator.CSVReader.read;
 
 public class TableVisualizer {
-//    private static Timer timer = new Timer();
-
     public static void LogTable(TableView<String[]> tableView, String columnStyle) throws IOException {
         List<String> data = read("logs/parsed/log_new.csv");
-        // Clear existing table content
         tableView.getItems().clear();
         tableView.getColumns().clear();
 
@@ -67,7 +64,6 @@ public class TableVisualizer {
             return row;
         });
 
-        // Set column resize policy to ensure all columns cover the full width of the table
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
     }
 
@@ -86,7 +82,6 @@ public class TableVisualizer {
     public static void ManageLogTable(TableView<String[]> tableView) throws IOException {
         LogTable(tableView, "manage-access-log-table-column-");
 
-        // Add a checkbox column
         TableColumn<String[], Boolean> checkboxColumn = new TableColumn<>("Checkbox");
         checkboxColumn.setCellValueFactory(param -> {
             String[] rowData = param.getValue();
@@ -110,13 +105,6 @@ public class TableVisualizer {
     }
 
     private static void updateTableView(TableView<String[]> tableView) {
-//        Platform.runLater(() -> {
-//            try {
-//                LogTable(tableView, "access-log-table-column-");
-//            } catch (IOException e) {
-//                throw new RuntimeException(e);
-//            }
-//        });
         try {
             LogTable(tableView, "access-log-table-column-");
         } catch (IOException e) {
@@ -125,26 +113,21 @@ public class TableVisualizer {
     }
 
     private static void showRowContent(String[] headers, String[] rowData) {
-        // Create a VBox to hold the content
         VBox contentBox = new VBox();
         contentBox.setSpacing(5);
 
-        // Create a map to store headerName: rowData pairs
         Map<String, String> headerDataMap = new LinkedHashMap<>();
-        // Iterate through the headers and rowData and add non-empty headers and their data to the map
         for (int i = 0; i < headers.length; i++) {
             if (!headers[i].trim().isEmpty()) {
                 headerDataMap.put(headers[i], rowData[i]);
             }
         }
 
-        // Iterate through the rowData and create Text nodes for each element
         for (Map.Entry<String, String> entry : headerDataMap.entrySet()) {
             Text text = new Text(entry.getKey() + ": " + entry.getValue());
             contentBox.getChildren().add(text);
         }
 
-        // Create a dialog to display the content
         Dialog<Void> dialog = new Dialog<>();
         dialog.getDialogPane().setContent(contentBox);
         dialog.setTitle("Row Details");
