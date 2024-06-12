@@ -9,6 +9,7 @@ logs/parsed/
 !.mvn/wrapper/maven-wrapper.jar
 !src/main/resources/main/**/target/
 !src/main/resources/test/**/target/
+*.jar
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
