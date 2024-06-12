@@ -35,7 +35,11 @@ public class Controller {
 
     public void init(Stage stage) {
         // CONSTANT VALUE HERE
-        String dbFilePath = System.getProperty("user.dir") + "\\credentials\\cred.txt";
+        String dbFilePath = System.getProperty("user.dir")
+                + File.separator
+                + "credentials"
+                + File.separator
+                + "cred.txt";
         File dbFile = new File(dbFilePath);
         if (dbFile.exists()) {
             userLists = UserManagement.readUserFile(dbFilePath);

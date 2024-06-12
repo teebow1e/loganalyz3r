@@ -48,7 +48,13 @@ public class ApacheParser {
     public static void parseAndGenerateCSV() {
         Logger logger = Logger.getLogger(ApacheParser.class.getName());
         // CONSTANT VALUE HERE
-        String logFilePath = System.getProperty("user.dir") + "\\logs\\apache_nginx\\access_log_1000.log";
+        String logFilePath = System.getProperty("user.dir")
+                + File.separator
+                + "logs"
+                + File.separator
+                + "apache_nginx"
+                + File.separator
+                + "access_log_1000.log";
         Path logPath = Paths.get(logFilePath);
         LinkedList<String> lines;
 
@@ -84,7 +90,13 @@ public class ApacheParser {
     public static List<Apache> parseApacheByDate(DatePicker datePicker) {
         Logger logger = Logger.getLogger(ApacheParser.class.getName());
         // CONSTANT VALUE HERE
-        String logFilePath = System.getProperty("user.dir") + "\\logs\\apache_nginx\\access_log_50000.log";
+        String logFilePath = System.getProperty("user.dir")
+                + File.separator
+                + "logs"
+                + File.separator
+                + "apache_nginx"
+                + File.separator
+                + "access_log_50000.log";
         Path logPath = Paths.get(logFilePath);
         List<Apache> logList = new LinkedList<>();
         LocalDate selectedDate = datePicker.getValue();

@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import csvgenerator.CsvGenerator;
 import javafx.scene.control.DatePicker;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -90,7 +87,13 @@ public class ModSecurityParser {
     public static List<ModSecurity> parseModSecByDate(DatePicker datePicker) {
         Logger logger = Logger.getLogger(ApacheParser.class.getName());
         // CONSTANT VALUE HERE
-        String logFilePath = System.getProperty("user.dir") + "\\logs\\modsecurity\\modsec_audit_new.log";
+        String logFilePath = System.getProperty("user.dir")
+                + File.separator
+                + "logs"
+                + File.separator
+                + "modsecurity"
+                + File.separator
+                + "modsec_audit_new.log";
         Path logPath = Paths.get(logFilePath);
         ObjectMapper objectMapper = new ObjectMapper();
         List<ModSecurity> logList = new LinkedList<>();
