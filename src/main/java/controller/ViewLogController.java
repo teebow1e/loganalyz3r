@@ -53,6 +53,7 @@ public class ViewLogController {
     private static String dbSearch;
     private static DatePicker dbDate;
     private static String comboBoxElementToBeTicked;
+    private static String searchBoxData;
 
     private List<String> appliedFilter = new LinkedList<>();
 
@@ -77,6 +78,9 @@ public class ViewLogController {
     public static void setComboBoxElementTick(String data) {
         comboBoxElementToBeTicked = data;
     }
+    public static void setSearchBoxData(String data) {
+        searchBoxData = data;
+    }
 
     public AtomicInteger getNumberOfSelectedFilter() {
         AtomicInteger counter = new AtomicInteger();
@@ -85,10 +89,6 @@ public class ViewLogController {
                 .forEach(item -> counter.getAndIncrement());
         return counter;
     }
-
-
-
-
 
     @FXML
     private void initialize() {
@@ -117,6 +117,10 @@ public class ViewLogController {
 
             return cell;
         });
+
+        if (searchBoxData != null) {
+            searchField.setText(searchBoxData);
+        }
 
         if (comboBoxElementToBeTicked != null) {
             switch (comboBoxElementToBeTicked) {

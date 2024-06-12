@@ -17,6 +17,7 @@ import loganalyzer.ModSecurity;
 import ui.WebLogManager;
 
 import javax.swing.event.ChangeListener;
+import javax.swing.text.View;
 import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -476,6 +477,7 @@ public class DashboardController {
     private void handleStatusCodeDoubleClick (String statusCode) {
         try {
             Stage primaryStage = (Stage) mainVBox.getScene().getWindow();
+            ViewLogController.setSearchBoxData(statusCode);
             ViewLogController.setComboBoxElementTick("Status Code");
             ViewLogController.setIpSearch(statusCode);
             ViewLogController.setdbDate(datePicker);
@@ -489,6 +491,7 @@ public class DashboardController {
     private void handleTimeStampDoubleClick (String timeStamp) {
         try {
             Stage primaryStage = (Stage) mainVBox.getScene().getWindow();
+            ViewLogController.setSearchBoxData(timeStamp);
             ViewLogController.setComboBoxElementTick("Time Stamp");
             ViewLogController.setIpSearch(timeStamp);
             ViewLogController.setdbDate(datePicker);
@@ -502,6 +505,7 @@ public class DashboardController {
     private void handleIpDoubleClick(String ipAddress) {
         try {
             Stage primaryStage = (Stage) mainVBox.getScene().getWindow();
+            ViewLogController.setSearchBoxData(ipAddress);
             ViewLogController.setComboBoxElementTick("IP Address");
             ViewLogController.setIpSearch(ipAddress);
             ViewLogController.setdbDate(datePicker);
@@ -515,7 +519,8 @@ public class DashboardController {
     private void handleModSecDoubleClick(String rule) {
         try {
             Stage primaryStage = (Stage) mainVBox.getScene().getWindow();
-//            ViewModSecController.setComboBoxElementTick("IP Address");
+            ViewModSecController.setSearchField(rule);
+            ViewModSecController.setComboBoxElementTick("Attack Name");
             ViewModSecController.setdbRule(rule);
             ViewModSecController.setdbDate(datePicker);
             WebLogManager webLogManager = new WebLogManager();

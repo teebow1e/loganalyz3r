@@ -23,7 +23,7 @@
     <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
         <children>
             <Label text="Search" />
-            <TextField fx:id="searchField" />
+            <TextField fx:id="searchField" prefHeight="25.0" prefWidth="205.0" />
             <Label text="Date" />
             <DatePicker fx:id="datePicker" />
          <Label text="Filter" />

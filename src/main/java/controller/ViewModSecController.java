@@ -18,7 +18,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Logger;
 
 import loganalyzer.ModSecurity;
 import ui.ComboBoxItemWrap;
@@ -53,6 +52,8 @@ public class ViewModSecController {
     private ComboBox<ComboBoxItemWrap<String>> filterComboBox;
     private static String dbRule;
     private static DatePicker dbDate;
+    private static String comboBoxElementToBeTicked;
+    private static String searchBoxData;
     private List<String> appliedFilter = new LinkedList<>();
 
     private ObservableList<ComboBoxItemWrap<String>> filterList = FXCollections.observableArrayList(
@@ -71,6 +72,10 @@ public class ViewModSecController {
 
     public static void setdbDate(DatePicker date) {
         dbDate = date;
+    }
+
+    public static void setSearchField(String data) {
+        searchBoxData = data;
     }
 
     public AtomicInteger getNumberOfSelectedFilter() {
@@ -108,6 +113,21 @@ public class ViewModSecController {
 
             return cell;
         });
+
+        if (searchBoxData != null) {
+            searchField.setText(searchBoxData);
+        }
+
+        if (comboBoxElementToBeTicked != null &&
+                comboBoxElementToBeTicked.equals("Attack Name")) {
+            filterComboBox.setPromptText(comboBoxElementToBeTicked);
+            filterList.stream()
+                    .filter(item -> item.getItem().equals(comboBoxElementToBeTicked))
+                    .findFirst()
+                    .ifPresent(item -> item.setCheck(true));
+        } else {
+            filterComboBox.setPromptText("Choose Filter");
+        }
 
         filterComboBox.setItems(filterList);
         if(datePicker.getValue() == null) {
@@ -162,6 +182,10 @@ public class ViewModSecController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static void setComboBoxElementTick(String data) {
+        comboBoxElementToBeTicked = data;
     }
 
     private void viewLog() {
