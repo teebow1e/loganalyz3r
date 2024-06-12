@@ -89,6 +89,7 @@ public class ModSecurityParser {
 
     public static List<ModSecurity> parseModSecByDate(DatePicker datePicker) {
         Logger logger = Logger.getLogger(ApacheParser.class.getName());
+        // CONSTANT VALUE HERE
         String logFilePath = System.getProperty("user.dir") + "\\logs\\modsecurity\\modsec_audit_new.log";
         Path logPath = Paths.get(logFilePath);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -145,7 +146,3 @@ public class ModSecurityParser {
         return logList;
     }
 }
-
-// todo: suy nghĩ về phương pháp đọc file để gen + benchmark
-// todo: suy nghĩ về cách detect file đã dc thêm data/xóa data đi
-// todo: bảng không cần phải đọc từ csv mà đọc từ đối tượng Log

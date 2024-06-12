@@ -34,6 +34,7 @@ public class Controller {
     private TextField rePasswordField;
 
     public void init(Stage stage) {
+        // CONSTANT VALUE HERE
         String dbFilePath = System.getProperty("user.dir") + "\\credentials\\cred.txt";
         File dbFile = new File(dbFilePath);
         if (dbFile.exists()) {

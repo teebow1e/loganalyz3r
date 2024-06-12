@@ -12,13 +12,10 @@ public class CSVReader {
 
         try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
             String line;
-            int lineCount = 0;
             while ((line = reader.readLine()) != null) {
                 stringList.add(line);
-                lineCount++;
             }
         }
         return stringList;
     }
-
 }

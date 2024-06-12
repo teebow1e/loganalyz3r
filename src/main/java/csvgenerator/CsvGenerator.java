@@ -16,6 +16,7 @@ public class CsvGenerator {
     }
     public static void generateCSVNormalLog(List<Apache> logList)
             throws IOException, CsvRequiredFieldEmptyException, CsvDataTypeMismatchException {
+        // CONSTANT VALUE HERE
         File file = new File("logs/parsed/log_new.csv");
         try (FileWriter writer = new FileWriter(file)){
             var mappingStrategy = new CustomColumnPositionStrategy<Apache>();
@@ -37,9 +38,9 @@ public class CsvGenerator {
             return;
         }
 
+        // CONSTANT VALUE HERE
         File file = new File("logs/parsed/modsecurity.csv");
 
-        // Ensure the directory exists
         File parentDir = file.getParentFile();
         if (!parentDir.exists()) {
             parentDir.mkdirs();
@@ -54,7 +55,6 @@ public class CsvGenerator {
                     .withMappingStrategy(mappingStrategy)
                     .build();
 
-            // Attempt to write the data
             try {
                 builder.write(logList);
                 System.out.println("CSV file written successfully.");
@@ -64,5 +64,4 @@ public class CsvGenerator {
             }
         }
     }
-
 }

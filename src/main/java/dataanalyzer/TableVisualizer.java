@@ -17,6 +17,7 @@ import static csvgenerator.CSVReader.read;
 
 public class TableVisualizer {
     public static void LogTable(TableView<String[]> tableView, String columnStyle) throws IOException {
+        // CONSTANT VALUE HERE
         List<String> data = read("logs/parsed/log_new.csv");
         tableView.getItems().clear();
         tableView.getColumns().clear();

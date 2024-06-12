@@ -10,6 +10,7 @@ import java.net.InetAddress;
 
 public class IpLookUp {
     public static String IpCheck (String host) throws IOException {
+        // CONSTANT VALUE HERE
         File database = new File("GeoLite2-Country.mmdb");
         try (Reader reader = new Reader(database)) {
             InetAddress address = InetAddress.getByName(host);

@@ -47,9 +47,10 @@ public class ApacheParser {
 
     public static void parseAndGenerateCSV() {
         Logger logger = Logger.getLogger(ApacheParser.class.getName());
+        // CONSTANT VALUE HERE
         String logFilePath = System.getProperty("user.dir") + "\\logs\\apache_nginx\\access_log_1000.log";
         Path logPath = Paths.get(logFilePath);
-        LinkedList<String> lines = new LinkedList<>();
+        LinkedList<String> lines;
 
         if (Files.exists(logPath)) {
             System.out.println("log path exists");
@@ -82,6 +83,7 @@ public class ApacheParser {
 
     public static List<Apache> parseApacheByDate(DatePicker datePicker) {
         Logger logger = Logger.getLogger(ApacheParser.class.getName());
+        // CONSTANT VALUE HERE
         String logFilePath = System.getProperty("user.dir") + "\\logs\\apache_nginx\\access_log_50000.log";
         Path logPath = Paths.get(logFilePath);
         List<Apache> logList = new LinkedList<>();
@@ -91,7 +93,6 @@ public class ApacheParser {
             try (BufferedReader br = new BufferedReader(new FileReader(logFilePath))) {
                 String line;
                 while ((line = br.readLine()) != null) {
-
                     String timestamp = parseTimestamp(line);
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss Z", Locale.ENGLISH);
                     LocalDate logDate = LocalDate.parse(timestamp, formatter);

@@ -447,7 +447,7 @@ public class DashboardController {
         pieChartData.setData(piechartActualData);
     }
 
-    private void updateModsecRuleTable(LocalDate selectedDate) throws IOException {
+    private void updateModsecRuleTable(LocalDate selectedDate) {
         Map<String, Integer> ruleCounts = new HashMap<>();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss.SSSSSS Z", Locale.ENGLISH);
 
