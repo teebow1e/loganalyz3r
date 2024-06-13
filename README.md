@@ -30,7 +30,7 @@ This application was developed as part of the course Project 1 by [SoICT@HUST](h
 │       │   │   ├── Controller.java
 │       │   │   ├── SidebarController.java
 │       │   │   └── TableCheckBox.java
-│       │   ├── csvgenerator
+│       │   ├── oldarchive.csvgenerator
 │       │   │   ├── CSVReader.java
 │       │   │   ├── CsvGenerator.java
 │       │   │   └── CustomColumnPositionStrategy.java

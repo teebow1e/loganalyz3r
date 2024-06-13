@@ -275,6 +275,7 @@ public class ViewLogController {
         String requestPath = apache.getRequestPath();
         int statusCode = apache.getStatusCode();
         String userAgent = apache.getUserAgent();
+
         if (fields.isEmpty()) {
             return ip.contains(textField) ||
                     timestamp.contains(textField) ||

@@ -65,16 +65,28 @@
       </padding>
      </Label>
 
-<!--     <Label lineSpacing="10.0" onMouseClicked="#handleExport" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: #FFE6E6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;" styleClass="sidebar-content-label" text="Export" graphicTextGap="10.0">-->
-<!--         <graphic>-->
-<!--             <ImageView>-->
-<!--                 <Image url="@/img/export.png" />-->
-<!--             </ImageView>-->
-<!--         </graphic>-->
-<!--      <padding>-->
-<!--         <Insets left="10.0" right="10.0" top="10.0" />-->
-<!--      </padding>-->
-<!--     </Label>-->
+    <Label lineSpacing="10.0" onMouseClicked="#handleAboutUs" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: #FFE6E6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;" styleClass="sidebar-content-label" text="About us" graphicTextGap="10.0">
+        <graphic>
+            <ImageView>
+                <Image url="@/img/aboutus.png" />
+            </ImageView>
+        </graphic>
+        <padding>
+            <Insets left="10.0" right="10.0" top="10.0" />
+        </padding>
+    </Label>
+
+    <Label lineSpacing="10.0" onMouseClicked="#handleOption" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: #FFE6E6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;" styleClass="sidebar-content-label" text="Option" graphicTextGap="10.0">
+        <graphic>
+            <ImageView>
+                <Image url="@/img/option.png" />
+            </ImageView>
+        </graphic>
+        <padding>
+            <Insets left="10.0" right="10.0" top="10.0" />
+        </padding>
+    </Label>
+
      <Label alignment="BASELINE_LEFT" lineSpacing="10.0" onMouseClicked="#handleLogout" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: #FFE6E6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;" styleClass="sidebar-content-label" text="Log out" graphicTextGap="10.0">
          <graphic>
              <ImageView>

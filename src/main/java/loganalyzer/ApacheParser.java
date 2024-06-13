@@ -3,7 +3,6 @@ package loganalyzer;
 import java.io.*;
 import java.nio.file.*;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,7 +11,6 @@ import java.util.regex.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import csvgenerator.CsvGenerator;
 import javafx.scene.control.DatePicker;
 
 import static utility.Utility.findFirstMatch;
@@ -77,7 +75,6 @@ public class ApacheParser {
             }
             try {
                 System.out.println("generating csv now..");
-                CsvGenerator.generateCSVNormalLog(logList);
                 System.out.println("done generate");
             } catch (Exception e) {
                 logger.log(Level.SEVERE, "Error generating CSV: {0}", e.getMessage());

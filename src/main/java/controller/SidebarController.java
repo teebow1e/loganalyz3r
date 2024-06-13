@@ -54,7 +54,7 @@ public class SidebarController {
     }
 
     @FXML
-    private void handleExport(MouseEvent event) throws Exception {
+    private void handleAboutUs(MouseEvent event) throws Exception {
         Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         WebLogManager webLogManager = new WebLogManager();
@@ -62,7 +62,7 @@ public class SidebarController {
     }
 
     @FXML
-    private void handleManagelog(MouseEvent event) throws Exception {
+    private void handleOption(MouseEvent event) throws Exception {
         Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();
 
         WebLogManager webLogManager = new WebLogManager();
