@@ -233,7 +233,13 @@ public class DashboardController {
 
         for (Map.Entry<String, Map<String, Integer>> entry : displayedEntries) {
             String timeSlot = entry.getKey();
-            String timeOnly = timeSlot.substring(11, 16);
+            String timeOnly;
+            if (timeSlot.length() < 11) {
+                timeOnly = timeSlot;
+            }
+            else {
+                timeOnly = timeSlot.substring(11, 16);
+            }
             Map<String, Integer> statusCounts = entry.getValue();
             int totalLogs = statusCounts.values().stream().mapToInt(Integer::intValue).sum();
 
@@ -440,8 +446,10 @@ public class DashboardController {
             }
             String country = entry.getKey();
             int countryCount = entry.getValue();
-            piechartActualData.add(new PieChart.Data(country, countryCount));
-            count++;
+            if (!Objects.equals(country, "None")) {
+                piechartActualData.add(new PieChart.Data(country, countryCount));
+                count++;
+            }
         }
 
         pieChartData.setData(piechartActualData);

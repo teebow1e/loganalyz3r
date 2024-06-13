@@ -38,14 +38,14 @@
     </HBox>
     <TableView fx:id="Table" prefHeight="600.0" prefWidth="1000.0" VBox.vgrow="ALWAYS">
         <columns>
-            <TableColumn fx:id="ipColumn" text="IP Address" />
-            <TableColumn fx:id="timestampColumn" text="Timestamp" />
-            <TableColumn fx:id="methodColumn" text="Method" />
-            <TableColumn fx:id="protocolColumn" text="Protocol" />
-            <TableColumn fx:id="requestPathColumn" text="Request Path" />
-            <TableColumn fx:id="statusCodeColumn" text="Status Code" />
-            <TableColumn fx:id="contentLengthColumn" text="Content Length" />
-            <TableColumn fx:id="userAgentColumn" text="User Agent" />
+            <TableColumn fx:id="ipColumn" minWidth="80.0" prefWidth="-1.0" text="IP Address" />
+            <TableColumn fx:id="timestampColumn" minWidth="80.0" prefWidth="-1.0" text="Timestamp" />
+            <TableColumn fx:id="methodColumn" minWidth="50.0" prefWidth="-1.0" text="Method" />
+            <TableColumn fx:id="protocolColumn" minWidth="40.0" prefWidth="-1.0" text="Protocol" />
+            <TableColumn fx:id="requestPathColumn" minWidth="60.0" prefWidth="-1.0" text="Request Path" />
+            <TableColumn fx:id="statusCodeColumn" minWidth="40.0" prefWidth="-1.0" text="Status Code" />
+            <TableColumn fx:id="contentLengthColumn" minWidth="50.0" prefWidth="-1.0" text="Content Length" />
+            <TableColumn fx:id="userAgentColumn" minWidth="100.0" prefWidth="-1.0" text="User Agent" />
         </columns>
         <columnResizePolicy>
             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />

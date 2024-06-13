@@ -35,7 +35,7 @@
         </VBox.margin>
     </HBox>
 
-    <LineChart fx:id="logLineChart" createSymbols="true" legendVisible="true" minHeight="300.0" VBox.vgrow="ALWAYS">
+    <LineChart fx:id="logLineChart" animated="false" createSymbols="true" legendVisible="true" minHeight="300.0" VBox.vgrow="ALWAYS">
         <xAxis>
             <CategoryAxis label="Time" />
         </xAxis>

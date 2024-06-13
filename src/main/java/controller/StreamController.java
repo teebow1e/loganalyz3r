@@ -58,10 +58,10 @@ public class StreamController {
     private void handleStartStopButtonAction() {
         if (isTailerRunning) {
             stopTailer();
-            startStopButton.setText("Start");
+            startStopButton.setText("Start Streaming");
         } else {
             startTailer();
-            startStopButton.setText("Stop");
+            startStopButton.setText("Stop Streaming");
         }
         isTailerRunning = !isTailerRunning;
     }
@@ -133,6 +133,7 @@ public class StreamController {
                         Integer.parseInt(parseAllInOne(line)[9]),
                         parseUserAgent(line)
                 ));
+                System.out.println(rows.size());
                 Table.setItems(rows);
             }
         };
