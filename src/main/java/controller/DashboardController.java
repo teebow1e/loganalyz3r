@@ -267,6 +267,7 @@ public class DashboardController {
         }
 
         logLineChart.getData().add(logSeries);
+        logLineChart.setLegendVisible(false);
 
         updateStatusCodeRanking(groupedLogs);
         updateTimestampRanking(groupedLogs);
@@ -446,13 +447,14 @@ public class DashboardController {
             }
             String country = entry.getKey();
             int countryCount = entry.getValue();
-            if (!Objects.equals(country, "None")) {
+            if (!Objects.equals(country, "Unknown Country")) {
                 piechartActualData.add(new PieChart.Data(country, countryCount));
                 count++;
             }
         }
 
         pieChartData.setData(piechartActualData);
+        pieChartData.setLegendVisible(false);
     }
 
     private void updateModsecRuleTable(LocalDate selectedDate) {

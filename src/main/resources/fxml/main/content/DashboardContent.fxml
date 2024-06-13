@@ -49,7 +49,7 @@
             <children>
             
                 <HBox maxWidth="1.7976931348623157E308" spacing="10.0" VBox.vgrow="ALWAYS">
-                    <TableView fx:id="statusCodeRankingTable" maxHeight="250.0" minHeight="200.0" minWidth="300.0" styleClass="status-code-table">
+                    <TableView fx:id="statusCodeRankingTable" maxHeight="250.0" minHeight="200.0" minWidth="250.0" styleClass="status-code-table">
                         <columns>
                             <TableColumn fx:id="statusCodeColumn" text="Status Code" />
                             <TableColumn fx:id="statusCodeCountColumn" text="Count" />
@@ -58,7 +58,7 @@
                             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                         </columnResizePolicy>
                     </TableView>
-                    <TableView fx:id="timestampRankingTable" maxHeight="250.0" minHeight="200.0" minWidth="300.0" styleClass="timestamp-table">
+                    <TableView fx:id="timestampRankingTable" maxHeight="250.0" minHeight="200.0" minWidth="250.0" styleClass="timestamp-table">
                         <columns>
                             <TableColumn fx:id="timestampColumn" text="Timestamp" />
                             <TableColumn fx:id="timestampCountColumn" text="Log Count" />
@@ -74,7 +74,7 @@
                 </HBox>
             
                 <HBox spacing="10.0" VBox.vgrow="ALWAYS">
-                    <TableView fx:id="ruleCountTable" minHeight="250.0" minWidth="300.0" styleClass="rule-count-table">
+                    <TableView fx:id="ruleCountTable" minHeight="250.0" minWidth="250.0" styleClass="rule-count-table">
                         <columns>
                             <TableColumn fx:id="modsecRuleColumn" text="Rule" />
                             <TableColumn fx:id="modsecRuleCountColumn" text="Count" />
@@ -83,7 +83,7 @@
                         <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                      </columnResizePolicy>
                     </TableView>
-                    <TableView fx:id="ipRankingTable" maxHeight="250.0" minHeight="250.0" minWidth="300.0" styleClass="ip-table">
+                    <TableView fx:id="ipRankingTable" maxHeight="250.0" minHeight="250.0" minWidth="250.0" styleClass="ip-table">
                         <columns>
                             <TableColumn fx:id="ipColumn" text="IP Address" />
                             <TableColumn fx:id="ipCountColumn" text="Count" />
@@ -99,7 +99,10 @@
                <Insets left="10.0" />
             </padding>
          </VBox>
-         <PieChart fx:id="pieChartData" maxWidth="1.7976931348623157E308" title="Top Countries" />
+         <PieChart fx:id="pieChartData" maxWidth="1.7976931348623157E308" title="Top Countries">
+            <HBox.margin>
+               <Insets bottom="10.0" />
+            </HBox.margin></PieChart>
       </children>
    </HBox>
 </VBox>
