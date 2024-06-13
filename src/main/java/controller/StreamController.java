@@ -1,5 +1,7 @@
 package controller;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -22,6 +24,23 @@ public class StreamController {
     @FXML
     private TableView<Apache> Table;
     @FXML
+    private TableColumn<Apache, String> ipColumn;
+    @FXML
+    private TableColumn<Apache, String> timestampColumn;
+    @FXML
+    private TableColumn<Apache, String> methodColumn;
+    @FXML
+    private TableColumn<Apache, String> protocolColumn;
+    @FXML
+    private TableColumn<Apache, String> requestPathColumn;
+    @FXML
+    private TableColumn<Apache, Integer> statusCodeColumn;
+    @FXML
+    private TableColumn<Apache, Integer> contentLengthColumn;
+    @FXML
+    private TableColumn<Apache, String> userAgentColumn;
+
+    @FXML
     private Button startStopButton;
     @FXML
     private Button chooseFileBtn;
@@ -38,7 +57,7 @@ public class StreamController {
     @FXML
     private void initialize() {
         streamTable(Table);
-        startStopButton.setText("Start");
+        startStopButton.setText("Start Streaming");
     }
 
     @FXML
@@ -68,33 +87,15 @@ public class StreamController {
 
     private void streamTable(TableView<Apache> tableView) {
         tableView.getItems().clear();
-        tableView.getColumns().clear();
 
-        TableColumn<Apache, String> ipColumn = new TableColumn<>("IP Address");
-        ipColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getRemoteAddress()));
-
-        TableColumn<Apache, String> timestampColumn = new TableColumn<>("Timestamp");
-        timestampColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getTimestamp()));
-
-        TableColumn<Apache, String> methodColumn = new TableColumn<>("Method");
-        methodColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getMethod()));
-
-        TableColumn<Apache, String> protocolColumn = new TableColumn<>("Protocol");
-        protocolColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getProtocol()));
-
-        TableColumn<Apache, String> requestPathColumn = new TableColumn<>("Request Path");
-        requestPathColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getRequestPath()));
-
-        TableColumn<Apache, Integer> statusCodeColumn = new TableColumn<>("Status Code");
-        statusCodeColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(cellData.getValue().getStatusCode()).asObject());
-
-        TableColumn<Apache, Integer> contentLengthColumn = new TableColumn<>("Content Length");
-        contentLengthColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(cellData.getValue().getContentLength()).asObject());
-
-        TableColumn<Apache, String> userAgentColumn = new TableColumn<>("User Agent");
-        userAgentColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue().getUserAgent()));
-
-        tableView.getColumns().addAll(ipColumn, timestampColumn, methodColumn, protocolColumn, requestPathColumn, statusCodeColumn, contentLengthColumn, userAgentColumn);
+        ipColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRemoteAddress()));
+        timestampColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getTimestamp()));
+        methodColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getMethod()));
+        protocolColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getProtocol()));
+        requestPathColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getRequestPath()));
+        statusCodeColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getStatusCode()).asObject());
+        contentLengthColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(cellData.getValue().getContentLength()).asObject());
+        userAgentColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue().getUserAgent()));
 
         tableView.setRowFactory(tv -> {
             TableRow<Apache> row = new TableRow<>();
@@ -144,6 +145,7 @@ public class StreamController {
 
     private void stopTailer() {
         if (tailer != null) {
+            Table.getItems().clear();
             tailer.stop();
             try {
                 tailerThread.join();

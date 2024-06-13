@@ -1,5 +1,7 @@
 package controller;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -158,18 +160,18 @@ public class DashboardController {
     }
 
     private void setupTableViews() {
-        statusCodeColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue()[0]));
-        statusCodeCountColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(Integer.parseInt(cellData.getValue()[1])).asObject());
+        statusCodeColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue()[0]));
+        statusCodeCountColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(Integer.parseInt(cellData.getValue()[1])).asObject());
 
-        timestampColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue()[0]));
-        timestampCountColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(Integer.parseInt(cellData.getValue()[1])).asObject());
+        timestampColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue()[0]));
+        timestampCountColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(Integer.parseInt(cellData.getValue()[1])).asObject());
 
-        ipColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue()[0]));
-        ipCountColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(Integer.parseInt(cellData.getValue()[1])).asObject());
-        ipCountryColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue()[2]));
+        ipColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue()[0]));
+        ipCountColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(Integer.parseInt(cellData.getValue()[1])).asObject());
+        ipCountryColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue()[2]));
 
-        modsecRuleColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleStringProperty(cellData.getValue()[0]));
-        modsecRuleCountColumn.setCellValueFactory(cellData -> new javafx.beans.property.SimpleIntegerProperty(Integer.parseInt(cellData.getValue()[1])).asObject());
+        modsecRuleColumn.setCellValueFactory(cellData -> new SimpleStringProperty(cellData.getValue()[0]));
+        modsecRuleCountColumn.setCellValueFactory(cellData -> new SimpleIntegerProperty(Integer.parseInt(cellData.getValue()[1])).asObject());
 
         statusCodeRankingTable.setRowFactory(tv -> {
             TableRow<String[]> row = new TableRow<>();
