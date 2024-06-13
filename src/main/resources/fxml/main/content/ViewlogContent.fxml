@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox fx:id="mainVBox" alignment="TOP_CENTER" minHeight="600.0" minWidth="1000.0" style="-fx-background-color: white;" HBox.hgrow="ALWAYS" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.ViewLogController">
+    <Label alignment="CENTER" contentDisplay="CENTER" styleClass="title-label" text="Apache Logs">
+        <font>
+            <Font size="24.0" />
+        </font>
+        <padding>
+            <Insets bottom="10.0" top="10.0" />
+        </padding>
+    </Label>
+    <HBox alignment="CENTER_LEFT" prefWidth="200.0" spacing="10.0">
+        <children>
+            <Label text="Search" />
+            <TextField fx:id="searchField" prefHeight="25.0" prefWidth="205.0" />
+            <Label text="Date" />
+            <DatePicker fx:id="datePicker" />
+            <Label text="Filter" />
+            <ComboBox fx:id="filterComboBox" prefHeight="25.0" prefWidth="175.0" promptText="Choose Filter" />
+        </children>
+        <opaqueInsets>
+            <Insets />
+        </opaqueInsets>
+        <padding>
+            <Insets bottom="10.0" left="10.0" top="10.0" />
+        </padding>
+    </HBox>
+    <TableView fx:id="Table" prefHeight="600.0" prefWidth="1000.0" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="ipColumn" minWidth="80.0" prefWidth="-1.0" text="IP Address" />
+            <TableColumn fx:id="timestampColumn" minWidth="80.0" prefWidth="-1.0" text="Timestamp" />
+            <TableColumn fx:id="methodColumn" minWidth="50.0" prefWidth="-1.0" text="Method" />
+            <TableColumn fx:id="protocolColumn" minWidth="40.0" prefWidth="-1.0" text="Protocol" />
+            <TableColumn fx:id="requestPathColumn" minWidth="60.0" prefWidth="-1.0" text="Request Path" />
+            <TableColumn fx:id="statusCodeColumn" minWidth="40.0" prefWidth="-1.0" text="Status Code" />
+            <TableColumn fx:id="contentLengthColumn" minWidth="50.0" prefWidth="-1.0" text="Content Length" />
+            <TableColumn fx:id="userAgentColumn" minWidth="100.0" prefWidth="-1.0" text="User Agent" />
+        </columns>
+        <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+        </columnResizePolicy>
+        <opaqueInsets>
+            <Insets />
+        </opaqueInsets>
+    </TableView>
+    <opaqueInsets>
+        <Insets top="10.0" />
+    </opaqueInsets>
+</VBox>

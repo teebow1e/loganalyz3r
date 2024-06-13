@@ -14,7 +14,7 @@ import ui.WebLogManager;
 import usermanagement.User;
 import usermanagement.UserManagement;
 
-import javax.swing.JOptionPane;
+import static utility.Utility.showAlert;
 
 import java.io.File;
 import java.util.List;
@@ -28,15 +28,18 @@ public class Controller {
 
     @FXML
     private TextField usernameField;
-
     @FXML
     private TextField passwordField;
-
     @FXML
     private TextField rePasswordField;
 
     public void init(Stage stage) {
-        String dbFilePath = System.getProperty("user.dir") + "\\credentials\\cred.txt";
+        // CONSTANT VALUE HERE
+        String dbFilePath = System.getProperty("user.dir")
+                + File.separator
+                + "credentials"
+                + File.separator
+                + "cred.txt";
         File dbFile = new File(dbFilePath);
         if (dbFile.exists()) {
             userLists = UserManagement.readUserFile(dbFilePath);
@@ -87,7 +90,7 @@ public class Controller {
             webLogManager.start(stage);
         } else {
             logger.log(Level.INFO, "Login failed");
-            JOptionPane.showMessageDialog(null, "Nhap sai password roi cu!");
+            showAlert("Wrong Password", "Nhap sai password roi cu!");
         }
     }
 }

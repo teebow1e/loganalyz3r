@@ -15,7 +15,7 @@ public class SignUpForm {
 
         Scene scene = new Scene(root, 1200, 800);
 
-        scene.getStylesheets().add(getClass().getResource("/css/Form.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/css/Startupform.css").toExternalForm());
 
         primaryStage.setTitle("Sign Up");
         primaryStage.setScene(scene);

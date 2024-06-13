@@ -1,12 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
 
-<HBox xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml" fx:controller="controller.Controller">
-    <fx:include source="Sidebar.fxml"/>
+<?import javafx.scene.layout.HBox?>
 
-    <VBox fx:id="mainVBox" styleClass="main" HBox.hgrow="ALWAYS">
-        <Label text="MAIN CONTENT HERE"/>
+<HBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controller">
+    <fx:include minWidth="150.0" source="Sidebar.fxml" />
 
-    </VBox>
+    <fx:include source="content/DashboardContent.fxml" />
 </HBox>

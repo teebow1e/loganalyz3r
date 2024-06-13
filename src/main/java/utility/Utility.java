@@ -1,5 +1,7 @@
 package utility;
 
+import javafx.scene.control.Alert;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -35,5 +37,12 @@ public class Utility {
             logger.log(Level.SEVERE, "Error reading log file: {0}", e.getMessage());
         }
         return lines;
+    }
+    public static void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 }

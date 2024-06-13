@@ -10,14 +10,13 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class LoginForm extends Application {
-
     @Override
     public void start(Stage primaryStage) throws IOException {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/LoginForm.fxml"));
         Parent root = loader.load();
 
         Scene scene = new Scene(root, 1200, 800);
-        scene.getStylesheets().add(getClass().getResource("/css/Form.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/css/Startupform.css").toExternalForm());
 
         primaryStage.setTitle("Login");
         primaryStage.setScene(scene);
