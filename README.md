@@ -22,54 +22,7 @@ This application was developed as part of the course Project 1 by [SoICT@HUST](h
 - Advanced filtering: Filter and search through logs based on specific criteria to pinpoint relevant information quickly.
 
 ## Code Structure
-```
-├── src
-│   └── main
-│       ├── java
-│       │   ├── controller
-│       │   │   ├── Controller.java
-│       │   │   ├── SidebarController.java
-│       │   │   └── TableCheckBox.java
-│       │   ├── oldarchive.csvgenerator
-│       │   │   ├── CSVReader.java
-│       │   │   ├── CsvGenerator.java
-│       │   │   └── CustomColumnPositionStrategy.java
-│       │   ├── dataanalyzer
-│       │   │   ├── PieChartVisualizer.java
-│       │   │   └── TableVisualizer.java
-│       │   ├── loganalyzer
-│       │   │   ├── Log.java
-│       │   │   ├── LogParser.java
-│       │   │   ├── ModSecurity.java
-│       │   │   └── ModSecurityParser.java
-│       │   ├── ui
-│       │   │   ├── LoginForm.java
-│       │   │   ├── Main.java
-│       │   │   ├── SignUpForm.java
-│       │   │   └── WebLogManager.java
-│       │   ├── usermanagement
-│       │   │   ├── User.java
-│       │   │   └── UserManagement.java
-│       │   └── utility
-│       │       └── Utility.java
-│       └── resources
-│           ├── css
-│           │   ├── Form.css
-│           │   ├── Table.css
-│           │   └── WebLog.css
-│           ├── fxml
-│           │   ├── LoginForm.fxml
-│           │   ├── PieChart.fxml
-│           │   ├── SignUpForm.fxml
-│           │   └── main
-│           │       ├── Dashboard.fxml
-│           │       ├── Export.fxml
-│           │       ├── Feedback.fxml
-│           │       ├── Managelog.fxml
-│           │       ├── Sidebar.fxml
-│           │       └── Viewlog.fxml
-│           └── img
-```
+To be added.
 
 ## License
 Distributed under the MIT License. See `LICENSE` for more information.
