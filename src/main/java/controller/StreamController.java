@@ -16,11 +16,17 @@ import org.apache.commons.io.input.Tailer;
 import org.apache.commons.io.input.TailerListenerAdapter;
 
 import java.io.File;
+import java.io.IOException;
+import java.util.Objects;
 
 import static loganalyzer.ApacheParser.*;
 import static utility.Utility.*;
+import static utility.LogFileVerifier.*;
 
 public class StreamController {
+    // this class right now only support Apache log
+    // todo: add a dropdown, can we modify the table according to the log we choose?
+    // @fieryphoenix
     @FXML
     private TableView<Apache> Table;
     @FXML
@@ -39,20 +45,20 @@ public class StreamController {
     private TableColumn<Apache, Integer> contentLengthColumn;
     @FXML
     private TableColumn<Apache, String> userAgentColumn;
-
     @FXML
     private Button startStopButton;
     @FXML
-    private Button chooseFileBtn;
-
-    @FXML
     private Text chosenFileText;
-
     private Tailer tailer;
     private Thread tailerThread;
     private boolean isTailerRunning = false;
+    private String fileToStreamPath = "";
 
-    private String fileToStreamPath;
+    FileChooser.ExtensionFilter extFilterLogs = new FileChooser.ExtensionFilter(
+            "Log files (*.log, *.txt, *.json)",
+            "*.log", "*.txt", "*.json"
+    );
+
 
     @FXML
     private void initialize() {
@@ -63,13 +69,14 @@ public class StreamController {
     @FXML
     void chooseFile(ActionEvent event) {
         FileChooser fc = new FileChooser();
-        fc.setTitle("Choose a file");
+        fc.getExtensionFilters().addAll(extFilterLogs);
+        fc.setTitle("Choose a file for streaming");
         File file = fc.showOpenDialog(null);
         if (file != null) {
             chosenFileText.setText("You selected: " + file.getAbsolutePath());
             fileToStreamPath = file.getAbsolutePath();
-            System.out.println("File name: " + file.getName());
-            System.out.println("File size: " + file.length() + " bytes");
+            System.out.println("[DEBUG] File name: " + file.getName());
+            System.out.println("[DEBUG] File size: " + file.length() + " bytes");
         }
     }
 
@@ -103,7 +110,7 @@ public class StreamController {
                 if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
                     Apache rowData = row.getItem();
                     showRowContent(rowData);
-                    System.out.println("Double clicked row: " + rowData);
+                    System.out.println("[DEBUG] Double clicked row: " + rowData);
                 }
             });
             return row;
@@ -112,6 +119,10 @@ public class StreamController {
 
     private void startTailer() {
         ObservableList<Apache> rows = FXCollections.observableArrayList();
+        if (Objects.equals(fileToStreamPath, "")) {
+            showAlert("ERROR", "You have not selected any files!");
+            return;
+        }
         File file = new File(fileToStreamPath);
 
         if (!file.canRead()) {
@@ -123,17 +134,8 @@ public class StreamController {
         TailerListenerAdapter listener = new TailerListenerAdapter() {
             @Override
             public void handle(String line) {
-                System.out.printf("new line added: %s\n", line);
-                rows.add(new Apache(
-                        parseIpAddress(line),
-                        parseTimestamp(line),
-                        parseAllInOne(line)[5].replace("\"", ""),
-                        parseAllInOne(line)[7].replace("\"", ""),
-                        parseAllInOne(line)[6].replace("\"", ""),
-                        Integer.parseInt(parseAllInOne(line)[8]),
-                        Integer.parseInt(parseAllInOne(line)[9]),
-                        parseUserAgent(line)
-                ));
+                System.out.printf("[DEBUG] new line added: %s\n", line);
+                rows.add(parseLogLine(line));
                 System.out.println(rows.size());
                 Table.setItems(rows);
             }
@@ -145,7 +147,6 @@ public class StreamController {
 
     private void stopTailer() {
         if (tailer != null) {
-            Table.getItems().clear();
             tailer.stop();
             try {
                 tailerThread.join();

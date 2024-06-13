@@ -38,6 +38,15 @@ public class Utility {
         }
         return lines;
     }
+
+    public static String getElementSafely(String[] array, int index) {
+        if (index >= 0 && index < array.length) {
+            return array[index];
+        } else {
+            return null;
+        }
+    }
+
     public static void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle(title);

@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 import javafx.scene.control.DatePicker;
 
 import static utility.Utility.findFirstMatch;
-import static utility.Utility.readFile;
+import static utility.Utility.getElementSafely;
 
 public class ApacheParser {
     private static final Pattern ipAddrPattern = Pattern.compile("((\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})|([0-9a-fA-F]{1,4}(:[0-9a-fA-F]{1,4}){7}))");
@@ -39,49 +39,63 @@ public class ApacheParser {
             return null;
         }
     }
+
     public static String[] parseAllInOne(String logLine) {
         return logLine.split(" ");
     }
 
-    public static void parseAndGenerateCSV() {
-        Logger logger = Logger.getLogger(ApacheParser.class.getName());
-        // CONSTANT VALUE HERE
-        String logFilePath = System.getProperty("user.dir")
-                + File.separator
-                + "logs"
-                + File.separator
-                + "apache_nginx"
-                + File.separator
-                + "access_log_1000.log";
-        Path logPath = Paths.get(logFilePath);
-        LinkedList<String> lines;
-
-        if (Files.exists(logPath)) {
-            System.out.println("log path exists");
-            lines = readFile(logFilePath, logger);
-            LinkedList<Apache> logList = new LinkedList<>();
-            for (String workingLine : lines) {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss Z");
-                logList.add(new Apache(
-                        parseIpAddress(workingLine),
-                        parseTimestamp(workingLine),
-                        parseAllInOne(workingLine)[5].replace("\"", ""),
-                        parseAllInOne(workingLine)[7].replace("\"", ""),
-                        parseAllInOne(workingLine)[6].replace("\"", ""),
-                        Integer.parseInt(parseAllInOne(workingLine)[8]),
-                        Integer.parseInt(parseAllInOne(workingLine)[9]),
-                        parseUserAgent(workingLine)
-                ));
-            }
-            try {
-                System.out.println("generating csv now..");
-                System.out.println("done generate");
-            } catch (Exception e) {
-                logger.log(Level.SEVERE, "Error generating CSV: {0}", e.getMessage());
-            }
-        } else {
-            logger.log(Level.SEVERE, "Log file not found at location {0}", logFilePath);
+    public static String parseMethod(String[] aioArr) {
+        String tempMethodValue = getElementSafely(aioArr, 5);
+        if (tempMethodValue != null) {
+            return tempMethodValue.replace("\"", "");
         }
+        return null;
+    }
+
+    public static String parseProtocol(String[] aioArr) {
+        String tempMethodValue = getElementSafely(aioArr, 7);
+        if (tempMethodValue != null) {
+            return tempMethodValue.replace("\"", "");
+        }
+        return null;
+    }
+
+    public static String parseRequestPath(String[] aioArr) {
+        String tempMethodValue = getElementSafely(aioArr, 6);
+        if (tempMethodValue != null) {
+            return tempMethodValue.replace("\"", "");
+        }
+        return null;
+    }
+
+    public static int parseStatusCode(String[] aioArr) {
+        String tempMethodValue = getElementSafely(aioArr, 8);
+        if (tempMethodValue != null) {
+            return Integer.parseInt(tempMethodValue.replace("\"", ""));
+        }
+        return 0;
+    }
+
+    public static int parseContentLength(String[] aioArr) {
+        String tempMethodValue = getElementSafely(aioArr, 9);
+        if (tempMethodValue != null) {
+            return Integer.parseInt(tempMethodValue.replace("\"", ""));
+        }
+        return 0;
+    }
+
+    public static Apache parseLogLine(String line) {
+        String[] aioArr = parseAllInOne(line);
+        return new Apache(
+                parseIpAddress(line),
+                parseTimestamp(line),
+                parseMethod(aioArr),
+                parseProtocol(aioArr),
+                parseRequestPath(aioArr),
+                parseStatusCode(aioArr),
+                parseContentLength(aioArr),
+                parseUserAgent(line)
+        );
     }
 
     public static List<Apache> parseApacheByDate(DatePicker datePicker) {
@@ -107,20 +121,13 @@ public class ApacheParser {
                     LocalDate logDate = LocalDate.parse(timestamp, formatter);
 
                     if (logDate.equals(selectedDate)) {
-                        logList.add(new Apache(
-                                parseIpAddress(line),
-                                timestamp,
-                                parseAllInOne(line)[5].replace("\"", ""),
-                                parseAllInOne(line)[7].replace("\"", ""),
-                                parseAllInOne(line)[6].replace("\"", ""),
-                                Integer.parseInt(parseAllInOne(line)[8]),
-                                Integer.parseInt(parseAllInOne(line)[9]),
-                                parseUserAgent(line)
-                        ));
+                        // at this point, every line put to this code can be parsed
+                        // however, some of them might be invalid, but still be able to be parsed
+                        // we need to make sure that only valid log will be pushed into this application
+                        // also pushed a notification if there's un-parse-able log in the process
+                        logList.add(parseLogLine(line));
                     }
                 }
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
