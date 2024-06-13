@@ -3,7 +3,7 @@
 <?import javafx.scene.layout.HBox?>
 
 <HBox xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.Controller">
-    <fx:include minWidth="150.0" source="Sidebar.fxml" />
+    <fx:include source="Sidebar.fxml" />
 
     <fx:include source="content/DashboardContent.fxml" />
 </HBox>

@@ -15,8 +15,16 @@ public class LoginForm extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/LoginForm.fxml"));
         Parent root = loader.load();
 
-        Scene scene = new Scene(root, 1200, 800);
-        scene.getStylesheets().add(getClass().getResource("/css/Startupform.css").toExternalForm());
+        double width, height;
+        if (primaryStage.getScene() == null) {
+            width = 1200;
+            height = 800;
+        }
+        else {
+            width = primaryStage.getScene().getWidth();
+            height = primaryStage.getScene().getHeight();
+        }
+        Scene scene = new Scene(root, width, height);
 
         primaryStage.setTitle("Login");
         primaryStage.setScene(scene);

@@ -53,7 +53,7 @@ public class IpLookUp {
     }
 
     public static String Convert(String countryCode) {
-        return COUNTRY_CODES_MAP.getOrDefault(countryCode, "Unknown Country");
+        return COUNTRY_CODES_MAP.getOrDefault(countryCode, "None");
     }
     private static Map<String, String> COUNTRY_CODES_MAP = new HashMap<>();
     static {

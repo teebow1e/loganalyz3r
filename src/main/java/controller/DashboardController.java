@@ -449,7 +449,7 @@ public class DashboardController {
             }
             String country = entry.getKey();
             int countryCount = entry.getValue();
-            if (!Objects.equals(country, "Unknown Country")) {
+            if (!Objects.equals(country, "None")) {
                 piechartActualData.add(new PieChart.Data(country, countryCount));
                 count++;
             }

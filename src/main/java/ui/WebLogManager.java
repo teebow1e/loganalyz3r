@@ -26,9 +26,11 @@ public class WebLogManager extends Application {
             default -> throw new IllegalArgumentException("Invalid mode specified: " + mode);
         };
 
+        double width = primaryStage.getScene().getWidth();
+        double height = primaryStage.getScene().getHeight();
         loader = new FXMLLoader(getClass().getResource(fxmlFile));
         Parent root = loader.load();
-        Scene scene = new Scene(root, 1200, 800);
+        Scene scene = new Scene(root, width, height);
 
         primaryStage.setTitle("Web Log Analyzer");
         primaryStage.setScene(scene);
