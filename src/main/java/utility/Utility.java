@@ -2,14 +2,8 @@ package utility;
 
 import javafx.scene.control.Alert;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.LinkedList;
 
 public class Utility {
     private Utility() {

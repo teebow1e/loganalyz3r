@@ -99,11 +99,11 @@ public class Controller {
 
         boolean authenticated = UserManagement.authenticateUser(userLists, username, password);
         if (authenticated) {
-            logger.log(Level.INFO, String.format("[%s] User authenticated successfully.", username));
+            logger.log(Level.INFO, "[{0}] User authenticated successfully.", username);
             WebLogManager webLogManager = new WebLogManager();
             webLogManager.start(stage);
         } else {
-            logger.log(Level.INFO, String.format("User failed to authenticate with username %s.", username));
+            logger.log(Level.INFO, "User failed to authenticate with username {0}.", username);
             showAlert("Wrong Password", "Nhap sai password roi cu!");
         }
     }
