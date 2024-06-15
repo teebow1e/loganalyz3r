@@ -2,24 +2,22 @@ package controller;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import javafx.scene.control.*;
+import java.io.File;
+import java.util.List;
+import java.util.Objects;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 import ui.LoginForm;
 import ui.SignUpForm;
 import ui.WebLogManager;
-
-import usermanagement.User;
-import usermanagement.UserManagement;
+import user.User;
+import user.UserManagement;
 
 import static utility.Utility.showAlert;
-
-import java.io.File;
-import java.util.List;
-import java.util.logging.Logger;
-import java.util.logging.Level;
 
 public class Controller {
     private Stage stage;
@@ -33,13 +31,14 @@ public class Controller {
     @FXML
     private TextField rePasswordField;
 
+    // CONSTANT VALUE HERE
+    private String dbFilePath = System.getProperty("user.dir")
+            + File.separator
+            + ".config"
+            + File.separator
+            + "accounts.json";
+
     public void init(Stage stage) {
-        // CONSTANT VALUE HERE
-        String dbFilePath = System.getProperty("user.dir")
-                + File.separator
-                + ".config"
-                + File.separator
-                + "accounts.json";
         File dbFile = new File(dbFilePath);
         if (dbFile.exists()) {
             userLists = UserManagement.readUserFile(dbFilePath);
@@ -64,15 +63,31 @@ public class Controller {
         loginForm.start(stage);
     }
     @FXML
-    private void handleSignupAccount(MouseEvent event) throws Exception{
+    private void handleSignupAccount(MouseEvent event) throws Exception {
         String username = usernameField.getText();
         String password = passwordField.getText();
         String rePassword = rePasswordField.getText();
 
-        System.out.println("Username: " + username);
-        System.out.println("Password: " + password);
-        System.out.println("Re-entered Password: " + rePassword);
+        if (username.isEmpty()) {
+            showAlert("ERROR", "Username can not be empty");
+            returnToLogin(event);
+            return;
+        }
 
+        if (password.length() < 8) {
+            showAlert("ERROR", "Password must be longer than 8 characters.");
+            returnToLogin(event);
+            return;
+        }
+
+        if (!Objects.equals(password, rePassword)) {
+            showAlert("ERROR",
+                    "Password and Re-enter password field must be the same."
+            );
+            returnToLogin(event);
+            return;
+        }
+        UserManagement.addUser(dbFilePath, username, password);
         returnToLogin(event);
     }
 
@@ -81,11 +96,9 @@ public class Controller {
         String username = usernameField.getText();
         String password = passwordField.getText();
 
-        System.out.println("Username: " + username);
-        System.out.println("Password: " + password);
         boolean authenticated = UserManagement.authenticateUser(userLists, username, password);
         if (authenticated) {
-            logger.log(Level.INFO, "Login successful");
+            logger.log(Level.INFO, "Login successful with user " + username);
             WebLogManager webLogManager = new WebLogManager();
             webLogManager.start(stage);
         } else {

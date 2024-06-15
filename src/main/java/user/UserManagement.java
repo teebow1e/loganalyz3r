@@ -1,7 +1,9 @@
-package usermanagement;
+package user;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.*;
@@ -43,17 +45,19 @@ public class UserManagement {
         return false;
     }
 
-    public static void addUser(String fileName, User user) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(fileName, true))) {
-            String hashedPassword = BCrypt.hashpw(user.getPasswordHash(), BCrypt.gensalt());
-            writer.write(user.getUsername() + "," + hashedPassword + "\n");
+    public static void addUser(String fileName, String username, String plaintextPassword) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try {
+            JsonNode rootNode = objectMapper.readTree(new File(fileName));
+            ArrayNode usersNode = (ArrayNode) rootNode.path("users");
+            String hashedPassword = BCrypt.hashpw(plaintextPassword, BCrypt.gensalt());
+            ObjectNode newUserNode = objectMapper.createObjectNode();
+            newUserNode.put("username", username);
+            newUserNode.put("password_hash", hashedPassword);
+            usersNode.add(newUserNode);
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(fileName), rootNode);
         } catch (IOException e) {
             logger.log(Level.SEVERE, "An error occurred while writing to the user file", e);
         }
-    }
-
-    public static void main(String[] args) {
-        System.out.println(BCrypt.hashpw("a", BCrypt.gensalt()));
-        System.out.println(BCrypt.checkpw("a", "$2a$10$t.g7znEK3FTRtqNZSHb4c.D.IdnUm8SBobTV/xjq6uvs7iB7qng/m"));
     }
 }

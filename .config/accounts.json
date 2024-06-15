@@ -1,8 +1,9 @@
 {
-  "users": [
-    {
-      "username": "a",
-      "password_hash": "$2a$10$t.g7znEK3FTRtqNZSHb4c.D.IdnUm8SBobTV/xjq6uvs7iB7qng/m"
-    }
-  ]
+  "users" : [ {
+    "username" : "a",
+    "password_hash" : "$2a$10$t.g7znEK3FTRtqNZSHb4c.D.IdnUm8SBobTV/xjq6uvs7iB7qng/m"
+  }, {
+    "username" : "trung",
+    "password_hash" : "$2a$10$70uOzzH2wXJLvLgrNUDhh.GsDgHvWYohjGJrsffBMaaQyZu2OuwkK"
+  } ]
 }
