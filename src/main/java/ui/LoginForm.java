@@ -17,7 +17,7 @@ public class LoginForm extends Application {
 
         double width, height;
         if (primaryStage.getScene() == null) {
-            width = 1200;
+            width = 1300;
             height = 800;
         }
         else {

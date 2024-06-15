@@ -14,7 +14,7 @@
 <VBox alignment="TOP_CENTER" style="-fx-background-color: white;" HBox.hgrow="ALWAYS" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.StreamController">
     <Label alignment="CENTER" contentDisplay="CENTER" styleClass="title-label" text="Logs stream">
         <font>
-            <Font size="24.0" />
+            <Font name="Gill Sans Ultra Bold" size="24.0" />
         </font>
         <padding>
             <Insets top="10.0" />

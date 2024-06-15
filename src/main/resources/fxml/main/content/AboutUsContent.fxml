@@ -1,14 +1,140 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.Insets?>
-<?import javafx.geometry.Pos?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
-<?import javafx.scene.text.Text?>
-<?import javafx.scene.text.TextAlignment?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.text.Font?>
 
-<VBox xmlns="http://javafx.com/javafx">
-
+<VBox fx:id="mainVBox" alignment="TOP_CENTER" style="-fx-background-color: white;" HBox.hgrow="ALWAYS" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+   <VBox alignment="TOP_CENTER" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+      <children>
+         <Label text="Loganalyz3r" VBox.vgrow="ALWAYS">
+            <VBox.margin>
+               <Insets top="10.0" />
+            </VBox.margin>
+            <font>
+               <Font name="Gill Sans Ultra Bold" size="40.0" />
+            </font>
+         </Label>
+         <Label text="Analyze with Ease, Troubleshoot with Breeze !!!" VBox.vgrow="ALWAYS">
+            <font>
+               <Font size="16.0" />
+            </font></Label>
+         <HBox maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" spacing="10.0" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+            <VBox.margin>
+               <Insets top="10.0" />
+            </VBox.margin>
+            <children>
+               <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" minHeight="300.0" minWidth="500.0" style="-fx-background-color: #5A639C;" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                  <children>
+                     <Label text="Hanoi University of Science and Technology" textAlignment="CENTER" textFill="WHITE">
+                        <font>
+                           <Font name="Broadway" size="30.0" />
+                        </font>
+                        <VBox.margin>
+                           <Insets bottom="30.0" left="10.0" right="10.0" />
+                        </VBox.margin>
+                        <wrapText>true</wrapText>
+                     </Label>
+                     <Line endX="300.5857849121094" endY="1.5857864618301392" startX="-100.0" stroke="WHITE" strokeWidth="2.0" />
+                     <Label style="-fx-text-fill: white;" text="Pham Hong Quan">
+                        <font>
+                           <Font name="Broadway" size="30.0" />
+                        </font>
+                        <VBox.margin>
+                           <Insets />
+                        </VBox.margin>
+                     </Label>
+                     <Label style="-fx-text-fill: white;" text="20225551">
+                        <VBox.margin>
+                           <Insets />
+                        </VBox.margin>
+                        <font>
+                           <Font size="18.0" />
+                        </font>
+                     </Label>
+                     <Label alignment="CENTER" style="-fx-text-fill: white;" text="&amp;" textAlignment="CENTER" VBox.vgrow="ALWAYS">
+                        <font>
+                           <Font name="Broadway" size="24.0" />
+                        </font>
+                        <VBox.margin>
+                           <Insets />
+                        </VBox.margin>
+                     </Label>
+                     <Label style="-fx-text-fill: white;" text="Tran Quoc Tri Trung">
+                        <font>
+                           <Font name="Broadway" size="30.0" />
+                        </font>
+                        <VBox.margin>
+                           <Insets />
+                        </VBox.margin>
+                     </Label>
+                     <Label style="-fx-text-fill: white;" text="20225558">
+                        <VBox.margin>
+                           <Insets />
+                        </VBox.margin>
+                        <font>
+                           <Font size="18.0" />
+                        </font>
+                     </Label>
+                     <Line endX="300.5857849121094" endY="1.5857864618301392" startX="-100.0" stroke="WHITE" strokeWidth="2.0" />
+                  </children>
+               </VBox>
+               <VBox fx:id="VBox2" alignment="CENTER_RIGHT" maxHeight="450.0" maxWidth="450.0" minHeight="300.0" minWidth="300.0" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                  <children>
+                     <ImageView fitHeight="${VBox2.height}" fitWidth="${VBox2.width}" preserveRatio="true">
+                        <image>
+                           <Image url="@/img/tranquoctritrung.png" />
+                        </image>
+                     </ImageView>
+                  </children>
+               </VBox>
+            </children>
+         </HBox>
+         <HBox spacing="10.0" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+            <VBox.margin>
+               <Insets bottom="10.0" top="10.0" />
+            </VBox.margin>
+            <children>
+               <VBox fx:id="VBox3" alignment="CENTER_LEFT" maxHeight="450.0" maxWidth="450.0" minHeight="300.0" minWidth="300.0" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                  <children>
+                     <ImageView fitHeight="${VBox3.height}" fitWidth="${VBox3.width}" preserveRatio="true" VBox.vgrow="ALWAYS">
+                        <image>
+                           <Image url="@/img/phamhongquan.png" />
+                        </image>
+                     </ImageView>
+                  </children>
+               </VBox>
+               <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" minHeight="300.0" minWidth="500.0" style="-fx-background-color: #AD88C6;" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
+                  <children>
+                     <Label text="Project Aim">
+                        <font>
+                           <Font name="Gill Sans Ultra Bold" size="32.0" />
+                        </font>
+                        <VBox.margin>
+                           <Insets bottom="10.0" />
+                        </VBox.margin>
+                     </Label>
+                     <Label maxWidth="700.0" style="-fx-text-fill: white;" text="We aim to create a Java application for log analysis and visualization, specifically tailored for logs generated by iptables, Apache Web Server, NGINX, and ModSecurity WAF.">
+                        <font>
+                           <Font size="20.0" />
+                        </font>
+                        <wrapText>true</wrapText>
+                        <VBox.margin>
+                           <Insets left="20.0" right="20.0" />
+                        </VBox.margin>
+                     </Label>
+                  </children>
+               </VBox>
+            </children>
+         </HBox>
+      </children>
+   </VBox>
+   <padding>
+      <Insets left="10.0" right="10.0" />
+   </padding>
 </VBox>

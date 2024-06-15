@@ -6,8 +6,8 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox spacing="10.0" style="-fx-background-color: #7469B6;" styleClass="sidebar" stylesheets="@../../css/Sidebar.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SidebarController">
-     <Label lineSpacing="10.0" onMouseClicked="#handleDashboard" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: #FFE6E6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;" styleClass="sidebar-content-label" text="Dashboard" graphicTextGap="10.0">
+<VBox minWidth="150.0" spacing="10.0" style="-fx-background-color: #7469B6;" styleClass="sidebar" stylesheets="@../../css/Sidebar.css" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.SidebarController">
+     <Label graphicTextGap="10.0" lineSpacing="10.0" onMouseClicked="#handleDashboard" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: #FFE6E6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;" styleClass="sidebar-content-label" text="Dashboard">
          <graphic>
              <ImageView>
                  <Image url="@/img/dashboard.png" />
@@ -21,7 +21,7 @@
       </padding>
      </Label>
 
-     <Label lineSpacing="10.0" onMouseClicked="#handleStream" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: #FFE6E6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;" styleClass="sidebar-content-label" text="Stream" graphicTextGap="10.0">
+     <Label graphicTextGap="10.0" lineSpacing="10.0" onMouseClicked="#handleStream" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: #FFE6E6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;" styleClass="sidebar-content-label" text="Stream">
          <graphic>
              <ImageView>
                  <Image url="@/img/stream.png" />
@@ -32,7 +32,7 @@
       </padding>
      </Label>
 
-     <Label lineSpacing="10.0" onMouseClicked="#handleViewlog" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: #FFE6E6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;" styleClass="sidebar-content-label" text="View Logs" graphicTextGap="10.0">
+     <Label graphicTextGap="10.0" lineSpacing="10.0" onMouseClicked="#handleViewlog" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: #FFE6E6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;" styleClass="sidebar-content-label" text="View Logs">
          <graphic>
              <ImageView>
                  <Image url="@/img/access.png" />
@@ -43,7 +43,7 @@
       </padding>
      </Label>
 
-     <Label lineSpacing="10.0" onMouseClicked="#handleViewModSec" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: #FFE6E6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;" styleClass="sidebar-content-label" text="View Mod Sec" graphicTextGap="10.0">
+     <Label graphicTextGap="10.0" lineSpacing="10.0" onMouseClicked="#handleViewModSec" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: #FFE6E6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;" styleClass="sidebar-content-label" text="View Mod Sec">
          <graphic>
              <ImageView>
                  <Image url="@/img/modsec.png" />
@@ -54,7 +54,7 @@
       </padding>
      </Label>
 
-     <Label lineSpacing="10.0" onMouseClicked="#handleFeedback" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: #FFE6E6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;" styleClass="sidebar-content-label" text="Feedback" graphicTextGap="10.0">
+     <Label graphicTextGap="10.0" lineSpacing="10.0" onMouseClicked="#handleFeedback" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: #FFE6E6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;" styleClass="sidebar-content-label" text="Feedback">
          <graphic>
              <ImageView>
                  <Image url="@/img/feedback.png" />
@@ -65,7 +65,7 @@
       </padding>
      </Label>
 
-    <Label lineSpacing="10.0" onMouseClicked="#handleAboutUs" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: #FFE6E6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;" styleClass="sidebar-content-label" text="About us" graphicTextGap="10.0">
+    <Label graphicTextGap="10.0" lineSpacing="10.0" onMouseClicked="#handleAboutUs" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: #FFE6E6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;" styleClass="sidebar-content-label" text="About us">
         <graphic>
             <ImageView>
                 <Image url="@/img/aboutus.png" />
@@ -76,7 +76,7 @@
         </padding>
     </Label>
 
-    <Label lineSpacing="10.0" onMouseClicked="#handleOption" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: #FFE6E6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;" styleClass="sidebar-content-label" text="Option" graphicTextGap="10.0">
+    <Label graphicTextGap="10.0" lineSpacing="10.0" onMouseClicked="#handleOption" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: #FFE6E6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;" styleClass="sidebar-content-label" text="Option">
         <graphic>
             <ImageView>
                 <Image url="@/img/option.png" />
@@ -87,7 +87,7 @@
         </padding>
     </Label>
 
-     <Label alignment="BASELINE_LEFT" lineSpacing="10.0" onMouseClicked="#handleLogout" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: #FFE6E6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;" styleClass="sidebar-content-label" text="Log out" graphicTextGap="10.0">
+     <Label alignment="BASELINE_LEFT" graphicTextGap="10.0" lineSpacing="10.0" onMouseClicked="#handleLogout" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: #FFE6E6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;" styleClass="sidebar-content-label" text="Log out">
          <graphic>
              <ImageView>
                  <Image url="@/img/logout.png" />
