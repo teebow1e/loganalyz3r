@@ -15,7 +15,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.2.0</version>
                 <configuration>
-                    <mainClass>ui.Main</mainClass>
+                    <mainClass>entrypoint.Main</mainClass>
                 </configuration>
             </plugin>
             <plugin>
@@ -23,7 +23,7 @@
                 <artifactId>javafx-maven-plugin</artifactId>
                 <version>0.0.8</version>
                 <configuration>
-                    <mainClass>ui.Main</mainClass>
+                    <mainClass>entrypoint.Main</mainClass>
                 </configuration>
             </plugin>
             <plugin>
@@ -31,7 +31,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>ui.Main</mainClass>
+                            <mainClass>entrypoint.Main</mainClass>
                         </manifest>
                     </archive>
                     <descriptorRefs>
@@ -135,6 +135,11 @@
             <groupId>com.maxmind.db</groupId>
             <artifactId>maxmind-db</artifactId>
             <version>3.1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.4</version>
         </dependency>
     </dependencies>
 </project>

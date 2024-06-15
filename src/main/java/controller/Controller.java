@@ -37,9 +37,9 @@ public class Controller {
         // CONSTANT VALUE HERE
         String dbFilePath = System.getProperty("user.dir")
                 + File.separator
-                + "credentials"
+                + ".config"
                 + File.separator
-                + "cred.txt";
+                + "accounts.json";
         File dbFile = new File(dbFilePath);
         if (dbFile.exists()) {
             userLists = UserManagement.readUserFile(dbFilePath);

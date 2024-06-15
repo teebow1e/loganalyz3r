@@ -2,24 +2,19 @@ package usermanagement;
 
 public class User {
     private final String username;
-    private final String password;
-    private final String role;
+    private final String passwordHash;
 
-    public User(String username, String password, String role) {
+    public User(String username, String passwordHash) {
         this.username = username;
-        this.password = password;
-        this.role = role;
+        this.passwordHash = passwordHash;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPasswordHash() {
+        return passwordHash;
     }
 
-    public String getRole() {
-        return role;
-    }
 }
