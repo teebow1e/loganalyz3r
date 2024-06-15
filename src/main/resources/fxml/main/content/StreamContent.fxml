@@ -44,7 +44,7 @@
             <Insets bottom="10.0" left="10.0" />
         </padding>
     </HBox>
-    <TableView fx:id="Table" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="600.0" minWidth="1000.0" VBox.vgrow="ALWAYS">
+    <TableView fx:id="mainStreamTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="600.0" minWidth="1000.0" VBox.vgrow="ALWAYS">
         <columns>
             <TableColumn fx:id="ipColumn" minWidth="80.0" prefWidth="-1.0" text="IP Address" />
             <TableColumn fx:id="timestampColumn" minWidth="80.0" prefWidth="-1.0" text="Timestamp" />

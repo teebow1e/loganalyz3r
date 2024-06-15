@@ -16,19 +16,17 @@ import org.apache.commons.io.input.Tailer;
 import org.apache.commons.io.input.TailerListenerAdapter;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Objects;
 
 import static loganalyzer.ApacheParser.*;
 import static utility.Utility.*;
-import static utility.LogFileVerifier.*;
 
 public class StreamController {
     // this class right now only support Apache log
     // todo: add a dropdown, can we modify the table according to the log we choose?
     // @fieryphoenix
     @FXML
-    private TableView<Apache> Table;
+    private TableView<Apache> mainStreamTable;
     @FXML
     private TableColumn<Apache, String> ipColumn;
     @FXML
@@ -62,7 +60,7 @@ public class StreamController {
 
     @FXML
     private void initialize() {
-        streamTable(Table);
+        streamTable(mainStreamTable);
         startStopButton.setText("Start Streaming");
     }
 
@@ -75,6 +73,7 @@ public class StreamController {
         if (file != null) {
             chosenFileText.setText("You selected: " + file.getAbsolutePath());
             fileToStreamPath = file.getAbsolutePath();
+            // todo: implement check of log file
             System.out.println("[DEBUG] File name: " + file.getName());
             System.out.println("[DEBUG] File size: " + file.length() + " bytes");
         }
@@ -137,7 +136,7 @@ public class StreamController {
                 System.out.printf("[DEBUG] new line added: %s\n", line);
                 rows.add(parseLogLine(line));
                 System.out.println(rows.size());
-                Table.setItems(rows);
+                mainStreamTable.setItems(rows);
             }
         };
         tailer = new Tailer(file, listener, 200, true);
@@ -151,7 +150,8 @@ public class StreamController {
             try {
                 tailerThread.join();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                System.out.println("[DEBUG] The tailer was interrupted.");
+                Thread.currentThread().interrupt();
             }
         }
     }

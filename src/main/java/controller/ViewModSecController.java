@@ -17,6 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import loganalyzer.ModSecurity;
@@ -27,7 +28,7 @@ import static loganalyzer.ModSecurityParser.*;
 public class ViewModSecController {
 
     @FXML
-    private TableView<ModSecurity> Table;
+    private TableView<ModSecurity> modSecurityLogTable;
     @FXML
     private TableColumn<ModSecurity, String> timestampColumn;
     @FXML
@@ -104,13 +105,13 @@ public class ViewModSecController {
             cell.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
                 cell.getItem().checkProperty().set(!cell.getItem().checkProperty().get());
                 StringBuilder sb = new StringBuilder();
-                filterComboBox.getItems().filtered( f-> f!=null).filtered( f-> f.getCheck()).forEach( p -> {
-                    sb.append("; "+p.getItem());
-                });
+                filterComboBox.getItems()
+                        .filtered(Objects::nonNull)
+                        .filtered(ComboBoxItemWrap::getCheck)
+                        .forEach(p -> sb.append("; ").append(p.getItem()));
                 final String string = sb.toString();
                 filterComboBox.setPromptText(string.substring(Integer.min(2, string.length())));
             });
-
             return cell;
         });
 
@@ -157,13 +158,11 @@ public class ViewModSecController {
                 try {
                     if (getNumberOfSelectedFilter().get() > 0) {
                         appliedFilter.clear();
-                        filterComboBox.getItems().filtered(
-                                f -> f.getCheck()).forEach(item -> appliedFilter.add(item.getItem())
-                        );
-                        System.out.println("called view log with filter");
+                        filterComboBox.getItems()
+                                .filtered(ComboBoxItemWrap::getCheck)
+                                .forEach(item -> appliedFilter.add(item.getItem()));
                         viewLog(appliedFilter);
                     } else {
-                        System.out.println("called view log with no filter");
                         viewLog();
                     }
                 } catch (Exception e) {
@@ -189,18 +188,19 @@ public class ViewModSecController {
     }
 
     private void viewLog() {
-        ShowLogTable(Table, searchField.getText(), datePicker, new ArrayList<>());
+        showLogTable(modSecurityLogTable, searchField.getText(), datePicker, new ArrayList<>());
     }
     private void viewLog(List<String> appliedFilter) {
-        ShowLogTable(Table, searchField.getText(), datePicker, appliedFilter);
+        showLogTable(modSecurityLogTable, searchField.getText(), datePicker, appliedFilter);
     }
 
     public void viewLog(String rule, DatePicker datePicker) {
-        ShowLogTable(Table, rule, datePicker, new ArrayList<>());
+        showLogTable(modSecurityLogTable, rule, datePicker, new ArrayList<>());
     }
 
-    public void LogTable(TableView<ModSecurity> tableView,
-                         String textField, DatePicker datePicker, List<String> appliedFilter) {
+    public void initializeLogTable(TableView<ModSecurity> tableView,
+                                   String textField, DatePicker datePicker,
+                                   List<String> appliedFilter) {
         tableView.getItems().clear();
         tableView.getColumns().clear();
 
@@ -220,9 +220,6 @@ public class ViewModSecController {
         List<ModSecurity> modSecEntries = parseModSecByDate(datePicker);
 
         for (ModSecurity rowData : modSecEntries) {
-            String dateStr = rowData.getTimestamp();
-            LocalDate rowDate = parseDate(dateStr);
-
             if (containsTextField(rowData, textField, appliedFilter)) {
                 rows.add(rowData);
             }
@@ -237,16 +234,16 @@ public class ViewModSecController {
                 if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
                     ModSecurity rowData = row.getItem();
                     showRowContent(rowData);
-                    System.out.println("Double clicked row: " + rowData);
                 }
             });
             return row;
         });
     }
 
-    public void ShowLogTable(TableView<ModSecurity> tableView,
-                             String textField, DatePicker datePicker, List<String> appliedFilter) {
-        LogTable(tableView, textField, datePicker, appliedFilter);
+    public void showLogTable(TableView<ModSecurity> tableView,
+                             String textField, DatePicker datePicker,
+                             List<String> appliedFilter) {
+        initializeLogTable(tableView, textField, datePicker, appliedFilter);
     }
 
     private static void showRowContent(ModSecurity rowData) {

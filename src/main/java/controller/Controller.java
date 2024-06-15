@@ -16,6 +16,7 @@ import ui.SignUpForm;
 import ui.WebLogManager;
 import user.User;
 import user.UserManagement;
+import entrypoint.Config;
 
 import static utility.Utility.showAlert;
 
@@ -69,19 +70,19 @@ public class Controller {
         String rePassword = rePasswordField.getText();
 
         if (username.isEmpty()) {
-            showAlert("ERROR", "Username can not be empty");
+            showAlert(Config.ERROR_LABEL, "Username can not be empty");
             returnToLogin(event);
             return;
         }
 
         if (password.length() < 8) {
-            showAlert("ERROR", "Password must be longer than 8 characters.");
+            showAlert(Config.ERROR_LABEL, "Password must be longer than 8 characters.");
             returnToLogin(event);
             return;
         }
 
         if (!Objects.equals(password, rePassword)) {
-            showAlert("ERROR",
+            showAlert(Config.ERROR_LABEL,
                     "Password and Re-enter password field must be the same."
             );
             returnToLogin(event);
@@ -98,11 +99,11 @@ public class Controller {
 
         boolean authenticated = UserManagement.authenticateUser(userLists, username, password);
         if (authenticated) {
-            logger.log(Level.INFO, "Login successful with user " + username);
+            logger.log(Level.INFO, String.format("[%s] User authenticated successfully.", username));
             WebLogManager webLogManager = new WebLogManager();
             webLogManager.start(stage);
         } else {
-            logger.log(Level.INFO, "Login failed");
+            logger.log(Level.INFO, String.format("User failed to authenticate with username %s.", username));
             showAlert("Wrong Password", "Nhap sai password roi cu!");
         }
     }

@@ -36,7 +36,7 @@
             <Insets bottom="10.0" left="10.0" top="10.0" />
         </padding>
     </HBox>
-    <TableView fx:id="Table" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="600.0" minWidth="1000.0" VBox.vgrow="ALWAYS">
+    <TableView fx:id="modSecurityLogTable" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" minHeight="600.0" minWidth="1000.0" VBox.vgrow="ALWAYS">
         <columns>
             <TableColumn fx:id="timestampColumn" text="Timestamp" />
             <TableColumn fx:id="ipColumn" text="IP Address" />

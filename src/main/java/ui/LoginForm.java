@@ -15,7 +15,8 @@ public class LoginForm extends Application {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/LoginForm.fxml"));
         Parent root = loader.load();
 
-        double width, height;
+        double width;
+        double height;
         if (primaryStage.getScene() == null) {
             width = 1300;
             height = 800;

@@ -8,11 +8,6 @@ import ui.LoginForm;
 import ui.WebLogManager;
 
 public class SidebarController {
-    private Stage stage;
-    public void init(Stage stage) {
-        this.stage = stage;
-    }
-
     @FXML
     private void handleDashboard(MouseEvent event) throws Exception {
         Stage primaryStage = (Stage) ((Node) event.getSource()).getScene().getWindow();

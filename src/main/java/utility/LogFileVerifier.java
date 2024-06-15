@@ -40,11 +40,11 @@ public class LogFileVerifier {
         try {
             String filePath = "logs/modsecurity/modsec_audit.json";
             if (isModSecLogFile(filePath)) {
-                System.out.println("This is a ModSecurity log file.");
+                System.out.println("[DEBUG] This is a ModSecurity log file.");
             } else if (isApacheLogFile(filePath)) {
-                System.out.println("This is an Apache log file.");
+                System.out.println("[DEBUG] This is an Apache log file.");
             } else {
-                System.out.println("Unknown log file type.");
+                System.out.println("[DEBUG] Unknown log file type.");
             }
         } catch (IOException e) {
             e.printStackTrace();

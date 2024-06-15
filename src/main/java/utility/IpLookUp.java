@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class IpLookUp {
-    public static String IpCheck (String host) throws IOException {
+    public static String checkIP(String host) throws IOException {
         // CONSTANT VALUE HERE
         File database = new File("GeoLite2-Country.mmdb");
         try (Reader reader = new Reader(database)) {
@@ -19,7 +19,7 @@ public class IpLookUp {
             LookupResult result = reader.get(address, LookupResult.class);
 
             if (result != null && result.getCountry() != null) {
-                return Convert(result.getCountry().getIsoCode());
+                return convertToCountryCode(result.getCountry().getIsoCode());
             } else {
                 return "None";
             }
@@ -52,10 +52,10 @@ public class IpLookUp {
         }
     }
 
-    public static String Convert(String countryCode) {
+    public static String convertToCountryCode(String countryCode) {
         return COUNTRY_CODES_MAP.getOrDefault(countryCode, "None");
     }
-    private static Map<String, String> COUNTRY_CODES_MAP = new HashMap<>();
+    private static final Map<String, String> COUNTRY_CODES_MAP = new HashMap<>();
     static {
         COUNTRY_CODES_MAP.put("AF", "Afghanistan");
         COUNTRY_CODES_MAP.put("AL", "Albania");
@@ -255,6 +255,6 @@ public class IpLookUp {
 
 
     public static void main(String[] args) throws IOException {
-        System.out.println(IpCheck("202.191.57.199"));
+        System.out.println(checkIP("202.191.57.199"));
     }
 }

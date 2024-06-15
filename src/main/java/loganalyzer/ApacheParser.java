@@ -17,6 +17,9 @@ import static utility.Utility.findFirstMatch;
 import static utility.Utility.getElementSafely;
 
 public class ApacheParser {
+    private ApacheParser() {
+        throw new IllegalStateException("Utility class");
+    }
     private static final Pattern ipAddrPattern = Pattern.compile("((\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})|([0-9a-fA-F]{1,4}(:[0-9a-fA-F]{1,4}){7}))");
     private static final Pattern timestampPattern = Pattern.compile("\\[(\\d{2}/[A-Za-z]{3}/\\d{4}:\\d{2}:\\d{2}:\\d{2} [+\\-]\\d{4})]");
     private static final Pattern userAgentPattern = Pattern.compile("\"([^\"]*)\"[^\"]*$");

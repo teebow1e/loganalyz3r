@@ -135,8 +135,6 @@ public class ModSecurityParser {
                         ));
                     }
                 }
-            } catch (FileNotFoundException e) {
-                throw new RuntimeException(e);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

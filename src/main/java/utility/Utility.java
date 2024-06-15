@@ -23,22 +23,6 @@ public class Utility {
         return null;
     }
 
-    public static LinkedList<String> readFile(String filePath, Logger logger) {
-        LinkedList<String> lines = new LinkedList<>();
-        try {
-            BufferedReader reader = new BufferedReader(new FileReader(filePath));
-            String line = reader.readLine();
-            while (line != null) {
-                lines.add(line);
-                line = reader.readLine();
-            }
-            reader.close();
-        } catch (IOException e) {
-            logger.log(Level.SEVERE, "Error reading log file: {0}", e.getMessage());
-        }
-        return lines;
-    }
-
     public static String getElementSafely(String[] array, int index) {
         if (index >= 0 && index < array.length) {
             return array[index];

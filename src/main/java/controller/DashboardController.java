@@ -27,7 +27,7 @@ import java.util.*;
 
 import static loganalyzer.ApacheParser.*;
 import static loganalyzer.ModSecurityParser.*;
-import static utility.IpLookUp.IpCheck;
+import static utility.IpLookUp.checkIP;
 
 public class DashboardController {
     @FXML
@@ -222,11 +222,6 @@ public class DashboardController {
         XYChart.Series<String, Number> logSeries = new XYChart.Series<>();
         logSeries.setName("Log Count");
 
-        String selectedTime = startTimeComboBox.getSelectionModel().getSelectedItem();
-        if (selectedTime == null) {
-            selectedTime = "00:00";
-        }
-
         Map<String, Map<String, Integer>> groupedLogs = groupLogsByInterval(interval, selectedDate);
         logLineChart.getData().clear();
         List<Map.Entry<String, Map<String, Integer>>> entries = new ArrayList<>(groupedLogs.entrySet());
@@ -305,6 +300,8 @@ public class DashboardController {
                 field = Calendar.DAY_OF_MONTH;
                 amount = 1;
                 break;
+            default:
+                //todo: add something here?
         }
 
         dateFormat = getDateFormat(interval);
@@ -332,18 +329,12 @@ public class DashboardController {
     }
 
     private SimpleDateFormat getDateFormat(String interval) {
-        switch (interval) {
-            case "15 Minutes":
-            case "30 Minutes":
-            case "1 Hour":
-            case "2 Hours":
-            case "12 Hours":
-                return new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            case "1 Day":
-                return new SimpleDateFormat("yyyy-MM-dd");
-            default:
-                throw new IllegalArgumentException("Unexpected interval: " + interval);
-        }
+        return switch (interval) {
+            case "15 Minutes", "30 Minutes", "1 Hour", "2 Hours", "12 Hours" ->
+                    new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            case "1 Day" -> new SimpleDateFormat("yyyy-MM-dd");
+            default -> throw new IllegalArgumentException("Unexpected interval: " + interval);
+        };
     }
 
     private void adjustCalendar(Calendar calendar, int field, int amount) {
@@ -420,7 +411,7 @@ public class DashboardController {
             LocalDate logDate = LocalDate.parse(entry.getTimestamp(), formatter);
             if (logDate.equals(selectedDate)) {
                 ipCounts.merge(entry.getRemoteAddress(), 1, Integer::sum);
-                countryCounts.merge(IpCheck(entry.getRemoteAddress()), 1, Integer::sum);
+                countryCounts.merge(checkIP(entry.getRemoteAddress()), 1, Integer::sum);
             }
         }
 
@@ -438,7 +429,7 @@ public class DashboardController {
         for (Map.Entry<String, Integer> entry : sortedIps) {
             String ipAddress = entry.getKey();
             int count = entry.getValue();
-            String country = IpCheck(ipAddress);
+            String country = checkIP(ipAddress);
             items.add(new String[]{ipAddress, String.valueOf(count), country});
         }
 
