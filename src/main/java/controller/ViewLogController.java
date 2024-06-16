@@ -17,11 +17,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import ui.ComboBoxItemWrap;
-
 import loganalyzer.Apache;
-
 import static loganalyzer.ApacheParser.parseApacheByDate;
 
 public class ViewLogController {
@@ -54,10 +54,11 @@ public class ViewLogController {
     private static DatePicker dbDate;
     private static String comboBoxElementToBeTicked;
     private static String searchBoxData;
+    private final Logger logger = Logger.getLogger(ViewLogController.class.getName());
 
     private List<String> appliedFilter = new LinkedList<>();
 
-    private ObservableList<ComboBoxItemWrap<String>> filterList = FXCollections.observableArrayList(
+    private final ObservableList<ComboBoxItemWrap<String>> filterList = FXCollections.observableArrayList(
             new ComboBoxItemWrap<>("IP Address"),
             new ComboBoxItemWrap<>("Time Stamp"),
             new ComboBoxItemWrap<>("Method"),
@@ -85,7 +86,7 @@ public class ViewLogController {
     public AtomicInteger getNumberOfSelectedFilter() {
         AtomicInteger counter = new AtomicInteger();
         filterComboBox.getItems().
-                filtered(f -> f.getCheck())
+                filtered(ComboBoxItemWrap::getCheck)
                 .forEach(item -> counter.getAndIncrement());
         return counter;
     }
@@ -108,9 +109,11 @@ public class ViewLogController {
             cell.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
                 cell.getItem().checkProperty().set(!cell.getItem().checkProperty().get());
                 StringBuilder sb = new StringBuilder();
-                filterComboBox.getItems().filtered(f-> f!=null).filtered( f-> f.getCheck()).forEach( p -> {
-                    sb.append("; "+p.getItem());
-                });
+                filterComboBox.getItems()
+                        .filtered(Objects::nonNull)
+                        .filtered(ComboBoxItemWrap::getCheck)
+                        .forEach(p -> sb.append("; ").append(p.getItem())
+                );
                 final String string = sb.toString();
                 filterComboBox.setPromptText(string.substring(Integer.min(2, string.length())));
             });
@@ -152,26 +155,26 @@ public class ViewLogController {
             }
         }
 
-        datePicker.valueProperty().addListener((observable, oldValue, newValue) -> {
-            viewLog(searchField.getText());
-        });
+        datePicker.valueProperty().addListener((observable, oldValue, newValue) ->
+            viewLog(searchField.getText())
+        );
 
         searchField.setOnKeyPressed(event -> {
             if (event.getCode() == KeyCode.ENTER) {
                 try {
                     if (getNumberOfSelectedFilter().get() > 0) {
                         appliedFilter.clear();
-                        filterComboBox.getItems().filtered(
-                                f -> f.getCheck()).forEach(item -> appliedFilter.add(item.getItem())
+                        filterComboBox.getItems()
+                                .filtered(ComboBoxItemWrap::getCheck)
+                                .forEach(item -> appliedFilter.add(item.getItem())
                         );
-                        System.out.println("called view log with filter");
                         viewLog(appliedFilter);
                     } else {
-                        System.out.println("called view log with no filter");
                         viewLog();
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    // which has exception here ? @fieryphoenix
+                    logger.log(Level.INFO, "An exception occurred", e);
                 }
             }
         });
@@ -184,7 +187,7 @@ public class ViewLogController {
                 viewLog(dbSearch);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.INFO, "An exception occurred", e);
         }
     }
 
@@ -193,8 +196,9 @@ public class ViewLogController {
     }
 
     public void viewLog(String search) {
-        filterComboBox.getItems().filtered(
-                f -> f.getCheck()).forEach(item -> appliedFilter.add(item.getItem())
+        filterComboBox.getItems()
+                .filtered(ComboBoxItemWrap::getCheck)
+                .forEach(item -> appliedFilter.add(item.getItem())
         );
         LogTable(Table, search, appliedFilter);
     }
@@ -237,7 +241,6 @@ public class ViewLogController {
                 if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
                     Apache rowData = row.getItem();
                     showRowContent(rowData);
-                    System.out.println("Double clicked row: " + rowData);
                 }
             });
             return row;

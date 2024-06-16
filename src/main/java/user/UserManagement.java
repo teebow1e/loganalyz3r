@@ -69,7 +69,7 @@ public class UserManagement {
 
             objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, rootNode);
         } catch (IOException e) {
-            logger.log(Level.SEVERE, "An error occurred while writing to the user file", e);
+            logger.log(Level.SEVERE, "An error occurred when writing to the user file", e);
         }
     }
 }

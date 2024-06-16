@@ -1,14 +1,10 @@
 package controller;
 
-import entrypoint.Config;
-import utility.LogFileVerifier;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
-import utility.Utility;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -22,6 +18,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import utility.Utility;
+import entrypoint.Config;
+import utility.LogFileVerifier;
 
 public class OptionController {
     @FXML
@@ -34,7 +36,8 @@ public class OptionController {
     private TextField modsecLogLocationTF;
     @FXML
     private Text welcomeText;
-    private final String IP_DB_TEXT = "IP Database Location: Available at ";
+    private static final Logger logger = Logger.getLogger(OptionController.class.getName());
+
     FileChooser.ExtensionFilter extFilterLogs = new FileChooser.ExtensionFilter(
             "Log files (*.log, *.txt, *.json)",
             "*.log", "*.txt", "*.json"
@@ -47,8 +50,10 @@ public class OptionController {
 
         File ipDBFile = new File("GeoLite2-Country.mmdb");
         if (ipDBFile.exists() && ipDBFile.canRead()) {
+            String IP_DB_TEXT = "IP Database Location: Available at ";
             ipDBLocationText.setText(IP_DB_TEXT + ipDBFile.getAbsolutePath());
         } else {
+            logger.log(Level.WARNING, "GeoLiteIPDB not found.");
             ipDBLocationText.setText("IP Database Location: NOT FOUND");
         }
     }
@@ -61,10 +66,11 @@ public class OptionController {
         if (file != null) {
             String tmpLocation = file.getAbsolutePath();
             if (LogFileVerifier.isApacheLogFile(tmpLocation)) {
-                System.out.println("[DEBUG] File name: " + file.getName());
-                System.out.println("[DEBUG] File size: " + file.length() + " bytes");
+                logger.log(Level.INFO,"File name: {0}", file.getName());
+                logger.log(Level.INFO,"File size: {0} bytes", file.length());
                 apacheLogLocationTF.setText(tmpLocation);
             } else {
+                logger.log(Level.INFO, "[Apache] User selected an invalid file.");
                 Utility.showAlert("ERROR", "The selected file is not a valid log file.");
             }
         }
@@ -79,10 +85,11 @@ public class OptionController {
         if (file != null) {
             String tmpLocation = file.getAbsolutePath();
             if (LogFileVerifier.isModSecLogFile(tmpLocation)) {
-                System.out.println("[DEBUG] File name: " + file.getName());
-                System.out.println("[DEBUG] File size: " + file.length() + " bytes");
+                logger.log(Level.INFO,"File name: {0}", file.getName());
+                logger.log(Level.INFO,"File size: {0} bytes", file.length());
                 modsecLogLocationTF.setText(tmpLocation);
             } else {
+                logger.log(Level.INFO, "[ModSecurity] User selected an invalid file.");
                 Utility.showAlert("ERROR", "The selected file is not a valid log file.");
             }
         }
@@ -96,10 +103,12 @@ public class OptionController {
         con.setRequestProperty("X-GitHub-Api-Version", Config.API_VERSION_HEADER);
 
         int responseCode = con.getResponseCode();
+        logger.log(Level.INFO, "HTTP request received status code {0}", responseCode);
         if (responseCode != 200) {
+            logger.log(Level.INFO, "Received response: {0}", con.getResponseMessage());
             Utility.showAlert(
                     "ERROR",
-                    String.format("Got status code %d with response %s.", responseCode, con.getResponseMessage())
+                    String.format("Got status code %d, you should try again.", responseCode)
             );
         }
         BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -126,7 +135,7 @@ public class OptionController {
                 resultFetch = firstObject.get("body").asText();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.INFO, "[fetchUpdate] Failed to fetch update from remote API.", e);
         }
 
         if (!Objects.equals(resultFetch, "")) {
@@ -144,8 +153,10 @@ public class OptionController {
                 } else {
                     ipDBNewVerStatusText.setText("You are using the latest IPDB version!");
                 }
-            } catch (IOException | ParseException e) {
-                e.printStackTrace();
+            } catch (IOException ioe) {
+                logger.log(Level.WARNING, "[fetchUpdate] Failed to read GeoLiteDB file.", ioe);
+            } catch (ParseException pex) {
+                logger.log(Level.WARNING, "[fetchUpdate] Failed to parse remote data to time data.", pex);
             }
         } else {
             ipDBNewVerStatusText.setText("You are using the latest IPDB version!");
@@ -171,7 +182,7 @@ public class OptionController {
                 System.out.println("No releases found.");
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.INFO, "[updateIPDB] Failed to fetch update from remote API.");
         }
     }
 
@@ -187,7 +198,7 @@ public class OptionController {
                     "New version of IPDB has been downloaded successfully."
             );
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.log(Level.WARNING, "Failed to perform required IO activities.", e);
         }
     }
 

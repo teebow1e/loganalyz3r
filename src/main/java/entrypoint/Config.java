@@ -2,17 +2,19 @@ package entrypoint;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import user.UserManagement;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import utility.Utility;
 import utility.getAdminCredFirstRun;
 import utility.getLogPathFirstRun;
-
-import java.io.File;
-import java.io.IOException;
-
+import user.UserManagement;
 import static utility.Utility.showAlert;
 
 public class Config {
+    private static final Logger logger = Logger.getLogger(Config.class.getName());
     private Config() {
         throw new IllegalStateException("This function can not be instantiated.");
     }
@@ -26,6 +28,9 @@ public class Config {
             configDirPath + File.separator + "config.json";
     public static String getConfigFilePath() {
         return configFilePath;
+    }
+    public static String getAccountsFilePath() {
+        return accountsFilePath;
     }
     public static boolean checkConfigDir() {
         File dir = new File(configDirPath);
@@ -49,7 +54,7 @@ public class Config {
         if (!configFolder.exists()) {
             boolean folderCreated = configFolder.mkdir();
             if (folderCreated) {
-                System.out.println("DEBUG - Folder has been created .config");
+                logger.log(Level.INFO,"[FirstRun] .config folder has been created.");
                 getAdminCredFirstRun adminCredFR = new getAdminCredFirstRun(null);
                 getLogPathFirstRun logPathFR = new getLogPathFirstRun(null);
 
@@ -59,7 +64,7 @@ public class Config {
                     String adminPassword = adminCredFR.getPassword();
                     UserManagement.addUser(accountsFilePath, adminUsername, adminPassword);
                 } else {
-                    System.out.println("DEBUG - Failed to init admin cred");
+                    logger.log(Level.SEVERE,"[FirstRun] Failed to init admin cred.");
                 }
 
                 logPathFR.setVisible(true);
@@ -75,7 +80,7 @@ public class Config {
                             modSecurityPath
                     );
                 } else {
-                    System.out.println("debug - unable to create modsec apache path");
+                    logger.log(Level.SEVERE,"[FirstRun] Unable to create path config file.");
                 }
             } else {
                 showAlert(ERROR_LABEL,

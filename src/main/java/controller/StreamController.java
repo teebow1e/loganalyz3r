@@ -14,17 +14,18 @@ import javafx.stage.FileChooser;
 import loganalyzer.Apache;
 import org.apache.commons.io.input.Tailer;
 import org.apache.commons.io.input.TailerListenerAdapter;
+import utility.LogFileVerifier;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import static loganalyzer.ApacheParser.*;
 import static utility.Utility.*;
 
 public class StreamController {
-    // this class right now only support Apache log
-    // todo: add a dropdown, can we modify the table according to the log we choose?
-    // @fieryphoenix
     @FXML
     private TableView<Apache> mainStreamTable;
     @FXML
@@ -51,13 +52,12 @@ public class StreamController {
     private Thread tailerThread;
     private boolean isTailerRunning = false;
     private String fileToStreamPath = "";
+    private final Logger logger = Logger.getLogger(StreamController.class.getName());
 
     FileChooser.ExtensionFilter extFilterLogs = new FileChooser.ExtensionFilter(
             "Log files (*.log, *.txt, *.json)",
             "*.log", "*.txt", "*.json"
     );
-
-
     @FXML
     private void initialize() {
         streamTable(mainStreamTable);
@@ -65,26 +65,30 @@ public class StreamController {
     }
 
     @FXML
-    void chooseFile(ActionEvent event) {
+    void chooseFile(ActionEvent event) throws IOException {
         FileChooser fc = new FileChooser();
         fc.getExtensionFilters().addAll(extFilterLogs);
         fc.setTitle("Choose a file for streaming");
         File file = fc.showOpenDialog(null);
         if (file != null) {
-            chosenFileText.setText("You selected: " + file.getAbsolutePath());
             fileToStreamPath = file.getAbsolutePath();
-            // todo: implement check of log file
-            System.out.println("[DEBUG] File name: " + file.getName());
-            System.out.println("[DEBUG] File size: " + file.length() + " bytes");
+            // this only support apache for now.
+            if (LogFileVerifier.isApacheLogFile(fileToStreamPath)) {
+                chosenFileText.setText("You selected: " + file.getAbsolutePath());
+                logger.log(Level.INFO,"File name: {0}", file.getName());
+                logger.log(Level.INFO,"File size: {0} bytes", file.length());
+            }
         }
     }
 
     @FXML
     private void handleStartStopButtonAction() {
         if (isTailerRunning) {
+            logger.log(Level.INFO, "Tailer ordered to stop.");
             stopTailer();
             startStopButton.setText("Start Streaming");
         } else {
+            logger.log(Level.INFO, "Tailer ordered to start.");
             startTailer();
             startStopButton.setText("Stop Streaming");
         }
@@ -109,7 +113,6 @@ public class StreamController {
                 if (!row.isEmpty() && event.getButton() == MouseButton.PRIMARY && event.getClickCount() == 2) {
                     Apache rowData = row.getItem();
                     showRowContent(rowData);
-                    System.out.println("[DEBUG] Double clicked row: " + rowData);
                 }
             });
             return row;
@@ -125,6 +128,7 @@ public class StreamController {
         File file = new File(fileToStreamPath);
 
         if (!file.canRead()) {
+            logger.log(Level.INFO, "User selected an unreadable file for streaming.");
             showAlert("ERROR",
                     "This file is unreadable or you does not have the required permission to read. The program can not continue.");
             return;
@@ -133,14 +137,14 @@ public class StreamController {
         TailerListenerAdapter listener = new TailerListenerAdapter() {
             @Override
             public void handle(String line) {
-                System.out.printf("[DEBUG] new line added: %s\n", line);
+                logger.log(Level.FINE, "[{0}] new line added: {1}", new Object[]{fileToStreamPath, line});
                 rows.add(parseLogLine(line));
-                System.out.println(rows.size());
                 mainStreamTable.setItems(rows);
             }
         };
         tailer = new Tailer(file, listener, 200, true);
         tailerThread = new Thread(tailer);
+        logger.log(Level.INFO, "Tailer ready to start.");
         tailerThread.start();
     }
 
@@ -150,7 +154,7 @@ public class StreamController {
             try {
                 tailerThread.join();
             } catch (InterruptedException e) {
-                System.out.println("[DEBUG] The tailer was interrupted.");
+                logger.log(Level.INFO,"The tailer was interrupted.", e);
                 Thread.currentThread().interrupt();
             }
         }

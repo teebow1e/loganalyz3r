@@ -19,6 +19,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import loganalyzer.ModSecurity;
 import ui.ComboBoxItemWrap;
@@ -55,9 +57,10 @@ public class ViewModSecController {
     private static DatePicker dbDate;
     private static String comboBoxElementToBeTicked;
     private static String searchBoxData;
+    private final Logger logger = Logger.getLogger(ViewModSecController.class.getName());
     private List<String> appliedFilter = new LinkedList<>();
 
-    private ObservableList<ComboBoxItemWrap<String>> filterList = FXCollections.observableArrayList(
+    private final ObservableList<ComboBoxItemWrap<String>> filterList = FXCollections.observableArrayList(
             new ComboBoxItemWrap<>("Remote Address"),
             new ComboBoxItemWrap<>("Path"),
             new ComboBoxItemWrap<>("Method"),
@@ -81,8 +84,8 @@ public class ViewModSecController {
 
     public AtomicInteger getNumberOfSelectedFilter() {
         AtomicInteger counter = new AtomicInteger();
-        filterComboBox.getItems().
-                filtered(f -> f.getCheck())
+        filterComboBox.getItems()
+                .filtered(ComboBoxItemWrap::getCheck)
                 .forEach(item -> counter.getAndIncrement());
         return counter;
     }
@@ -149,7 +152,7 @@ public class ViewModSecController {
                     viewLog(dbRule, datePicker);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.log(Level.INFO, "An exception occurred", e);
             }
         });
 
@@ -166,7 +169,7 @@ public class ViewModSecController {
                         viewLog();
                     }
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.log(Level.INFO, "An exception occurred", e);
                 }
             }
         });
@@ -179,7 +182,7 @@ public class ViewModSecController {
                 viewLog(dbRule, dbDate);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.log(Level.INFO, "An exception occurred", e);
         }
     }
 

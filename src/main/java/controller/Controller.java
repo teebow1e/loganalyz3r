@@ -32,12 +32,7 @@ public class Controller {
     @FXML
     private TextField rePasswordField;
 
-    // CONSTANT VALUE HERE
-    private String dbFilePath = System.getProperty("user.dir")
-            + File.separator
-            + ".config"
-            + File.separator
-            + "accounts.json";
+    private final String dbFilePath = Config.getAccountsFilePath();
 
     public void init(Stage stage) {
         File dbFile = new File(dbFilePath);

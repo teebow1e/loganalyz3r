@@ -20,6 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ModSecurityParser {
+    private final static Logger logger = Logger.getLogger(ModSecurityParser.class.getName());
     private ModSecurityParser() {
         throw new IllegalStateException("Utility class");
     }
@@ -84,8 +85,6 @@ public class ModSecurityParser {
     }
 
     public static List<ModSecurity> parseModSecByDate(DatePicker datePicker) {
-        Logger logger = Logger.getLogger(ApacheParser.class.getName());
-        // CONSTANT VALUE HERE
         String logFilePath = Config.getModSecurityLogLocation();
         Path logPath = Paths.get(logFilePath);
         ObjectMapper objectMapper = new ObjectMapper();
@@ -131,11 +130,12 @@ public class ModSecurityParser {
                     }
                 }
             } catch (IOException e) {
+                logger.log(Level.WARNING, "Failed to perform IO activities on log file.");
                 throw new RuntimeException(e);
             }
         }
-        else{
-            logger.log(Level.SEVERE, "Log file not found at location {0}", logFilePath);
+        else {
+            logger.log(Level.WARNING, "Log file not found at location {0}", logFilePath);
         }
         return logList;
     }
