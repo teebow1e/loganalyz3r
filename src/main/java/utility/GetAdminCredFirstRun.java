@@ -5,13 +5,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class getAdminCredFirstRun extends JDialog {
+public class GetAdminCredFirstRun extends JDialog {
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JButton submitButton;
     private boolean success;
 
-    public getAdminCredFirstRun(Frame parent) {
+    public GetAdminCredFirstRun(Frame parent) {
         super(parent, "Initialize Admin Credentials", true);
         setLayout(new GridBagLayout());
 
@@ -67,7 +67,7 @@ public class getAdminCredFirstRun extends JDialog {
     }
 
     public static void main(String[] args) {
-        getAdminCredFirstRun dialog = new getAdminCredFirstRun(null);
+        GetAdminCredFirstRun dialog = new GetAdminCredFirstRun(null);
         dialog.setVisible(true);
 
         if (dialog.isSuccess()) {

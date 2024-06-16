@@ -8,8 +8,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import utility.Utility;
-import utility.getAdminCredFirstRun;
-import utility.getLogPathFirstRun;
+import utility.GetAdminCredFirstRun;
+import utility.GetLogPathFirstRun;
 import user.UserManagement;
 import static utility.Utility.showAlert;
 
@@ -20,49 +20,49 @@ public class Config {
     }
     private static JsonNode pathConfig;
     private static String currentlyLoggedOnUser;
-    private static final String configDirPath =
+    private static final String CONFIG_DIR_PATH =
             System.getProperty("user.dir") + File.separator + ".config";
-    private static final String accountsFilePath =
-            configDirPath + File.separator + "accounts.json";
-    private static final String configFilePath =
-            configDirPath + File.separator + "config.json";
+    private static final String ACCOUNTS_FILE_PATH =
+            CONFIG_DIR_PATH + File.separator + "accounts.json";
+    private static final String CONFIG_FILE_PATH =
+            CONFIG_DIR_PATH + File.separator + "config.json";
     public static String getConfigFilePath() {
-        return configFilePath;
+        return CONFIG_FILE_PATH;
     }
     public static String getAccountsFilePath() {
-        return accountsFilePath;
+        return ACCOUNTS_FILE_PATH;
     }
     public static boolean checkConfigDir() {
-        File dir = new File(configDirPath);
+        File dir = new File(CONFIG_DIR_PATH);
         return dir.exists() && dir.isDirectory() && dir.canRead();
     }
     public static boolean checkAccountsFile() {
-        File file = new File(accountsFilePath);
+        File file = new File(ACCOUNTS_FILE_PATH);
         return file.exists() && file.isFile() && file.canRead();
     }
     public static boolean checkConfigFile() {
-        File file = new File(configFilePath);
+        File file = new File(CONFIG_FILE_PATH);
         return file.exists() && file.isFile() && file.canRead();
     }
     public static void loadConfig() throws IOException {
         ObjectMapper mapper = new ObjectMapper();
-        pathConfig = mapper.readTree(new File(configFilePath));
+        pathConfig = mapper.readTree(new File(CONFIG_FILE_PATH));
     }
 
     public static void firstRunAction() {
-        File configFolder = new File(configDirPath);
+        File configFolder = new File(CONFIG_DIR_PATH);
         if (!configFolder.exists()) {
             boolean folderCreated = configFolder.mkdir();
             if (folderCreated) {
                 logger.log(Level.INFO,"[FirstRun] .config folder has been created.");
-                getAdminCredFirstRun adminCredFR = new getAdminCredFirstRun(null);
-                getLogPathFirstRun logPathFR = new getLogPathFirstRun(null);
+                GetAdminCredFirstRun adminCredFR = new GetAdminCredFirstRun(null);
+                GetLogPathFirstRun logPathFR = new GetLogPathFirstRun(null);
 
                 adminCredFR.setVisible(true);
                 if (adminCredFR.isSuccess()) {
                     String adminUsername = adminCredFR.getUsername();
                     String adminPassword = adminCredFR.getPassword();
-                    UserManagement.addUser(accountsFilePath, adminUsername, adminPassword);
+                    UserManagement.addUser(ACCOUNTS_FILE_PATH, adminUsername, adminPassword);
                 } else {
                     logger.log(Level.SEVERE,"[FirstRun] Failed to init admin cred.");
                 }
@@ -71,11 +71,11 @@ public class Config {
                 if (logPathFR.isSuccess()) {
                     String apachePath = logPathFR.getApacheLogPath();
                     String modSecurityPath = logPathFR.getModSecurityLogPath();
-                    Utility.updateConfigValue(configFilePath,
+                    Utility.updateConfigValue(CONFIG_FILE_PATH,
                             "DEFAULT_APACHE_LOG_LOCATION",
                             apachePath
                     );
-                    Utility.updateConfigValue(configFilePath,
+                    Utility.updateConfigValue(CONFIG_FILE_PATH,
                             "DEFAULT_MODSECURITY_LOG_LOCATION",
                             modSecurityPath
                     );

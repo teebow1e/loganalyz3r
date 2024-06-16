@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-public class getLogPathFirstRun extends JDialog {
+public class GetLogPathFirstRun extends JDialog {
     private JTextField apacheLogPathField;
     private JTextField modSecurityLogPathField;
     private JButton browseApacheLogButton;
@@ -14,7 +14,7 @@ public class getLogPathFirstRun extends JDialog {
     private JButton submitButton;
     private boolean success;
 
-    public getLogPathFirstRun(Frame parent) {
+    public GetLogPathFirstRun(Frame parent) {
         super(parent, "Select Log Paths", true);
         setLayout(new GridBagLayout());
 
@@ -63,7 +63,7 @@ public class getLogPathFirstRun extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                int option = fileChooser.showOpenDialog(getLogPathFirstRun.this);
+                int option = fileChooser.showOpenDialog(GetLogPathFirstRun.this);
                 if (option == JFileChooser.APPROVE_OPTION) {
                     File file = fileChooser.getSelectedFile();
                     apacheLogPathField.setText(file.getAbsolutePath());
@@ -76,7 +76,7 @@ public class getLogPathFirstRun extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                int option = fileChooser.showOpenDialog(getLogPathFirstRun.this);
+                int option = fileChooser.showOpenDialog(GetLogPathFirstRun.this);
                 if (option == JFileChooser.APPROVE_OPTION) {
                     File file = fileChooser.getSelectedFile();
                     modSecurityLogPathField.setText(file.getAbsolutePath());
@@ -109,7 +109,7 @@ public class getLogPathFirstRun extends JDialog {
     }
 
     public static void main(String[] args) {
-        getLogPathFirstRun dialog = new getLogPathFirstRun(null);
+        GetLogPathFirstRun dialog = new GetLogPathFirstRun(null);
         dialog.setVisible(true);
 
         if (dialog.isSuccess()) {

@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 import javax.swing.*;
 
 public class Utility {
-    private final static Logger logger = Logger.getLogger(Utility.class.getName());
+    private static final Logger logger = Logger.getLogger(Utility.class.getName());
     private Utility() {
         throw new IllegalStateException("Utility class");
     }

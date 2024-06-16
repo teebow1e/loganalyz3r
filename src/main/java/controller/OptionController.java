@@ -50,8 +50,8 @@ public class OptionController {
 
         File ipDBFile = new File("GeoLite2-Country.mmdb");
         if (ipDBFile.exists() && ipDBFile.canRead()) {
-            String IP_DB_TEXT = "IP Database Location: Available at ";
-            ipDBLocationText.setText(IP_DB_TEXT + ipDBFile.getAbsolutePath());
+            String ipDBLocationMsg = "IP Database Location: Available at ";
+            ipDBLocationText.setText(ipDBLocationMsg + ipDBFile.getAbsolutePath());
         } else {
             logger.log(Level.WARNING, "GeoLiteIPDB not found.");
             ipDBLocationText.setText("IP Database Location: NOT FOUND");
@@ -179,7 +179,7 @@ public class OptionController {
                     }
                 }
             } else {
-                System.out.println("No releases found.");
+                logger.log(Level.INFO,"No releases found when connecting to API.");
             }
         } catch (Exception e) {
             logger.log(Level.INFO, "[updateIPDB] Failed to fetch update from remote API.");

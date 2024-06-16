@@ -24,7 +24,7 @@ public class ApacheParser {
     private static final Pattern ipAddrPattern = Pattern.compile("((\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})|([0-9a-fA-F]{1,4}(:[0-9a-fA-F]{1,4}){7}))");
     private static final Pattern timestampPattern = Pattern.compile("\\[(\\d{2}/[A-Za-z]{3}/\\d{4}:\\d{2}:\\d{2}:\\d{2} [+\\-]\\d{4})]");
     private static final Pattern userAgentPattern = Pattern.compile("\"([^\"]*)\"[^\"]*$");
-    private final static Logger logger = Logger.getLogger(ApacheParser.class.getName());
+    private static final Logger logger = Logger.getLogger(ApacheParser.class.getName());
     public static String parseIpAddress(String logLine) {
         return findFirstMatch(logLine, ipAddrPattern);
     }

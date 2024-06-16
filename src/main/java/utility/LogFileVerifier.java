@@ -8,15 +8,18 @@ import java.util.logging.Logger;
 import java.util.regex.Pattern;
 
 public class LogFileVerifier {
+    private LogFileVerifier() {
+        throw new IllegalStateException("This class can not be instantiated.");
+    }
     private static final Pattern MODSEC_JSON_PATTERN = Pattern.compile(".*\"transaction\".*|.*\"messages\".*|.*\"details\".*");
     private static final Pattern MODSEC_PLAIN_PATTERN = Pattern.compile(".*\\[client\\].*|.*\\[msg\\].*|.*\\[severity\\].*|.*\\[hostname\\].*");
     private static final Pattern APACHE_LOG_PATTERN = Pattern.compile("\\d{1,3}(\\.\\d{1,3}){3} - .* \\[.*\\] \".*\" \\d{3} .*");
-    private final static Logger logger = Logger.getLogger(LogFileVerifier.class.getName());
-    public static boolean isModSecLogFile(String filePath) throws IOException {
+    private static final Logger logger = Logger.getLogger(LogFileVerifier.class.getName());
+    public static boolean isModSecLogFile(String filePath) {
         return checkFilePattern(filePath, MODSEC_JSON_PATTERN, MODSEC_PLAIN_PATTERN);
     }
 
-    public static boolean isApacheLogFile(String filePath) throws IOException {
+    public static boolean isApacheLogFile(String filePath) {
         return checkFilePattern(filePath, APACHE_LOG_PATTERN);
     }
 

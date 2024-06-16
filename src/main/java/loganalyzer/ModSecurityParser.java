@@ -20,7 +20,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class ModSecurityParser {
-    private final static Logger logger = Logger.getLogger(ModSecurityParser.class.getName());
+    private static final Logger logger = Logger.getLogger(ModSecurityParser.class.getName());
     private ModSecurityParser() {
         throw new IllegalStateException("Utility class");
     }
