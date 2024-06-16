@@ -5,13 +5,13 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-public class AdminCredentialsDialog extends JDialog {
+public class getAdminCredFirstRun extends JDialog {
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JButton submitButton;
     private boolean success;
 
-    public AdminCredentialsDialog(Frame parent) {
+    public getAdminCredFirstRun(Frame parent) {
         super(parent, "Initialize Admin Credentials", true);
         setLayout(new GridBagLayout());
 
@@ -19,16 +19,15 @@ public class AdminCredentialsDialog extends JDialog {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Username
         gbc.gridx = 0;
         gbc.gridy = 0;
         add(new JLabel("Username:"), gbc);
 
         gbc.gridx = 1;
         usernameField = new JTextField(20);
+        usernameField.setText("admin");
         add(usernameField, gbc);
 
-        // Password
         gbc.gridx = 0;
         gbc.gridy = 1;
         add(new JLabel("Password:"), gbc);
@@ -37,7 +36,6 @@ public class AdminCredentialsDialog extends JDialog {
         passwordField = new JPasswordField(20);
         add(passwordField, gbc);
 
-        // Submit Button
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.gridwidth = 2;
@@ -69,12 +67,12 @@ public class AdminCredentialsDialog extends JDialog {
     }
 
     public static void main(String[] args) {
-        AdminCredentialsDialog dialog = new AdminCredentialsDialog(null);
+        getAdminCredFirstRun dialog = new getAdminCredFirstRun(null);
         dialog.setVisible(true);
 
         if (dialog.isSuccess()) {
-            System.out.println("Username: " + dialog.getUsername());
-            System.out.println("Password: " + dialog.getPassword());
+            System.out.println("[DEBUG] Username: " + dialog.getUsername());
+            System.out.println("[DEBUG] Password: " + dialog.getPassword());
         }
     }
 }

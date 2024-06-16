@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-public class LogPathSelectionDialog extends JDialog {
+public class getLogPathFirstRun extends JDialog {
     private JTextField apacheLogPathField;
     private JTextField modSecurityLogPathField;
     private JButton browseApacheLogButton;
@@ -14,7 +14,7 @@ public class LogPathSelectionDialog extends JDialog {
     private JButton submitButton;
     private boolean success;
 
-    public LogPathSelectionDialog(Frame parent) {
+    public getLogPathFirstRun(Frame parent) {
         super(parent, "Select Log Paths", true);
         setLayout(new GridBagLayout());
 
@@ -22,7 +22,6 @@ public class LogPathSelectionDialog extends JDialog {
         gbc.insets = new Insets(10, 10, 10, 10);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Apache Log Path
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.weightx = 0;
@@ -38,7 +37,6 @@ public class LogPathSelectionDialog extends JDialog {
         browseApacheLogButton = new JButton("Browse");
         add(browseApacheLogButton, gbc);
 
-        // ModSecurity Log Path
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.weightx = 0;
@@ -54,7 +52,6 @@ public class LogPathSelectionDialog extends JDialog {
         browseModSecurityLogButton = new JButton("Browse");
         add(browseModSecurityLogButton, gbc);
 
-        // Submit Button
         gbc.gridx = 0;
         gbc.gridy = 2;
         gbc.gridwidth = 3;
@@ -66,7 +63,7 @@ public class LogPathSelectionDialog extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                int option = fileChooser.showOpenDialog(LogPathSelectionDialog.this);
+                int option = fileChooser.showOpenDialog(getLogPathFirstRun.this);
                 if (option == JFileChooser.APPROVE_OPTION) {
                     File file = fileChooser.getSelectedFile();
                     apacheLogPathField.setText(file.getAbsolutePath());
@@ -79,7 +76,7 @@ public class LogPathSelectionDialog extends JDialog {
             public void actionPerformed(ActionEvent e) {
                 JFileChooser fileChooser = new JFileChooser();
                 fileChooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
-                int option = fileChooser.showOpenDialog(LogPathSelectionDialog.this);
+                int option = fileChooser.showOpenDialog(getLogPathFirstRun.this);
                 if (option == JFileChooser.APPROVE_OPTION) {
                     File file = fileChooser.getSelectedFile();
                     modSecurityLogPathField.setText(file.getAbsolutePath());
@@ -112,12 +109,12 @@ public class LogPathSelectionDialog extends JDialog {
     }
 
     public static void main(String[] args) {
-        LogPathSelectionDialog dialog = new LogPathSelectionDialog(null);
+        getLogPathFirstRun dialog = new getLogPathFirstRun(null);
         dialog.setVisible(true);
 
         if (dialog.isSuccess()) {
-            System.out.println("Apache Log Path: " + dialog.getApacheLogPath());
-            System.out.println("ModSecurity Log Path: " + dialog.getModSecurityLogPath());
+            System.out.println("[DEBUG] Apache Log Path: " + dialog.getApacheLogPath());
+            System.out.println("[DEBUG] ModSecurity Log Path: " + dialog.getModSecurityLogPath());
         }
     }
 }

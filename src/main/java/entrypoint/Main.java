@@ -2,21 +2,21 @@ package entrypoint;
 
 import javafx.application.Application;
 import ui.LoginForm;
+import utility.Utility;
+
 import javax.swing.JOptionPane;
 import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
         if (!Config.checkConfigDir()) {
-            // perform first run action
-            // WorkInProgress, not finished yet
-            new utility.AdminCredentialsDialog(null);
-            new utility.LogPathSelectionDialog(null);
+            Utility.showFirstRunMessage();
+            Config.firstRunAction();
         }
         boolean runtimeCheck = Config.checkAccountsFile() && Config.checkConfigFile();
         if (!runtimeCheck) {
             JOptionPane.showMessageDialog(null,
-                    "Account files and Config file does not exist.",
+                    "Account files and Config file does not exist. You should try remove the .config folder and try again.",
                     "Error",
                     JOptionPane.ERROR_MESSAGE);
             return;
@@ -26,8 +26,6 @@ public class Main {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-//        System.out.println(Config.getApacheLogLocation());
-//        System.out.println(Config.getModSecurityLogLocation());
         Application.launch(LoginForm.class, args);
     }
 }

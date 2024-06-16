@@ -2,6 +2,7 @@ package loganalyzer;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import entrypoint.Config;
 import javafx.scene.control.DatePicker;
 
 import java.io.*;
@@ -85,13 +86,7 @@ public class ModSecurityParser {
     public static List<ModSecurity> parseModSecByDate(DatePicker datePicker) {
         Logger logger = Logger.getLogger(ApacheParser.class.getName());
         // CONSTANT VALUE HERE
-        String logFilePath = System.getProperty("user.dir")
-                + File.separator
-                + "logs"
-                + File.separator
-                + "modsecurity"
-                + File.separator
-                + "modsec_audit_new.log";
+        String logFilePath = Config.getModSecurityLogLocation();
         Path logPath = Paths.get(logFilePath);
         ObjectMapper objectMapper = new ObjectMapper();
         List<ModSecurity> logList = new LinkedList<>();

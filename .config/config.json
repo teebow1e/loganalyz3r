@@ -1,5 +1,5 @@
 {
-  "DEFAULT_APACHE_LOG_LOCATION": "",
-  "DEFAULT_MODSECURITY_LOG_LOCATION": "",
+  "DEFAULT_APACHE_LOG_LOCATION": "C:\\Users\\teebow1e\\IdeaProjects\\project1-soict\\logs\\apache_nginx\\access_log_50000.log",
+  "DEFAULT_MODSECURITY_LOG_LOCATION": "C:\\Users\\teebow1e\\IdeaProjects\\project1-soict\\logs\\modsecurity\\modsec_audit_new.log",
   "GEOLITE_DB_LOCATION": ""
 }

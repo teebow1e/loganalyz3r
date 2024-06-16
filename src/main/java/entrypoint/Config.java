@@ -2,8 +2,15 @@ package entrypoint;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import user.UserManagement;
+import utility.Utility;
+import utility.getAdminCredFirstRun;
+import utility.getLogPathFirstRun;
+
 import java.io.File;
 import java.io.IOException;
+
+import static utility.Utility.showAlert;
 
 public class Config {
     private Config() {
@@ -32,9 +39,48 @@ public class Config {
         ObjectMapper mapper = new ObjectMapper();
         pathConfig = mapper.readTree(new File(configFilePath));
     }
-    public static void firstRunAction() {
 
+    public static void firstRunAction() {
+        File configFolder = new File(configDirPath);
+        if (!configFolder.exists()) {
+            boolean folderCreated = configFolder.mkdir();
+            if (folderCreated) {
+                System.out.println("DEBUG - Folder has been created .config");
+                getAdminCredFirstRun adminCredFR = new getAdminCredFirstRun(null);
+                getLogPathFirstRun logPathFR = new getLogPathFirstRun(null);
+
+                adminCredFR.setVisible(true);
+                if (adminCredFR.isSuccess()) {
+                    String adminUsername = adminCredFR.getUsername();
+                    String adminPassword = adminCredFR.getPassword();
+                    UserManagement.addUser(accountsFilePath, adminUsername, adminPassword);
+                } else {
+                    System.out.println("DEBUG - Failed to init admin cred");
+                }
+
+                logPathFR.setVisible(true);
+                if (logPathFR.isSuccess()) {
+                    String apachePath = logPathFR.getApacheLogPath();
+                    String modSecurityPath = logPathFR.getModSecurityLogPath();
+                    Utility.updateConfigValue(configFilePath,
+                            "DEFAULT_APACHE_LOG_LOCATION",
+                            apachePath
+                    );
+                    Utility.updateConfigValue(configFilePath,
+                            "DEFAULT_MODSECURITY_LOG_LOCATION",
+                            modSecurityPath
+                    );
+                } else {
+                    System.out.println("debug - unable to create modsec apache path");
+                }
+            } else {
+                showAlert(ERROR_LABEL,
+                        "Problem occured during first-run action. The program can not continue."
+                );
+            }
+        }
     }
+
     public static String getApacheLogLocation() {
         return pathConfig.get("DEFAULT_APACHE_LOG_LOCATION").asText();
     }
@@ -43,8 +89,5 @@ public class Config {
         return pathConfig.get("DEFAULT_MODSECURITY_LOG_LOCATION").asText();
     }
 
-    public static String getGeoLiteDbLocation() {
-        return pathConfig.get("GEOLITE_DB_LOCATION").asText();
-    }
     public static final String ERROR_LABEL = "ERROR";
 }

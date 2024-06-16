@@ -47,15 +47,27 @@ public class UserManagement {
 
     public static void addUser(String fileName, String username, String plaintextPassword) {
         ObjectMapper objectMapper = new ObjectMapper();
+        File file = new File(fileName);
+        JsonNode rootNode;
+        ArrayNode usersNode;
+
         try {
-            JsonNode rootNode = objectMapper.readTree(new File(fileName));
-            ArrayNode usersNode = (ArrayNode) rootNode.path("users");
+            if (file.exists() && file.length() != 0) {
+                rootNode = objectMapper.readTree(file);
+                usersNode = (ArrayNode) rootNode.path("users");
+            } else {
+                rootNode = objectMapper.createObjectNode();
+                usersNode = objectMapper.createArrayNode();
+                ((ObjectNode) rootNode).set("users", usersNode);
+            }
+
             String hashedPassword = BCrypt.hashpw(plaintextPassword, BCrypt.gensalt());
             ObjectNode newUserNode = objectMapper.createObjectNode();
             newUserNode.put("username", username);
             newUserNode.put("password_hash", hashedPassword);
             usersNode.add(newUserNode);
-            objectMapper.writerWithDefaultPrettyPrinter().writeValue(new File(fileName), rootNode);
+
+            objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, rootNode);
         } catch (IOException e) {
             logger.log(Level.SEVERE, "An error occurred while writing to the user file", e);
         }

@@ -11,6 +11,7 @@ import java.util.regex.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import entrypoint.Config;
 import javafx.scene.control.DatePicker;
 
 import static utility.Utility.findFirstMatch;
@@ -104,13 +105,7 @@ public class ApacheParser {
     public static List<Apache> parseApacheByDate(DatePicker datePicker) {
         Logger logger = Logger.getLogger(ApacheParser.class.getName());
         // CONSTANT VALUE HERE
-        String logFilePath = System.getProperty("user.dir")
-                + File.separator
-                + "logs"
-                + File.separator
-                + "apache_nginx"
-                + File.separator
-                + "access_log_50000.log";
+        String logFilePath = Config.getApacheLogLocation();
         Path logPath = Paths.get(logFilePath);
         List<Apache> logList = new LinkedList<>();
         LocalDate selectedDate = datePicker.getValue();
