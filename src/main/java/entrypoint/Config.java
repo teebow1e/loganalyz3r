@@ -101,4 +101,7 @@ public class Config {
     }
 
     public static final String ERROR_LABEL = "ERROR";
+    public static final String API_URL = "https://api.github.com/repos/P3TERX/GeoLite.mmdb/releases";
+    public static final String ACCEPT_HEADER = "application/vnd.github+json";
+    public static final String API_VERSION_HEADER = "2022-11-28";
 }

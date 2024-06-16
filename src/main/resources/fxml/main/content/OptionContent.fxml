@@ -28,7 +28,7 @@
                   <Insets top="2.0" />
                </HBox.margin>
                <font>
-                  <Font name="System Bold" size="18.0" />
+                  <Font name="System Bold" size="20.0" />
                </font>
             </Text>
          </children>
@@ -39,10 +39,22 @@
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Select default location for Apache log:">
                <HBox.margin>
                   <Insets top="2.0" />
-               </HBox.margin></Text>
-            <TextField fx:id="apacheLogLocationTF" editable="false" prefHeight="25.0" prefWidth="240.0" />
-            <Button fx:id="chooseApacheLocationBtn" mnemonicParsing="false" onAction="#chooseFileApacheLog" text="Choose File" />
-            <Button fx:id="confirmApacheLocationBtn" mnemonicParsing="false" onAction="#setApacheLocation" text="Confirm" />
+               </HBox.margin>
+               <font>
+                  <Font size="14.0" />
+               </font></Text>
+            <TextField fx:id="apacheLogLocationTF" editable="false" prefHeight="25.0" prefWidth="240.0">
+               <font>
+                  <Font size="14.0" />
+               </font></TextField>
+            <Button fx:id="chooseApacheLocationBtn" mnemonicParsing="false" onAction="#chooseFileApacheLog" text="Choose File">
+               <font>
+                  <Font size="14.0" />
+               </font></Button>
+            <Button fx:id="confirmApacheLocationBtn" mnemonicParsing="false" onAction="#setApacheLocation" text="Confirm">
+               <font>
+                  <Font size="14.0" />
+               </font></Button>
          </children>
       </HBox>
       <HBox spacing="10.0">
@@ -50,24 +62,51 @@
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Select default location for ModSecurity log:">
                <HBox.margin>
                   <Insets top="2.0" />
-               </HBox.margin></Text>
-            <TextField fx:id="modsecLogLocationTF" editable="false" prefWidth="240.0" />
-            <Button fx:id="chooseModsecLocationBtn" mnemonicParsing="false" onAction="#chooseFileModSecurityLog" text="Choose File" />
-            <Button fx:id="confirmModsecLocationBtn" mnemonicParsing="false" onAction="#setModSecurityLocation" text="Confirm" />
+               </HBox.margin>
+               <font>
+                  <Font size="14.0" />
+               </font></Text>
+            <TextField fx:id="modsecLogLocationTF" editable="false" prefWidth="240.0">
+               <font>
+                  <Font size="14.0" />
+               </font></TextField>
+            <Button fx:id="chooseModsecLocationBtn" mnemonicParsing="false" onAction="#chooseFileModSecurityLog" text="Choose File">
+               <font>
+                  <Font size="14.0" />
+               </font></Button>
+            <Button fx:id="confirmModsecLocationBtn" mnemonicParsing="false" onAction="#setModSecurityLocation" text="Confirm">
+               <font>
+                  <Font size="14.0" />
+               </font></Button>
          </children>
       </HBox>
       <VBox prefHeight="200.0" prefWidth="100.0" spacing="10.0">
          <children>
-            <Text fx:id="ipDBLocationText" strokeType="OUTSIDE" strokeWidth="0.0" text="IP Location Database: Available at /etc/passwd" />
+            <Text fx:id="ipDBLocationText" strokeType="OUTSIDE" strokeWidth="0.0" text="IP Location Database: Available at /etc/passwd">
+               <font>
+                  <Font size="14.0" />
+               </font></Text>
             <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
                <children>
                   <Text fx:id="ipDBNewVerStatusText" strokeType="OUTSIDE" strokeWidth="0.0" text="New version: NOT AVAILABLE">
                      <HBox.margin>
                         <Insets top="4.0" />
-                     </HBox.margin></Text>
-                  <Button fx:id="fetchUpdateDBBtn" mnemonicParsing="false" onAction="#fetchUpdateDB" text="Fetch updates" />
-                  <Button fx:id="updateDBBtn" mnemonicParsing="false" onAction="#updateIPDB" text="Update DB" />
+                     </HBox.margin>
+                     <font>
+                        <Font size="14.0" />
+                     </font></Text>
+                  <Button fx:id="fetchUpdateDBBtn" mnemonicParsing="false" onAction="#fetchUpdateDB" text="Fetch updates">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Button>
+                  <Button fx:id="updateDBBtn" mnemonicParsing="false" onAction="#updateIPDB" text="Update DB">
+                     <font>
+                        <Font size="14.0" />
+                     </font></Button>
                </children>
+               <VBox.margin>
+                  <Insets top="4.0" />
+               </VBox.margin>
             </HBox>
          </children>
       </VBox>

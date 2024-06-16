@@ -53,7 +53,7 @@ public class IpLookUp {
     }
 
     public static String convertToCountryCode(String countryCode) {
-        return COUNTRY_CODES_MAP.getOrDefault(countryCode, "None");
+        return COUNTRY_CODES_MAP.getOrDefault(countryCode, "N/A");
     }
     private static final Map<String, String> COUNTRY_CODES_MAP = new HashMap<>();
     static {
@@ -252,8 +252,6 @@ public class IpLookUp {
         COUNTRY_CODES_MAP.put("ZM", "Zambia");
         COUNTRY_CODES_MAP.put("ZW", "Zimbabwe");
     }
-
-
     public static void main(String[] args) throws IOException {
         System.out.println(checkIP("202.191.57.199"));
     }

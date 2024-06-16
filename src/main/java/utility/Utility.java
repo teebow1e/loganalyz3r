@@ -70,7 +70,7 @@ public class Utility {
         );
     }
 
-    public static String getLatestIPDBRelease() {
+    public static String[] getLatestIPDBRelease() {
         String url = "https://api.github.com/repos/P3TERX/GeoLite.mmdb/releases";
         String fetchResult = "";
         String downloadLinkDB = "";
@@ -102,8 +102,6 @@ public class Utility {
                     for (JsonNode asset : assetsArray) {
                         String browserDownloadUrl = asset.get("browser_download_url").asText();
                         if (browserDownloadUrl.contains("Country")) {
-                            System.out.println(browserDownloadUrl);
-                            // reserve for download func
                             downloadLinkDB = browserDownloadUrl;
                             break;
                         }
@@ -112,15 +110,22 @@ public class Utility {
             } else {
                 System.out.println("No releases found.");
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return fetchResult;
+        return new String[]{fetchResult, downloadLinkDB};
     }
 
     public static void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+
+    public static void showInfo(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
         alert.setHeaderText(null);
         alert.setContentText(message);
