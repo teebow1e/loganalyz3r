@@ -10,6 +10,7 @@ logs/parsed/
 !src/main/resources/main/**/target/
 !src/main/resources/test/**/target/
 *.jar
+.config/
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
