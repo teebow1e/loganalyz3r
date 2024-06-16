@@ -17,12 +17,16 @@ public class Config {
         throw new IllegalStateException("This function can not be instantiated.");
     }
     private static JsonNode pathConfig;
+    private static String currentlyLoggedOnUser;
     private static final String configDirPath =
             System.getProperty("user.dir") + File.separator + ".config";
     private static final String accountsFilePath =
             configDirPath + File.separator + "accounts.json";
     private static final String configFilePath =
             configDirPath + File.separator + "config.json";
+    public static String getConfigFilePath() {
+        return configFilePath;
+    }
     public static boolean checkConfigDir() {
         File dir = new File(configDirPath);
         return dir.exists() && dir.isDirectory() && dir.canRead();
@@ -84,9 +88,16 @@ public class Config {
     public static String getApacheLogLocation() {
         return pathConfig.get("DEFAULT_APACHE_LOG_LOCATION").asText();
     }
-
     public static String getModSecurityLogLocation() {
         return pathConfig.get("DEFAULT_MODSECURITY_LOG_LOCATION").asText();
+    }
+
+    public static void setCurrentlyLoggedOnUser(String data) {
+        currentlyLoggedOnUser = data;
+    }
+
+    public static String getCurrentlyLoggedOnUser() {
+        return currentlyLoggedOnUser;
     }
 
     public static final String ERROR_LABEL = "ERROR";

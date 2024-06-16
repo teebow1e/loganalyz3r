@@ -4,13 +4,16 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import javafx.scene.control.Alert;
-import user.UserManagement;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.*;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 
 public class Utility {
     private Utility() {
@@ -67,6 +70,54 @@ public class Utility {
         );
     }
 
+    public static String getLatestIPDBRelease() {
+        String url = "https://api.github.com/repos/P3TERX/GeoLite.mmdb/releases";
+        String fetchResult = "";
+        String downloadLinkDB = "";
+        try {
+            URL obj = new URL(url);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
+            con.setRequestMethod("GET");
+            con.setRequestProperty("Accept", "application/vnd.github+json");
+            con.setRequestProperty("X-GitHub-Api-Version", "2022-11-28");
+            int responseCode = con.getResponseCode();
+            System.out.println("[DEBUG] Response Code: " + responseCode);
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+            StringBuilder response = new StringBuilder();
+
+            while ((inputLine = in.readLine()) != null) {
+                response.append(inputLine);
+            }
+            in.close();
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode rootNode = mapper.readTree(response.toString());
+
+            if (rootNode.isArray() && !rootNode.isEmpty()) {
+                JsonNode firstObject = rootNode.get(0);
+                fetchResult = firstObject.get("body").asText();
+
+                JsonNode assetsArray = firstObject.get("assets");
+                if (assetsArray.isArray() && !assetsArray.isEmpty()) {
+                    for (JsonNode asset : assetsArray) {
+                        String browserDownloadUrl = asset.get("browser_download_url").asText();
+                        if (browserDownloadUrl.contains("Country")) {
+                            System.out.println(browserDownloadUrl);
+                            // reserve for download func
+                            downloadLinkDB = browserDownloadUrl;
+                            break;
+                        }
+                    }
+                }
+            } else {
+                System.out.println("No releases found.");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return fetchResult;
+    }
 
     public static void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

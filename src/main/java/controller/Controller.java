@@ -100,6 +100,7 @@ public class Controller {
         boolean authenticated = UserManagement.authenticateUser(userLists, username, password);
         if (authenticated) {
             logger.log(Level.INFO, "[{0}] User authenticated successfully.", username);
+            Config.setCurrentlyLoggedOnUser(username);
             WebLogManager webLogManager = new WebLogManager();
             webLogManager.start(stage);
         } else {
