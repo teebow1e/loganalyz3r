@@ -5,5 +5,8 @@
   }, {
     "username" : "trung",
     "password_hash" : "$2a$10$70uOzzH2wXJLvLgrNUDhh.GsDgHvWYohjGJrsffBMaaQyZu2OuwkK"
+  }, {
+    "username" : "phamhongquan",
+    "password_hash" : "$2a$10$d8G1/B83Q0irc/p9qUPePuMxwhteQZNENMWLWivOwopeYi0BT/D5q"
   } ]
 }

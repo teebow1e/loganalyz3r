@@ -14,8 +14,8 @@
         <VBox alignment="CENTER" spacing="10" style="-fx-padding: 0 100px 0 100px;">
             <TextField fx:id="usernameField" onAction="#onEnter" promptText="Enter username" style="-fx-background-radius: 40px; -fx-border-radius: 40px; -fx-padding: 10px 15px; -fx-font-size: 14px;" />
             <PasswordField fx:id="passwordField" onAction="#onEnter" promptText="Enter password" style="-fx-background-radius: 40px; -fx-border-radius: 40px; -fx-padding: 10px 15px; -fx-font-size: 14px;" />
-            <Button fx:id="loginButton" onMouseClicked="#handleLoginAccount" styleClass="button" text="Login" />
-            <Label fx:id="createAccountLabel" onMouseClicked="#handleCreateAccount" style="-fx-text-fill: #387eee;" text="Create Account"/>
+            <Button onMouseClicked="#handleLoginAccount" styleClass="button" text="Login" />
+            <Label fx:id="createAccountLabel" onMouseClicked="#handleCreateAccount" style="-fx-text-fill: #387eee;" text="Create Account" styleClass="create-account-label"/>
         </VBox>
     </VBox>
 </VBox>
