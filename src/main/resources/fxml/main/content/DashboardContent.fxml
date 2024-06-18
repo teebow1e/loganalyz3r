@@ -28,8 +28,8 @@
         <ComboBox fx:id="timeIntervalComboBox" />
         <Label text="Date" />
         <DatePicker fx:id="datePicker" />
-        <Label text="Hour" />
-        <ComboBox fx:id="startTimeComboBox" />
+<!--        <Label text="Hour" />-->
+<!--        <ComboBox fx:id="startTimeComboBox" />-->
         <VBox.margin>
             <Insets top="10.0" />
         </VBox.margin>

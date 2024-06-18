@@ -38,8 +38,8 @@ public class DashboardController {
     private ComboBox<String> timeIntervalComboBox;
     @FXML
     private DatePicker datePicker;
-    @FXML
-    private ComboBox<String> startTimeComboBox;
+//    @FXML
+//    private ComboBox<String> startTimeComboBox;
     @FXML
     private TableView<String[]> statusCodeRankingTable;
     @FXML
@@ -145,18 +145,18 @@ public class DashboardController {
         for (int hour = 0; hour < 24; hour++) {
             times.add(String.format("%02d:00", hour));
         }
-        startTimeComboBox.setItems(times);
-        startTimeComboBox.getSelectionModel().select("00:00"); // Default selection
-        startTimeComboBox
-                .getSelectionModel()
-                .selectedItemProperty()
-                .addListener((observable, oldValue, newValue) -> {
-            try {
-                displayLogsByInterval(timeIntervalComboBox.getSelectionModel().getSelectedItem(), datePicker.getValue());
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
+//        startTimeComboBox.setItems(times);
+//        startTimeComboBox.getSelectionModel().select("00:00"); // Default selection
+//        startTimeComboBox
+//                .getSelectionModel()
+//                .selectedItemProperty()
+//                .addListener((observable, oldValue, newValue) -> {
+//            try {
+//                displayLogsByInterval(timeIntervalComboBox.getSelectionModel().getSelectedItem(), datePicker.getValue());
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//        });
     }
 
     private void setupTableViews() {
@@ -306,10 +306,11 @@ public class DashboardController {
 
         dateFormat = getDateFormat(interval);
 
-        String selectedTime = startTimeComboBox.getSelectionModel().getSelectedItem();
-        if (selectedTime == null) {
-            selectedTime = "00:00";
-        }
+//        String selectedTime = startTimeComboBox.getSelectionModel().getSelectedItem();
+        String selectedTime = "00:00";
+//        if (selectedTime == null) {
+//            selectedTime = "00:00";
+//        }
         int startHour = Integer.parseInt(selectedTime.split(":")[0]);
 
         for (Apache entry : logEntries) {
