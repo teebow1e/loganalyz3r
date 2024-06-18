@@ -100,7 +100,7 @@ public class Controller {
             webLogManager.start(stage);
         } else {
             logger.log(Level.INFO, "User failed to authenticate with username {0}.", username);
-            showAlert("Wrong Password", "Nhap sai password roi cu!");
+            showAlert("Wrong Password", "The credential you entered is wrong!");
         }
     }
 }
