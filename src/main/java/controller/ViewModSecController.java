@@ -113,6 +113,10 @@ public class ViewModSecController {
                         .filtered(ComboBoxItemWrap::getCheck)
                         .forEach(p -> sb.append("; ").append(p.getItem()));
                 final String string = sb.toString();
+                if (string.isEmpty()) {
+                    filterComboBox.setPromptText("Matching all");
+                    return;
+                }
                 filterComboBox.setPromptText(string.substring(Integer.min(2, string.length())));
             });
             return cell;
