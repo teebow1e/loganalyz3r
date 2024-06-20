@@ -77,8 +77,22 @@ https://github.com/teebow1e/loganalyz3r/assets/130235050/3d49c91a-15d4-483e-89fb
     ├── fxml
     └── img
 ```
+## Usage
+You can download the JAR file directly at the Releases page or [build from source](https://github.com/teebow1e/loganalyz3r/blob/main/README.md#build).
+
 ## Build
-To be added.
+> In order to run this project, you must have `mvn` installed and set in `PATH` of your system.
+
+### Build and Run
+```sh
+mvn install -f <path/to/pom.xml>
+mvn.cmd exec:java -f <path/to/pom.xml>
+```
+
+### Build and export to JAR file
+```sh
+mvn clean compile assembly:single -f <path/to/pom.xml>
+```
 
 ## License
 Distributed under the MIT License. See [`LICENSE`](https://github.com/teebow1e/loganalyz3r/blob/main/LICENSE) for more information.
