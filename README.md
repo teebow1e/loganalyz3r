@@ -21,6 +21,22 @@ This application was developed as part of the course Project 1 by [SoICT@HUST](h
 - Intuitive visualization: Generate interactive charts, graphs, and tables to visualize log data for easy interpretation.
 - Advanced filtering: Filter and search through logs based on specific criteria to pinpoint relevant information quickly.
 
+## Features Demo
+### Login / Sign-up
+https://github.com/teebow1e/loganalyz3r/assets/130235050/400dc364-b545-4f19-b889-4dba7301408a
+
+### Dashboard
+https://github.com/teebow1e/loganalyz3r/assets/130235050/54addc40-01c3-431c-98d3-acbc008cc76a
+
+### Real-time Log Streaming
+https://github.com/teebow1e/loganalyz3r/assets/130235050/d899afaf-e8aa-44ae-be5e-1470cb8de671
+
+### View Apache Access Log
+https://github.com/teebow1e/loganalyz3r/assets/130235050/a329da6c-74fd-4e8a-a1e9-785330e220c9
+
+### View ModSecurity Audit Log
+https://github.com/teebow1e/loganalyz3r/assets/130235050/3d49c91a-15d4-483e-89fb-4c58a5843a89
+
 ## Code Structure
 To be added.
 
