@@ -11,6 +11,8 @@ public class GetLogPathFirstRun extends JDialog {
     private JTextField modSecurityLogPathField;
     private JButton browseApacheLogButton;
     private JButton browseModSecurityLogButton;
+    private JCheckBox useSampleApacheLogCheckBox;
+    private JCheckBox useSampleModSecurityLogCheckBox;
     private JButton submitButton;
     private boolean success;
 
@@ -37,6 +39,10 @@ public class GetLogPathFirstRun extends JDialog {
         browseApacheLogButton = new JButton("Browse");
         add(browseApacheLogButton, gbc);
 
+        gbc.gridx = 3;
+        useSampleApacheLogCheckBox = new JCheckBox("Use Sample Log");
+        add(useSampleApacheLogCheckBox, gbc);
+
         gbc.gridx = 0;
         gbc.gridy = 1;
         gbc.weightx = 0;
@@ -52,9 +58,13 @@ public class GetLogPathFirstRun extends JDialog {
         browseModSecurityLogButton = new JButton("Browse");
         add(browseModSecurityLogButton, gbc);
 
+        gbc.gridx = 3;
+        useSampleModSecurityLogCheckBox = new JCheckBox("Use Sample Log");
+        add(useSampleModSecurityLogCheckBox, gbc);
+
         gbc.gridx = 0;
         gbc.gridy = 2;
-        gbc.gridwidth = 3;
+        gbc.gridwidth = 4;
         submitButton = new JButton("Submit");
         add(submitButton, gbc);
 
@@ -92,12 +102,38 @@ public class GetLogPathFirstRun extends JDialog {
             }
         });
 
+        useSampleApacheLogCheckBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean selected = useSampleApacheLogCheckBox.isSelected();
+                apacheLogPathField.setEnabled(!selected);
+                browseApacheLogButton.setEnabled(!selected);
+            }
+        });
+
+        useSampleModSecurityLogCheckBox.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                boolean selected = useSampleModSecurityLogCheckBox.isSelected();
+                modSecurityLogPathField.setEnabled(!selected);
+                browseModSecurityLogButton.setEnabled(!selected);
+            }
+        });
+
         pack();
         setLocationRelativeTo(parent);
     }
 
     public String getApacheLogPath() {
         return apacheLogPathField.getText();
+    }
+
+    public boolean getUseSampleApacheLogCheckBox() {
+        return useSampleApacheLogCheckBox.isSelected();
+    }
+
+    public boolean getUseSampleModSecurityLogCheckBox() {
+        return useSampleModSecurityLogCheckBox.isSelected();
     }
 
     public String getModSecurityLogPath() {
@@ -115,6 +151,8 @@ public class GetLogPathFirstRun extends JDialog {
         if (dialog.isSuccess()) {
             System.out.println("[DEBUG] Apache Log Path: " + dialog.getApacheLogPath());
             System.out.println("[DEBUG] ModSecurity Log Path: " + dialog.getModSecurityLogPath());
+            System.out.println("[DEBUG] Use Pregen Apache : " + dialog.getUseSampleApacheLogCheckBox());
+            System.out.println("[DEBUG] Use Pregen Modsec : " + dialog.getUseSampleModSecurityLogCheckBox());
         }
     }
 }

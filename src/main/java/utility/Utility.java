@@ -12,6 +12,11 @@ import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.swing.*;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 public class Utility {
     private static final Logger logger = Logger.getLogger(Utility.class.getName());
@@ -32,6 +37,34 @@ public class Utility {
         } else {
             return null;
         }
+    }
+
+    public static String extractFileToLocal(String resourceFilePath) {
+        ClassLoader classLoader = Utility.class.getClassLoader();
+        String targetPathStr = null;
+
+        try (InputStream inputStream = classLoader.getResourceAsStream(resourceFilePath)) {
+            if (inputStream == null) {
+                logger.log(Level.SEVERE, "[EXTRACT_LOCAL] Resource file not found: " + resourceFilePath);
+                return null;
+            }
+
+            String samplePath = "sample/";
+            File targetDirectory = new File(samplePath);
+            if (!targetDirectory.exists()) {
+                if (!targetDirectory.mkdirs()) {
+                    logger.log(Level.SEVERE, "[EXTRACT_LOCAL] Failed to create sample directory.");
+                    return null;
+                }
+            }
+
+            Path outputPath = Paths.get(samplePath, Paths.get(resourceFilePath).getFileName().toString());
+            Files.copy(inputStream, outputPath, StandardCopyOption.REPLACE_EXISTING);
+            targetPathStr = outputPath.toAbsolutePath().toString();
+        } catch (IOException e) {
+            logger.log(Level.SEVERE, "[EXTRACT_LOCAL] Error extracting file to local", e);
+        }
+        return targetPathStr;
     }
 
     public static void updateConfigValue(String fileName, String key, String newValue) {

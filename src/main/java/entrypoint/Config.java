@@ -69,16 +69,37 @@ public class Config {
 
                 logPathFR.setVisible(true);
                 if (logPathFR.isSuccess()) {
-                    String apachePath = logPathFR.getApacheLogPath();
-                    String modSecurityPath = logPathFR.getModSecurityLogPath();
-                    Utility.updateConfigValue(CONFIG_FILE_PATH,
-                            "DEFAULT_APACHE_LOG_LOCATION",
-                            apachePath
-                    );
-                    Utility.updateConfigValue(CONFIG_FILE_PATH,
-                            "DEFAULT_MODSECURITY_LOG_LOCATION",
-                            modSecurityPath
-                    );
+                    if (logPathFR.getUseSampleApacheLogCheckBox()) {
+                        String apacheSamplePath = Utility.extractFileToLocal(
+                                "samplelog/apache_access_log.log"
+                        );
+                        Utility.updateConfigValue(CONFIG_FILE_PATH,
+                                "DEFAULT_APACHE_LOG_LOCATION",
+                                apacheSamplePath
+                        );
+                    } else {
+                        String apachePath = logPathFR.getApacheLogPath();
+                        Utility.updateConfigValue(CONFIG_FILE_PATH,
+                                "DEFAULT_APACHE_LOG_LOCATION",
+                                apachePath
+                        );
+                    }
+
+                    if (logPathFR.getUseSampleModSecurityLogCheckBox()) {
+                        String modsecSamplePath = Utility.extractFileToLocal(
+                                "samplelog/modsecurity_audit_log.log"
+                        );
+                        Utility.updateConfigValue(CONFIG_FILE_PATH,
+                                "DEFAULT_MODSECURITY_LOG_LOCATION",
+                                modsecSamplePath
+                        );
+                    } else {
+                        String modSecurityPath = logPathFR.getModSecurityLogPath();
+                        Utility.updateConfigValue(CONFIG_FILE_PATH,
+                                "DEFAULT_MODSECURITY_LOG_LOCATION",
+                                modSecurityPath
+                        );
+                    }
                 } else {
                     logger.log(Level.SEVERE,"[FirstRun] Unable to create path config file.");
                 }
