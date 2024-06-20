@@ -39,7 +39,7 @@ public class Utility {
         }
     }
 
-    public static String extractFileToLocal(String resourceFilePath) {
+    public static String extractFileToLocal(String resourceFilePath, String extractedPath) {
         ClassLoader classLoader = Utility.class.getClassLoader();
         String targetPathStr = null;
 
@@ -49,8 +49,7 @@ public class Utility {
                 return null;
             }
 
-            String samplePath = "sample/";
-            File targetDirectory = new File(samplePath);
+            File targetDirectory = new File(extractedPath);
             if (!targetDirectory.exists()) {
                 if (!targetDirectory.mkdirs()) {
                     logger.log(Level.SEVERE, "[EXTRACT_LOCAL] Failed to create sample directory.");
@@ -58,7 +57,7 @@ public class Utility {
                 }
             }
 
-            Path outputPath = Paths.get(samplePath, Paths.get(resourceFilePath).getFileName().toString());
+            Path outputPath = Paths.get(extractedPath, Paths.get(resourceFilePath).getFileName().toString());
             Files.copy(inputStream, outputPath, StandardCopyOption.REPLACE_EXISTING);
             targetPathStr = outputPath.toAbsolutePath().toString();
         } catch (IOException e) {

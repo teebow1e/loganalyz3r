@@ -71,7 +71,8 @@ public class Config {
                 if (logPathFR.isSuccess()) {
                     if (logPathFR.getUseSampleApacheLogCheckBox()) {
                         String apacheSamplePath = Utility.extractFileToLocal(
-                                "samplelog/apache_access_log.log"
+                                "samplelog/apache_access_log.log",
+                                "sample/"
                         );
                         Utility.updateConfigValue(CONFIG_FILE_PATH,
                                 "DEFAULT_APACHE_LOG_LOCATION",
@@ -87,7 +88,8 @@ public class Config {
 
                     if (logPathFR.getUseSampleModSecurityLogCheckBox()) {
                         String modsecSamplePath = Utility.extractFileToLocal(
-                                "samplelog/modsecurity_audit_log.log"
+                                "samplelog/modsecurity_audit_log.log",
+                                "sample/"
                         );
                         Utility.updateConfigValue(CONFIG_FILE_PATH,
                                 "DEFAULT_MODSECURITY_LOG_LOCATION",
@@ -103,6 +105,7 @@ public class Config {
                 } else {
                     logger.log(Level.SEVERE,"[FirstRun] Unable to create path config file.");
                 }
+                Utility.extractFileToLocal("db/GeoLite2-Country.mmdb", ".");
             } else {
                 showAlert(ERROR_LABEL,
                         "Problem occured during first-run action. The program can not continue."

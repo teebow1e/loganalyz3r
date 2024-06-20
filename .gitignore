@@ -12,6 +12,7 @@ logs/parsed/
 !src/main/resources/test/**/target/
 *.jar
 .config/
+./GeoLite2-Country.mmdb
 
 ### IntelliJ IDEA ###
 .idea/modules.xml
