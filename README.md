@@ -38,7 +38,45 @@ https://github.com/teebow1e/loganalyz3r/assets/130235050/a329da6c-74fd-4e8a-a1e9
 https://github.com/teebow1e/loganalyz3r/assets/130235050/3d49c91a-15d4-483e-89fb-4c58a5843a89
 
 ## Code Structure
-To be added.
+```
+├── java
+│   ├── controller
+│   │   ├── Controller.java
+│   │   ├── DashboardController.java
+│   │   ├── FeedbackController.java
+│   │   ├── OptionController.java
+│   │   ├── SidebarController.java
+│   │   ├── StreamController.java
+│   │   ├── ViewLogController.java
+│   │   └── ViewModSecController.java
+│   ├── entrypoint
+│   │   ├── Config.java
+│   │   └── Main.java
+│   ├── loganalyzer
+│   │   ├── Apache.java
+│   │   ├── ApacheParser.java
+│   │   ├── Log.java
+│   │   ├── ModSecurity.java
+│   │   └── ModSecurityParser.java
+│   ├── ui
+│   │   ├── ComboBoxItemWrap.java
+│   │   ├── LoginForm.java
+│   │   ├── SignUpForm.java
+│   │   └── WebLogManager.java
+│   ├── user
+│   │   ├── User.java
+│   │   └── UserManagement.java
+│   └── utility
+│       ├── GetAdminCredFirstRun.java
+│       ├── GetLogPathFirstRun.java
+│       ├── IpLookUp.java
+│       ├── LogFileVerifier.java
+│       └── Utility.java
+└── resources
+    ├── css
+    ├── fxml
+    └── img
+```
 
 ## License
 Distributed under the MIT License. See `LICENSE` for more information.
