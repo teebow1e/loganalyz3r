@@ -77,6 +77,8 @@ https://github.com/teebow1e/loganalyz3r/assets/130235050/3d49c91a-15d4-483e-89fb
     ├── fxml
     └── img
 ```
+## Build
+To be added.
 
 ## License
 Distributed under the MIT License. See `LICENSE` for more information.
