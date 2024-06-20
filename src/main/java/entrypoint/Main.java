@@ -3,12 +3,16 @@ package entrypoint;
 import javafx.application.Application;
 import ui.LoginForm;
 import utility.Utility;
+import static utility.TestReadFileInJar.ReadSpecialFile;
 
 import javax.swing.JOptionPane;
 import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) {
+        System.out.println("performming checking now..");
+        ReadSpecialFile(new String[]{"a"});
+
         if (!Config.checkConfigDir()) {
             Utility.showFirstRunMessage();
             Config.firstRunAction();
