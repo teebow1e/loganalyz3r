@@ -81,7 +81,7 @@ https://github.com/teebow1e/loganalyz3r/assets/130235050/3d49c91a-15d4-483e-89fb
 To be added.
 
 ## License
-Distributed under the MIT License. See `LICENSE` for more information.
+Distributed under the MIT License. See [`LICENSE`](https://github.com/teebow1e/loganalyz3r/blob/main/LICENSE) for more information.
 
 ## Contact
 This project is maintained by 2 moderators:
