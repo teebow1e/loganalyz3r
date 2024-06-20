@@ -6,6 +6,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
 import java.io.*;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -20,6 +21,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.ProgressMonitorInputStream;
 
 import utility.Utility;
 import entrypoint.Config;
@@ -135,6 +137,7 @@ public class OptionController {
                 resultFetch = firstObject.get("body").asText();
             }
         } catch (Exception e) {
+            // todo: add a dialog box here
             logger.log(Level.INFO, "[fetchUpdate] Failed to fetch update from remote API.", e);
         }
 
@@ -187,18 +190,41 @@ public class OptionController {
     }
 
     private void downloadFile(String fileURL, String savePath) {
-        try (InputStream in = new BufferedInputStream(new URL(fileURL).openStream());
-             OutputStream out = new FileOutputStream(savePath)) {
+        InputStream in = null;
+        OutputStream out = null;
+        try {
+            URL url = new URL(fileURL);
+            URLConnection connection = url.openConnection();
+            int fileSize = connection.getContentLength();
+
+            in = new ProgressMonitorInputStream(null, "Downloading file", connection.getInputStream());
+            out = new FileOutputStream(savePath);
             byte[] buffer = new byte[1024];
             int bytesRead;
+            int totalBytesRead = 0;
+
             while ((bytesRead = in.read(buffer, 0, 1024)) != -1) {
                 out.write(buffer, 0, bytesRead);
+                totalBytesRead += bytesRead;
+                int progress = (int) ((totalBytesRead / (double) fileSize) * 100);
+                // a download progress bar would be awesome asf
+                logger.log(Level.INFO, "Download progress: {0}%", progress);
             }
-            Utility.showInfo("File Downloaded",
-                    "New version of IPDB has been downloaded successfully."
-            );
+
+            Utility.showInfo("File Downloaded", "New version of IPDB has been downloaded successfully.");
         } catch (IOException e) {
             logger.log(Level.WARNING, "Failed to perform required IO activities.", e);
+        } finally {
+            try {
+                if (in != null) {
+                    in.close();
+                }
+                if (out != null) {
+                    out.close();
+                }
+            } catch (IOException e) {
+                logger.log(Level.WARNING, "Failed to close streams.", e);
+            }
         }
     }
 
