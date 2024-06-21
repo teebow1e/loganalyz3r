@@ -220,9 +220,6 @@ public class OptionController {
                 if (in != null) {
                     in.close();
                 }
-                if (out != null) {
-                    out.close();
-                }
             } catch (IOException e) {
                 logger.log(Level.WARNING, "Failed to close streams.", e);
             }
