@@ -137,7 +137,7 @@ public class OptionController {
                 resultFetch = firstObject.get("body").asText();
             }
         } catch (Exception e) {
-            // todo: add a dialog box here
+            Utility.showAlert("ERROR", String.format("%s\n%s", "An error has occurred during fetching update.", e));
             logger.log(Level.INFO, "[fetchUpdate] Failed to fetch update from remote API.", e);
         }
 
@@ -185,46 +185,35 @@ public class OptionController {
                 logger.log(Level.INFO,"No releases found when connecting to API.");
             }
         } catch (Exception e) {
+            Utility.showAlert("ERROR", String.format("%s\n%s", "An error has occurred during downloading updates.", e));
             logger.log(Level.INFO, "[updateIPDB] Failed to fetch update from remote API.");
         }
     }
 
     private void downloadFile(String fileURL, String savePath) {
-        InputStream in = null;
-        OutputStream out = null;
         try {
             URL url = new URL(fileURL);
             URLConnection connection = url.openConnection();
             int fileSize = connection.getContentLength();
 
-            in = new ProgressMonitorInputStream(null, "Downloading file", connection.getInputStream());
-            out = new FileOutputStream(savePath);
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            int totalBytesRead = 0;
+            try (InputStream in = new ProgressMonitorInputStream(null, "Downloading file", connection.getInputStream());
+                 FileOutputStream outputStream = new FileOutputStream(savePath)) {
 
-            while ((bytesRead = in.read(buffer, 0, 1024)) != -1) {
-                out.write(buffer, 0, bytesRead);
-                totalBytesRead += bytesRead;
-                int progress = (int) ((totalBytesRead / (double) fileSize) * 100);
-                // a download progress bar would be awesome asf
-                logger.log(Level.INFO, "Download progress: {0}%", progress);
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                int totalBytesRead = 0;
+
+                while ((bytesRead = in.read(buffer, 0, 1024)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                    totalBytesRead += bytesRead;
+                    int progress = (int) ((totalBytesRead / (double) fileSize) * 100);
+                    // A download progress bar would be awesome asf
+                    logger.log(Level.INFO, "Download progress: {0}%", progress);
+                }
+                Utility.showInfo("File Downloaded", "New version of IPDB has been downloaded successfully.");
             }
-
-            Utility.showInfo("File Downloaded", "New version of IPDB has been downloaded successfully.");
         } catch (IOException e) {
             logger.log(Level.WARNING, "Failed to perform required IO activities.", e);
-        } finally {
-            try {
-                if (in != null) {
-                    in.close();
-                }
-                if (out != null) {
-                    out.close();
-                }
-            } catch (IOException e) {
-                logger.log(Level.WARNING, "Failed to close streams.", e);
-            }
         }
     }
 
