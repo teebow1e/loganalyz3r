@@ -19,6 +19,7 @@ import user.UserManagement;
 import entrypoint.Config;
 
 import static utility.Utility.showAlert;
+import static utility.Utility.showInfo;
 
 public class Controller {
     private Stage stage;
@@ -84,6 +85,7 @@ public class Controller {
             return;
         }
         UserManagement.addUser(dbFilePath, username, password);
+        showInfo("Sign-up Completed", "Your account has been created.");
         returnToLogin(event);
     }
 

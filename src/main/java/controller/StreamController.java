@@ -65,7 +65,7 @@ public class StreamController {
     }
 
     @FXML
-    void chooseFile(ActionEvent event) throws IOException {
+    void chooseFile(ActionEvent event) {
         FileChooser fc = new FileChooser();
         fc.getExtensionFilters().addAll(extFilterLogs);
         fc.setTitle("Choose a file for streaming");
@@ -73,11 +73,9 @@ public class StreamController {
         if (file != null) {
             fileToStreamPath = file.getAbsolutePath();
             // this only support apache for now.
-            if (LogFileVerifier.isApacheLogFile(fileToStreamPath)) {
-                chosenFileText.setText("You selected: " + file.getAbsolutePath());
-                logger.log(Level.INFO,"File name: {0}", file.getName());
-                logger.log(Level.INFO,"File size: {0} bytes", file.length());
-            }
+            chosenFileText.setText("You selected: " + file.getAbsolutePath());
+            logger.log(Level.INFO,"File name: {0}", file.getName());
+            logger.log(Level.INFO,"File size: {0} bytes", file.length());
         }
     }
 
