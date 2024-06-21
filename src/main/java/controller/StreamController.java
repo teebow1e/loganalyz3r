@@ -14,10 +14,8 @@ import javafx.stage.FileChooser;
 import loganalyzer.Apache;
 import org.apache.commons.io.input.Tailer;
 import org.apache.commons.io.input.TailerListenerAdapter;
-import utility.LogFileVerifier;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;

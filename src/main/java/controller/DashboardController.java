@@ -17,7 +17,6 @@ import loganalyzer.Apache;
 import loganalyzer.ModSecurity;
 import ui.WebLogManager;
 
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
