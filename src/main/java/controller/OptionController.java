@@ -198,17 +198,18 @@ public class OptionController {
             int fileSize = connection.getContentLength();
 
             in = new ProgressMonitorInputStream(null, "Downloading file", connection.getInputStream());
-            out = new FileOutputStream(savePath);
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            int totalBytesRead = 0;
+            try (FileOutputStream outputStream = new FileOutputStream(savePath)) {
+                byte[] buffer = new byte[1024];
+                int bytesRead;
+                int totalBytesRead = 0;
 
-            while ((bytesRead = in.read(buffer, 0, 1024)) != -1) {
-                out.write(buffer, 0, bytesRead);
-                totalBytesRead += bytesRead;
-                int progress = (int) ((totalBytesRead / (double) fileSize) * 100);
-                // a download progress bar would be awesome asf
-                logger.log(Level.INFO, "Download progress: {0}%", progress);
+                while ((bytesRead = in.read(buffer, 0, 1024)) != -1) {
+                    outputStream.write(buffer, 0, bytesRead);
+                    totalBytesRead += bytesRead;
+                    int progress = (int) ((totalBytesRead / (double) fileSize) * 100);
+                    // a download progress bar would be awesome asf
+                    logger.log(Level.INFO, "Download progress: {0}%", progress);
+                }
             }
 
             Utility.showInfo("File Downloaded", "New version of IPDB has been downloaded successfully.");
