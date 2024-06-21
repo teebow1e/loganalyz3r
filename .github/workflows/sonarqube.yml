@@ -36,8 +36,8 @@ jobs:
         shell: bash
         working-directory: .
         run: | 
-          curl --insecure -o ./sonarscanner.zip -L https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip && unzip -q sonarscanner.zip
-          wget https://repo1.maven.org/maven2/org/sonarsource/scanner/maven/sonar-maven-plugin/3.11.0.3922/sonar-maven-plugin-3.11.0.3922.jar
+          curl --insecure -o ./sonarscanner.zip -L https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-6.0.0.4432-linux.zip && unzip -q sonarscanner.zip
+          wget https://repo1.maven.org/maven2/org/sonarsource/scanner/maven/sonar-maven-plugin/4.0.0.4121/sonar-maven-plugin-4.0.0.4121.jar
       - name: SonarQube Analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
