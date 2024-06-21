@@ -218,7 +218,7 @@ public class DashboardController {
         });
     }
 
-    private void displayLogsByInterval(String interval, LocalDate selectedDate) throws IOException, ParseException {
+    private void displayLogsByInterval(String interval, LocalDate selectedDate) {
         XYChart.Series<String, Number> logSeries = new XYChart.Series<>();
         logSeries.setName("Log Count");
 
@@ -272,7 +272,7 @@ public class DashboardController {
         updateModsecRuleTable(selectedDate);
     }
 
-    private Map<String, Map<String, Integer>> groupLogsByInterval(String interval, LocalDate selectedDate) throws ParseException {
+    private Map<String, Map<String, Integer>> groupLogsByInterval(String interval, LocalDate selectedDate) {
         Map<String, Map<String, Integer>> groupedLogs = new TreeMap<>();
         SimpleDateFormat dateFormat;
         Calendar calendar = Calendar.getInstance();
@@ -315,7 +315,11 @@ public class DashboardController {
 
         for (Apache entry : logEntries) {
             SimpleDateFormat sdf = new SimpleDateFormat("dd/MMM/yyyy:HH:mm:ss Z", Locale.ENGLISH);
-            calendar.setTime(sdf.parse(entry.getTimestamp()));
+            try {
+                calendar.setTime(sdf.parse(entry.getTimestamp()));
+            } catch (ParseException e) {
+                throw new RuntimeException(e);
+            }
             LocalDate entryDate = calendar.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
             if (entryDate.equals(selectedDate) && calendar.get(Calendar.HOUR_OF_DAY) >= startHour) {
                 adjustCalendar(calendar, field, amount);
@@ -402,7 +406,7 @@ public class DashboardController {
         }
     }
 
-    private void updateIpRanking(LocalDate selectedDate) throws IOException {
+    private void updateIpRanking(LocalDate selectedDate) {
         Map<String, Integer> ipCounts = new HashMap<>();
         Map<String, Integer> countryCounts = new HashMap<>();
 

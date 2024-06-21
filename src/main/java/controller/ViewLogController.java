@@ -297,6 +297,7 @@ public class ViewLogController {
                 case "Time Stamp" -> {
                     DateTimeFormatter APACHE_TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss Z");
                     DateTimeFormatter TEXTFIELD_TIMESTAMP_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
                     if (textField != null) {
                         try {
                             LocalDateTime apacheDateTime = LocalDateTime.parse(timestamp, APACHE_TIMESTAMP_FORMATTER);

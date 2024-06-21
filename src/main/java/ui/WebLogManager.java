@@ -7,13 +7,15 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.IOException;
+
 public class WebLogManager extends Application {
     @Override
-    public void start(Stage primaryStage) throws Exception {
+    public void start(Stage primaryStage) {
         start(primaryStage, 1);
     }
 
-    public void start(Stage primaryStage, int mode) throws Exception {
+    public void start(Stage primaryStage, int mode) {
         FXMLLoader loader;
         String fxmlFile = switch (mode) {
             case 1 -> "/fxml/main/Dashboard.fxml";
@@ -29,7 +31,12 @@ public class WebLogManager extends Application {
         double width = primaryStage.getScene().getWidth();
         double height = primaryStage.getScene().getHeight();
         loader = new FXMLLoader(getClass().getResource(fxmlFile));
-        Parent root = loader.load();
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         Scene scene = new Scene(root, width, height);
 
         primaryStage.setTitle("Web Log Analyzer");

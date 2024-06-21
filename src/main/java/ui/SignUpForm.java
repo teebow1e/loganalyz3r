@@ -9,17 +9,17 @@ import javafx.stage.Stage;
 import java.io.IOException;
 
 public class SignUpForm {
-    public void start(Stage primaryStage) throws IOException {
+    public void start(Stage primaryStage) {
         FXMLLoader loader = new FXMLLoader(getClass().getResource("/fxml/SignUpForm.fxml"));
-        Parent root = loader.load();
+        Parent root = null;
+        try {
+            root = loader.load();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
         double width = primaryStage.getScene().getWidth();
         double height = primaryStage.getScene().getHeight();
-        if (width <= 0) {
-            width = 1200;
-            height = 800;
-        }
-
         Scene scene = new Scene(root, width, height);
 
         primaryStage.setTitle("Sign Up");
