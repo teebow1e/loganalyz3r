@@ -14,10 +14,7 @@ import javafx.scene.text.Text;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -106,20 +103,22 @@ public class ViewModSecController {
             };
 
             cell.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
-                cell.getItem().checkProperty().set(!cell.getItem().checkProperty().get());
-                StringBuilder sb = new StringBuilder();
-                filterComboBox.getItems()
-                        .filtered(Objects::nonNull)
-                        .filtered(ComboBoxItemWrap::getCheck)
-                        .forEach(p -> sb.append("; ").append(p.getItem()));
-                final String string = sb.toString();
-                if (string.isEmpty()) {
-                    filterComboBox.setPromptText("Matching all");
-                    return;
+                ComboBoxItemWrap<String> item = cell.getItem();
+                if (item != null) {
+                    item.checkProperty().set(!item.checkProperty().get());
+                    updateComboBoxPromptText(filterComboBox);
+                    event.consume();
                 }
-                filterComboBox.setPromptText(string.substring(Integer.min(2, string.length())));
             });
             return cell;
+        });
+
+        filterComboBox.setButtonCell(new ListCell<ComboBoxItemWrap<String>>() {
+            @Override
+            protected void updateItem(ComboBoxItemWrap<String> item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(filterComboBox.getPromptText());
+            }
         });
 
         if (searchBoxData != null) {
@@ -188,6 +187,24 @@ public class ViewModSecController {
         } catch (Exception e) {
             logger.log(Level.INFO, "An exception occurred", e);
         }
+    }
+
+    private void updateComboBoxPromptText(ComboBox<ComboBoxItemWrap<String>> comboBox) {
+        StringJoiner joiner = new StringJoiner("; ");
+        comboBox.getItems()
+                .filtered(item -> item != null && item.getCheck())
+                .forEach(item -> joiner.add(item.getItem()));
+        String selectedItems = joiner.toString();
+
+        if (selectedItems.isEmpty()) {
+            comboBox.setPromptText("Choose Filter");
+        } else {
+            comboBox.setPromptText(selectedItems);
+        }
+
+        String promptText = comboBox.getPromptText();
+        comboBox.setPromptText(null);
+        comboBox.setPromptText(promptText);
     }
 
     public static void setComboBoxElementTick(String data) {
