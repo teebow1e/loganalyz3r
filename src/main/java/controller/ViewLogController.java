@@ -93,6 +93,7 @@ public class ViewLogController {
 
     @FXML
     private void initialize() {
+        filterComboBox.setItems(filterList);
         filterComboBox.setCellFactory( c -> {
             ListCell<ComboBoxItemWrap<String>> cell = new ListCell<>(){
                 @Override
@@ -107,23 +108,24 @@ public class ViewLogController {
             };
 
             cell.addEventFilter(MouseEvent.MOUSE_RELEASED, event -> {
-                cell.getItem().checkProperty().set(!cell.getItem().checkProperty().get());
-                StringBuilder sb = new StringBuilder();
-                filterComboBox.getItems()
-                        .filtered(Objects::nonNull)
-                        .filtered(ComboBoxItemWrap::getCheck)
-                        .forEach(p -> sb.append("; ").append(p.getItem())
-                );
-                final String string = sb.toString();
-                if (string.isEmpty()) {
-                    filterComboBox.setPromptText("Matching all");
-                    return;
+                ComboBoxItemWrap<String> item = cell.getItem();
+                if (item != null) {
+                    item.checkProperty().set(!item.checkProperty().get());
+                    updateComboBoxPromptText(filterComboBox);
+                    event.consume();
                 }
-                filterComboBox.setPromptText(string.substring(Integer.min(2, string.length())));
             });
 
             return cell;
         });
+        filterComboBox.setButtonCell(new ListCell<ComboBoxItemWrap<String>>() {
+            @Override
+            protected void updateItem(ComboBoxItemWrap<String> item, boolean empty) {
+                super.updateItem(item, empty);
+                setText(filterComboBox.getPromptText());
+            }
+        });
+
 
         if (searchBoxData != null) {
             searchField.setText(searchBoxData);
@@ -148,9 +150,8 @@ public class ViewLogController {
             filterComboBox.setPromptText("Choose Filter");
         }
 
-        filterComboBox.setItems(filterList);
 
-        if(datePicker.getValue() == null) {
+        if (datePicker.getValue() == null) {
             if (dbDate == null) {
                 datePicker.setValue(LocalDate.now());
             }
@@ -193,6 +194,24 @@ public class ViewLogController {
         } catch (Exception e) {
             logger.log(Level.INFO, "An exception occurred", e);
         }
+    }
+
+    private void updateComboBoxPromptText(ComboBox<ComboBoxItemWrap<String>> comboBox) {
+        StringJoiner joiner = new StringJoiner("; ");
+        comboBox.getItems()
+                .filtered(item -> item != null && item.getCheck())
+                .forEach(item -> joiner.add(item.getItem()));
+        String selectedItems = joiner.toString();
+
+        if (selectedItems.isEmpty()) {
+            comboBox.setPromptText("Choose Filter");
+        } else {
+            comboBox.setPromptText(selectedItems);
+        }
+
+        String promptText = comboBox.getPromptText();
+        comboBox.setPromptText(null);
+        comboBox.setPromptText(promptText);
     }
 
     public void viewLog() {
