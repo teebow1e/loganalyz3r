@@ -111,7 +111,7 @@
                </VBox>
                <VBox alignment="CENTER" maxWidth="1.7976931348623157E308" minHeight="300.0" minWidth="480.0" style="-fx-background-color: #AD88C6;" HBox.hgrow="ALWAYS" VBox.vgrow="ALWAYS">
                   <children>
-                     <Label text="Project Aim">
+                     <Label text="Project Aim" textFill="WHITE">
                         <font>
                            <Font name="Gill Sans Ultra Bold" size="32.0" />
                         </font>

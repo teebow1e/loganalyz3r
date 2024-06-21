@@ -13,7 +13,7 @@ import java.util.Map;
 public class IpLookUp {
     public static String checkIP(String host) throws IOException {
         // CONSTANT VALUE HERE
-        File database = new File("GeoLite2-Country.mmdb");
+        File database = new File("src/main/resources/db/GeoLite2-Country.mmdb");
         try (Reader reader = new Reader(database)) {
             InetAddress address = InetAddress.getByName(host);
             LookupResult result = reader.get(address, LookupResult.class);
@@ -21,7 +21,7 @@ public class IpLookUp {
             if (result != null && result.getCountry() != null) {
                 return convertToCountryCode(result.getCountry().getIsoCode());
             } else {
-                return "None";
+                return "N/A";
             }
         }
     }
