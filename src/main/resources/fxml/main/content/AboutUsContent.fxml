@@ -9,7 +9,7 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<VBox fx:id="mainVBox" alignment="TOP_CENTER" style="-fx-background-color: white;" HBox.hgrow="ALWAYS" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
+<VBox fx:id="mainVBox" alignment="TOP_CENTER" style="-fx-background-color: white;" stylesheets="@../../../css/AboutUs.css" HBox.hgrow="ALWAYS" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.AboutUsController">
    <VBox alignment="TOP_CENTER" VBox.vgrow="ALWAYS" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1">
       <children>
          <Label text="Loganalyz3r" VBox.vgrow="ALWAYS">
@@ -124,6 +124,14 @@
                            <Font size="20.0" />
                         </font>
                         <wrapText>true</wrapText>
+                        <VBox.margin>
+                           <Insets left="20.0" right="20.0" />
+                        </VBox.margin>
+                     </Label>
+                     <Label onMouseClicked="#openGitHubLink" styleClass="hover-underline" text="- More Info -" textFill="#370b4d" VBox.vgrow="NEVER">
+                        <font>
+                           <Font size="20.0" />
+                        </font>
                         <VBox.margin>
                            <Insets left="20.0" right="20.0" />
                         </VBox.margin>

@@ -1,0 +1,8 @@
+.hover-underline {
+    -fx-underline: false;
+    -fx-cursor: hand;
+}
+
+.hover-underline:hover {
+    -fx-underline: true;
+}
