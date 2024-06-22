@@ -90,17 +90,23 @@ public class ApacheParser {
     }
 
     public static Apache parseLogLine(String line) {
-        String[] aioArr = parseAllInOne(line);
-        return new Apache(
-                parseIpAddress(line),
-                parseTimestamp(line),
-                parseMethod(aioArr),
-                parseProtocol(aioArr),
-                parseRequestPath(aioArr),
-                parseStatusCode(aioArr),
-                parseContentLength(aioArr),
-                parseUserAgent(line)
-        );
+        try {
+            String[] aioArr = parseAllInOne(line);
+            return new Apache(
+                    parseIpAddress(line),
+                    parseTimestamp(line),
+                    parseMethod(aioArr),
+                    parseProtocol(aioArr),
+                    parseRequestPath(aioArr),
+                    parseStatusCode(aioArr),
+                    parseContentLength(aioArr),
+                    parseUserAgent(line)
+            );
+        } catch (Exception e) {
+            System.out.println(e);
+            System.out.println(line);
+        }
+        return null;
     }
 
     public static List<Apache> parseApacheByDate(DatePicker datePicker) {
@@ -118,10 +124,8 @@ public class ApacheParser {
                     LocalDate logDate = LocalDate.parse(timestamp, formatter);
 
                     if (logDate.equals(selectedDate)) {
-                        // at this point, every line put to this code can be parsed
-                        // however, some of them might be invalid, but still be able to be parsed
-                        // we need to make sure that only valid log will be pushed into this application
-                        // also pushed a notification if there's un-parse-able log in the process
+                        // todo: perform check to determine the current datae
+                        // also check for current date in log using for loops
                         logList.add(parseLogLine(line));
                     }
                 }

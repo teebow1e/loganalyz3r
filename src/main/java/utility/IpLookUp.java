@@ -8,16 +8,26 @@ import entrypoint.Config;
 import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
 public class IpLookUp {
+
+    private static Reader dbReader;
+
+    static {
+        try {
+            dbReader = new Reader(new File(Config.getIpDbFilename()));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
     public static String checkIP(String host) {
-        // CONSTANT VALUE HERE
-        File database = new File(Config.getIpDbFilename());
-        try (Reader reader = new Reader(database)) {
+        try {
             InetAddress address = InetAddress.getByName(host);
-            LookupResult result = reader.get(address, LookupResult.class);
+            LookupResult result = dbReader.get(address, LookupResult.class);
 
             if (result != null && result.getCountry() != null) {
                 return convertToCountryCode(result.getCountry().getIsoCode());
@@ -25,8 +35,9 @@ public class IpLookUp {
                 return "N/A";
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println(e);
         }
+        return "N/A";
     }
 
     public static class LookupResult {
