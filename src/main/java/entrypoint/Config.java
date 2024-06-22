@@ -26,11 +26,15 @@ public class Config {
             CONFIG_DIR_PATH + File.separator + "accounts.json";
     private static final String CONFIG_FILE_PATH =
             CONFIG_DIR_PATH + File.separator + "config.json";
+    private static final String IP_DB_FILENAME = "GeoLite2-Country.mmdb";
     public static String getConfigFilePath() {
         return CONFIG_FILE_PATH;
     }
     public static String getAccountsFilePath() {
         return ACCOUNTS_FILE_PATH;
+    }
+    public static String getIpDbFilename() {
+        return IP_DB_FILENAME;
     }
     public static boolean checkConfigDir() {
         File dir = new File(CONFIG_DIR_PATH);

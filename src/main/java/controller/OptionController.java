@@ -50,7 +50,7 @@ public class OptionController {
         apacheLogLocationTF.setText(Config.getApacheLogLocation());
         modsecLogLocationTF.setText(Config.getModSecurityLogLocation());
 
-        File ipDBFile = new File("GeoLite2-Country.mmdb");
+        File ipDBFile = new File(Config.getIpDbFilename());
         if (ipDBFile.exists() && ipDBFile.canRead()) {
             String ipDBLocationMsg = "IP Database Location: Available at ";
             ipDBLocationText.setText(ipDBLocationMsg + ipDBFile.getAbsolutePath());
