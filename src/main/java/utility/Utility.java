@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import javafx.scene.control.Alert;
 
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.logging.Logger;
@@ -90,13 +92,29 @@ public class Utility {
     }
 
     public static void showFirstRunMessage() {
-        JOptionPane.showMessageDialog(
-                null,
-                "This is the first time you run this app. You have to perform first-run initialization. Click OK to continue.",
-                "Notification",
-                JOptionPane.INFORMATION_MESSAGE
+        JPanel panel = new JPanel();
+        panel.add(new JLabel(
+                "This is the first time you run this app. You have to perform first-run initialization. Click OK to continue."
+        ));
+
+        JOptionPane optionPane = new JOptionPane(
+                panel,
+                JOptionPane.INFORMATION_MESSAGE,
+                JOptionPane.DEFAULT_OPTION
         );
+
+        JDialog dialog = optionPane.createDialog("Notification");
+
+        dialog.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                logger.log(Level.INFO,"[FirstRun] User aborted the first-run initialization.");
+                System.exit(1);
+            }
+        });
+        dialog.setVisible(true);
     }
+
 
     public static void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);

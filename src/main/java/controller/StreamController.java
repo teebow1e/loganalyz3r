@@ -6,11 +6,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.Node;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 import loganalyzer.Apache;
 import org.apache.commons.io.input.Tailer;
 import org.apache.commons.io.input.TailerListenerAdapter;
@@ -116,6 +119,14 @@ public class StreamController {
     }
 
     private void startTailer() {
+        Stage primaryStage = (Stage) mainStreamTable.getScene().getWindow();
+        primaryStage.setOnCloseRequest(event -> {
+            if (isTailerRunning) {
+                logger.log(Level.WARNING,"User attempted to close windows during streaming logs.");
+                showAlert("ERROR", "You can not close the application while stream logs.");
+                event.consume();
+            }
+        });
         ObservableList<Apache> rows = FXCollections.observableArrayList();
         if (Objects.equals(fileToStreamPath, "")) {
             showAlert("ERROR", "You have not selected any files!");
