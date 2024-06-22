@@ -32,7 +32,7 @@
       </padding>
      </Label>
 
-     <Label graphicTextGap="10.0" lineSpacing="10.0" maxWidth="1.7976931348623157E308" onMouseClicked="#handleViewlog" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: #FFE6E6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;" styleClass="sidebar-content-label" text="View Logs">
+     <Label graphicTextGap="10.0" lineSpacing="10.0" maxWidth="1.7976931348623157E308" onMouseClicked="#handleViewlog" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: #FFE6E6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;" styleClass="sidebar-content-label" text="Apache">
          <graphic>
              <ImageView>
                  <Image url="@/img/access.png" />
@@ -43,7 +43,7 @@
       </padding>
      </Label>
 
-     <Label graphicTextGap="10.0" lineSpacing="10.0" maxWidth="1.7976931348623157E308" onMouseClicked="#handleViewModSec" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: #FFE6E6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;" styleClass="sidebar-content-label" text="View Mod Sec">
+     <Label graphicTextGap="10.0" lineSpacing="10.0" maxWidth="1.7976931348623157E308" onMouseClicked="#handleViewModSec" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: #FFE6E6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;" styleClass="sidebar-content-label" text="ModSecurity">
          <graphic>
              <ImageView>
                  <Image url="@/img/modsec.png" />
@@ -76,7 +76,7 @@
         </padding>
     </Label>
 
-    <Label graphicTextGap="10.0" lineSpacing="10.0" maxWidth="1.7976931348623157E308" onMouseClicked="#handleOption" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: #FFE6E6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;" styleClass="sidebar-content-label" text="Option">
+    <Label graphicTextGap="10.0" lineSpacing="10.0" maxWidth="1.7976931348623157E308" onMouseClicked="#handleOption" style="-fx-min-width: 150px; -fx-min-height: 40px; -fx-padding: 10px 10px 10px 10px; -fx-text-fill: #FFE6E6; -fx-font-size: 14px; -fx-font-weight: bold; -fx-background-radius: 4px;" styleClass="sidebar-content-label" text="Options">
         <graphic>
             <ImageView>
                 <Image url="@/img/option.png" />

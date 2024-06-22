@@ -27,6 +27,7 @@ public class Config {
     private static final String CONFIG_FILE_PATH =
             CONFIG_DIR_PATH + File.separator + "config.json";
     private static final String IP_DB_FILENAME = "GeoLite2-Country.mmdb";
+    public static final String PROJECT_NAME = "loganalyz3r";
     public static String getConfigFilePath() {
         return CONFIG_FILE_PATH;
     }

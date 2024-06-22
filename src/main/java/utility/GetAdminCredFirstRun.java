@@ -4,15 +4,18 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GetAdminCredFirstRun extends JDialog {
     private JTextField usernameField;
     private JPasswordField passwordField;
     private JButton submitButton;
     private boolean success;
+    private static final Logger logger = Logger.getLogger(GetAdminCredFirstRun.class.getName());
 
     public GetAdminCredFirstRun(Frame parent) {
-        super(parent, "Initialize Admin Credentials", true);
+        super(parent, "Create admin account", true);
         setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -26,6 +29,7 @@ public class GetAdminCredFirstRun extends JDialog {
         gbc.gridx = 1;
         usernameField = new JTextField(20);
         usernameField.setText("admin");
+        usernameField.setEditable(false);
         add(usernameField, gbc);
 
         gbc.gridx = 0;
@@ -71,8 +75,9 @@ public class GetAdminCredFirstRun extends JDialog {
         dialog.setVisible(true);
 
         if (dialog.isSuccess()) {
-            System.out.println("[DEBUG] Username: " + dialog.getUsername());
-            System.out.println("[DEBUG] Password: " + dialog.getPassword());
+            logger.log(Level.INFO, "[FirstRun] Get admin creds from user successfully.");
+        } else {
+            logger.log(Level.INFO, "[FirstRun] Failed to init admin creds.");
         }
     }
 }

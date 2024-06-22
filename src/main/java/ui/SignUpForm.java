@@ -1,6 +1,7 @@
 package ui;
 
 import controller.Controller;
+import entrypoint.Config;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -22,7 +23,7 @@ public class SignUpForm {
         double height = primaryStage.getScene().getHeight();
         Scene scene = new Scene(root, width, height);
 
-        primaryStage.setTitle("Sign Up");
+        primaryStage.setTitle(Config.PROJECT_NAME);
         primaryStage.setScene(scene);
         primaryStage.show();
 

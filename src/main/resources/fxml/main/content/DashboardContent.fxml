@@ -40,7 +40,7 @@
             <CategoryAxis label="Time" />
         </xAxis>
         <yAxis>
-            <NumberAxis fx:id="yAxis" forceZeroInRange="true" label="Log Count" minorTickCount="0" tickUnit="1.0" />
+            <NumberAxis fx:id="yAxis" forceZeroInRange="true" label="Count" minorTickCount="0" tickUnit="1.0" />
         </yAxis>
     </LineChart>
    <HBox VBox.vgrow="ALWAYS">

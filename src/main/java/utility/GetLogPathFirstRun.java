@@ -5,6 +5,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class GetLogPathFirstRun extends JDialog {
     private JTextField apacheLogPathField;
@@ -15,9 +17,10 @@ public class GetLogPathFirstRun extends JDialog {
     private JCheckBox useSampleModSecurityLogCheckBox;
     private JButton submitButton;
     private boolean success;
+    private static final Logger logger = Logger.getLogger(GetLogPathFirstRun.class.getName());
 
     public GetLogPathFirstRun(Frame parent) {
-        super(parent, "Select Log Paths", true);
+        super(parent, "Select log paths", true);
         setLayout(new GridBagLayout());
 
         GridBagConstraints gbc = new GridBagConstraints();
@@ -149,10 +152,9 @@ public class GetLogPathFirstRun extends JDialog {
         dialog.setVisible(true);
 
         if (dialog.isSuccess()) {
-            System.out.println("[DEBUG] Apache Log Path: " + dialog.getApacheLogPath());
-            System.out.println("[DEBUG] ModSecurity Log Path: " + dialog.getModSecurityLogPath());
-            System.out.println("[DEBUG] Use Pregen Apache : " + dialog.getUseSampleApacheLogCheckBox());
-            System.out.println("[DEBUG] Use Pregen Modsec : " + dialog.getUseSampleModSecurityLogCheckBox());
+            logger.log(Level.INFO, "[FirstRun] Init log path successfully.");
+        } else {
+            logger.log(Level.INFO, "[FirstRun] Failed to init log path.");
         }
     }
 }

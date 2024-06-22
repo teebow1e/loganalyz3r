@@ -92,8 +92,8 @@ public class Utility {
     public static void showFirstRunMessage() {
         JOptionPane.showMessageDialog(
                 null,
-                "It looks like this is the first time you are opening this app. You have to perform first run actions. Click OK to continue.",
-                "First Run",
+                "This is the first time you run this app. You have to perform first-run initialization. Click OK to continue.",
+                "Notification",
                 JOptionPane.INFORMATION_MESSAGE
         );
     }

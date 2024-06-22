@@ -1,6 +1,7 @@
 package ui;
 
 import controller.Controller;
+import entrypoint.Config;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -32,7 +33,7 @@ public class LoginForm extends Application {
         }
         Scene scene = new Scene(root, width, height);
 
-        primaryStage.setTitle("Login");
+        primaryStage.setTitle(Config.PROJECT_NAME);
         primaryStage.setScene(scene);
         primaryStage.show();
 
