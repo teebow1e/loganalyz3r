@@ -113,22 +113,18 @@ public class ApacheParser {
         Path logPath = Paths.get(logFilePath);
         List<Apache> logList = new LinkedList<>();
         LocalDate selectedDate = datePicker.getValue();
+        System.out.println(selectedDate);
 
         if (Files.exists(logPath)) {
             try (BufferedReader br = new BufferedReader(new FileReader(logFilePath))) {
                 String line;
-                boolean reachedEOD = false;
                 while ((line = br.readLine()) != null) {
                     String timestamp = parseTimestamp(line);
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss Z", Locale.ENGLISH);
                     LocalDate logDate = LocalDate.parse(timestamp, formatter);
 
-                    if (!reachedEOD) {
-                        if (logDate.equals(selectedDate)) {
-                            logList.add(parseLogLine(line));
-                        } else {
-                            reachedEOD = true;
-                        }
+                    if (logDate.equals(selectedDate)) {
+                        logList.add(parseLogLine(line));
                     }
                 }
             } catch (IOException e) {
