@@ -35,6 +35,15 @@ public class ApacheParser {
             return null;
         }
     }
+
+    public static String parseTimestampSpecial(String logLine) {
+        String parsedLog = findFirstMatch(logLine, timestampPattern);
+        if (parsedLog != null) {
+            return parsedLog.substring(1, parsedLog.length() - 1).substring(0, 11);
+        } else {
+            return null;
+        }
+    }
     public static String parseUserAgent(String logLine) {
         String parsedLog = findFirstMatch(logLine, userAgentPattern);
         if (parsedLog != null) {
