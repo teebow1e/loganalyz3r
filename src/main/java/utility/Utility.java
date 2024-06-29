@@ -83,11 +83,13 @@ public class Utility {
                 objectNode.put(key, newValue);
                 objectMapper.writerWithDefaultPrettyPrinter().writeValue(file, rootNode);
                 logger.log(Level.INFO,"Updated key \"" + key + "\" with value \"" + newValue + "\".");
+                showInfo("Update Config", "Config updated successfully.");
             } else {
                 logger.log(Level.WARNING,"Root node is not an object node.");
             }
         } catch (IOException e) {
             logger.log(Level.WARNING,"An error occurred while updating the configuration file.", e);
+            showAlert("Update Config", "Failed to update config.");
         }
     }
 

@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static utility.Utility.showAlert;
 
 public class UserManagement {
     private static final Logger logger = Logger.getLogger(UserManagement.class.getName());
@@ -32,6 +33,7 @@ public class UserManagement {
             }
         } catch (IOException e) {
             logger.log(Level.SEVERE, "An error occurred while reading the user file", e);
+            showAlert("ERROR", "An error occurred while reading the user file.\nThe program can not continue.");
         }
         return userList;
     }

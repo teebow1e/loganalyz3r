@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import static utility.Utility.showAlert;
 
 public class ModSecurityParser {
     private static final Logger logger = Logger.getLogger(ModSecurityParser.class.getName());
@@ -135,7 +136,9 @@ public class ModSecurityParser {
             }
         }
         else {
-            logger.log(Level.WARNING, "Log file not found at location {0}", logFilePath);
+            String errMsg = String.format("ModSecurity Audit Log file not found at location %s", logPath);
+            logger.log(Level.WARNING, errMsg);
+            showAlert("ERROR", errMsg);
         }
         return logList;
     }

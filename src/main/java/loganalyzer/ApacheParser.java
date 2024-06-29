@@ -14,8 +14,7 @@ import java.util.logging.Logger;
 import entrypoint.Config;
 import javafx.scene.control.DatePicker;
 
-import static utility.Utility.findFirstMatch;
-import static utility.Utility.getElementSafely;
+import static utility.Utility.*;
 
 public class ApacheParser {
     private ApacheParser() {
@@ -138,7 +137,9 @@ public class ApacheParser {
             }
         }
         else {
-            logger.log(Level.WARNING, "Log file not found at location {0}", logFilePath);
+            String errMsg = String.format("Apache Log file not found at location %s", logFilePath);
+            logger.log(Level.WARNING, errMsg);
+            showAlert("ERROR", errMsg);
         }
         return logList;
     }
