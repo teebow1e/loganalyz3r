@@ -118,15 +118,18 @@ public class ApacheParser {
         if (Files.exists(logPath)) {
             try (BufferedReader br = new BufferedReader(new FileReader(logFilePath))) {
                 String line;
+                boolean reachedEOD = false;
                 while ((line = br.readLine()) != null) {
                     String timestamp = parseTimestamp(line);
                     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MMM/yyyy:HH:mm:ss Z", Locale.ENGLISH);
                     LocalDate logDate = LocalDate.parse(timestamp, formatter);
 
-                    if (logDate.equals(selectedDate)) {
-                        // todo: perform check to determine the current datae
-                        // also check for current date in log using for loops
-                        logList.add(parseLogLine(line));
+                    if (!reachedEOD) {
+                        if (logDate.equals(selectedDate)) {
+                            logList.add(parseLogLine(line));
+                        } else {
+                            reachedEOD = true;
+                        }
                     }
                 }
             } catch (IOException e) {
