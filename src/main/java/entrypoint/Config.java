@@ -110,7 +110,7 @@ public class Config {
                 } else {
                     logger.log(Level.SEVERE,"[FirstRun] Unable to create path config file.");
                 }
-                Utility.extractFileToLocal("db/GeoLite2-Country.mmdb", ".");
+                Utility.extractFileToLocal("GeoLite2-Country.mmdb", ".");
             } else {
                 showAlert(ERROR_LABEL,
                         "Problem occured during first-run action. The program can not continue."
