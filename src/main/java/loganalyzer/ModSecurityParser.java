@@ -36,7 +36,7 @@ public class ModSecurityParser {
             String filename = filePath.substring(filePath.lastIndexOf('/') + 1);
             return filename.replace(".conf", "");
         } else {
-            return null;
+            return Config.NOT_AVAILABLE_TEXT;
         }
     }
 
@@ -47,7 +47,7 @@ public class ModSecurityParser {
         if (matcher.find()) {
             return matcher.group(1);
         } else {
-            return null;
+            return Config.NOT_AVAILABLE_TEXT;
         }
     }
 
@@ -58,7 +58,7 @@ public class ModSecurityParser {
         if (matcher.find()) {
             return matcher.group(1);
         } else {
-            return null;
+            return Config.NOT_AVAILABLE_TEXT;
         }
     }
 
@@ -69,7 +69,7 @@ public class ModSecurityParser {
         if (matcher.find()) {
             return matcher.group(1);
         } else {
-            return null;
+            return Config.NOT_AVAILABLE_TEXT;
         }
     }
 
@@ -81,7 +81,7 @@ public class ModSecurityParser {
         if (matcher.find()) {
             return matcher.group(1);
         } else {
-            return null;
+            return Config.NOT_AVAILABLE_TEXT;
         }
     }
 

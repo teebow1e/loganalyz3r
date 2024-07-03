@@ -20,6 +20,7 @@ public class Config {
     }
     private static JsonNode pathConfig;
     private static String currentlyLoggedOnUser;
+    public final static String NOT_AVAILABLE_TEXT = "N/A";
     private static final String CONFIG_DIR_PATH =
             System.getProperty("user.dir") + File.separator + ".config";
     private static final String ACCOUNTS_FILE_PATH =
@@ -110,7 +111,7 @@ public class Config {
                 } else {
                     logger.log(Level.SEVERE,"[FirstRun] Unable to create path config file.");
                 }
-                Utility.extractFileToLocal("GeoLite2-Country.mmdb", ".");
+                Utility.extractFileToLocal("db/GeoLite2-Country.mmdb", ".");
             } else {
                 showAlert(ERROR_LABEL,
                         "Problem occured during first-run action. The program can not continue."

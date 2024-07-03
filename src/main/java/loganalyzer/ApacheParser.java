@@ -21,26 +21,39 @@ public class ApacheParser {
         throw new IllegalStateException("Utility class");
     }
     private static final Pattern ipAddrPattern = Pattern.compile("((\\d{1,3}\\.\\d{1,3}\\.\\d{1,3}\\.\\d{1,3})|([0-9a-fA-F]{1,4}(:[0-9a-fA-F]{1,4}){7}))");
+    private static final Pattern ipv6AddrPattern = Pattern.compile("([0-9a-fA-F]{1,4}:){7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\\\.){3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\\\\.){3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])");
     private static final Pattern timestampPattern = Pattern.compile("\\[(\\d{2}/[A-Za-z]{3}/\\d{4}:\\d{2}:\\d{2}:\\d{2} [+\\-]\\d{4})]");
     private static final Pattern userAgentPattern = Pattern.compile("\"([^\"]*)\"[^\"]*$");
     private static final Logger logger = Logger.getLogger(ApacheParser.class.getName());
     public static String parseIpAddress(String logLine) {
-        return findFirstMatch(logLine, ipAddrPattern);
+        if (findFirstMatch(logLine, ipAddrPattern) == null) {
+            return findFirstMatch(logLine, ipv6AddrPattern);
+        } else {
+            return findFirstMatch(logLine, ipAddrPattern);
+        }
     }
     public static String parseTimestamp(String logLine) {
         String parsedLog = findFirstMatch(logLine, timestampPattern);
         if (parsedLog != null) {
-            return parsedLog.substring(1, parsedLog.length() - 1);
+            try {
+                return parsedLog.substring(1, parsedLog.length() - 1);
+            } catch (Exception e) {
+                return Config.NOT_AVAILABLE_TEXT;
+            }
         } else {
-            return null;
+            return Config.NOT_AVAILABLE_TEXT;
         }
     }
     public static String parseUserAgent(String logLine) {
         String parsedLog = findFirstMatch(logLine, userAgentPattern);
         if (parsedLog != null) {
-            return parsedLog.substring(1, parsedLog.length() - 1);
+            try {
+                return parsedLog.substring(1, parsedLog.length() - 1);
+            } catch (Exception e) {
+                return Config.NOT_AVAILABLE_TEXT;
+            }
         } else {
-            return null;
+            return Config.NOT_AVAILABLE_TEXT;
         }
     }
 
@@ -51,31 +64,48 @@ public class ApacheParser {
     public static String parseMethod(String[] aioArr) {
         String tempMethodValue = getElementSafely(aioArr, 5);
         if (tempMethodValue != null) {
-            return tempMethodValue.replace("\"", "");
+            try {
+                return tempMethodValue.replace("\"", "");
+            } catch (Exception e) {
+                return Config.NOT_AVAILABLE_TEXT;
+            }
         }
-        return null;
+        return Config.NOT_AVAILABLE_TEXT;
     }
 
     public static String parseProtocol(String[] aioArr) {
         String tempMethodValue = getElementSafely(aioArr, 7);
         if (tempMethodValue != null) {
-            return tempMethodValue.replace("\"", "");
+            try {
+                return tempMethodValue.replace("\"", "");
+            } catch (Exception e) {
+                return Config.NOT_AVAILABLE_TEXT;
+            }
         }
-        return null;
+        return Config.NOT_AVAILABLE_TEXT;
     }
 
     public static String parseRequestPath(String[] aioArr) {
         String tempMethodValue = getElementSafely(aioArr, 6);
         if (tempMethodValue != null) {
-            return tempMethodValue.replace("\"", "");
+            try {
+                return tempMethodValue.replace("\"", "");
+            } catch (Exception e) {
+                return Config.NOT_AVAILABLE_TEXT;
+            }
         }
-        return null;
+        return Config.NOT_AVAILABLE_TEXT;
     }
 
     public static int parseStatusCode(String[] aioArr) {
         String tempMethodValue = getElementSafely(aioArr, 8);
         if (tempMethodValue != null) {
-            return Integer.parseInt(tempMethodValue.replace("\"", ""));
+            try {
+                return Integer.parseInt(tempMethodValue.replace("\"", ""));
+            } catch (Exception e) {
+                return 0;
+            }
+
         }
         return 0;
     }
@@ -83,7 +113,11 @@ public class ApacheParser {
     public static int parseContentLength(String[] aioArr) {
         String tempMethodValue = getElementSafely(aioArr, 9);
         if (tempMethodValue != null) {
-            return Integer.parseInt(tempMethodValue.replace("\"", ""));
+            try {
+                return Integer.parseInt(tempMethodValue.replace("\"", ""));
+            } catch (Exception e) {
+                return 0;
+            }
         }
         return 0;
     }
@@ -102,8 +136,7 @@ public class ApacheParser {
                     parseUserAgent(line)
             );
         } catch (Exception e) {
-            System.out.println(e);
-            System.out.println(line);
+            logger.log(Level.WARNING, "An error occurred during parsing phase: {0}", e);
         }
         return null;
     }
